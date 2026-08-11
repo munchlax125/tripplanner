@@ -174,7 +174,7 @@ ov = next(b for b in doc['blocks'] if b.get('type') == 'overview') if any(
     b.get('type') == 'overview' for b in doc['blocks']) else None
 B.append('      ' + render_daymap('m00', 'ov', doc.get('overview_cap', '')) + '\n')
 
-B.append('  <p class="section-label">가는 편</p>')
+B.append('  <p class="section-label">항공편 — 전편 확정</p>')
 for f in doc['flights']:
     B.append('  <div class="flight">\n    <div class="flight-date">%s</div>'
              '\n    <div class="flight-body">%s</div>\n  </div>' % (f['date'], f['body']))
