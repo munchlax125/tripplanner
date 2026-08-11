@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>조지아 · 아르메니아 최종 일정</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Song+Myung&family=IBM+Plex+Sans+KR:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F2EEE7;
+    --paper-deep:#E7E1D7;
+    --card:#F8F5F0;
+    --ink:#241E22;
+    --ink-soft:#5C5258;
+    --ink-faint:#8C8289;
+    --stone:#CDC3B6;
+    --slate:#42606E;
+    --apricot:#C87518;
+    --greece:#1F6FA5;
+    --uae:#A97142;
+    --china:#9E3B34;
+    --rule:rgba(36,30,34,.14);
+    --busGe:rgba(66,96,110,.09);
+    --busAm:rgba(200,117,24,.10);
+    --busGr:rgba(31,111,165,.10);
+    --busAe:rgba(169,113,66,.10);
+    --busCn:rgba(158,59,52,.10);
+    color-scheme:light dark;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --paper:#1A1719;
+      --paper-deep:#2A2428;
+      --card:#232025;
+      --ink:#EFE9E4;
+      --ink-soft:#BAB0AB;
+      --ink-faint:#8F8580;
+      --stone:#4E463F;
+      --slate:#8FB4C4;
+      --apricot:#E5A153;
+      --greece:#7EC1E8;
+      --uae:#D9A66C;
+      --china:#DE8B82;
+      --rule:rgba(239,233,228,.18);
+      --busGe:rgba(143,180,196,.14);
+      --busAm:rgba(229,161,83,.14);
+      --busGr:rgba(126,193,232,.14);
+      --busAe:rgba(217,166,108,.14);
+      --busCn:rgba(222,139,130,.14);
+    }
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;background:var(--paper);}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:"IBM Plex Sans KR",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+    font-weight:300;line-height:1.62;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:780px;margin:0 auto;padding:52px 26px 90px;
+    background:var(--paper);color:var(--ink);min-height:100vh;}
+
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--ink-faint);margin:0 0 16px;}
+  .title{font-family:"Song Myung",serif;font-size:clamp(34px,6.5vw,56px);line-height:1.12;
+    margin:0 0 6px;font-weight:400;letter-spacing:-.01em;color:var(--ink);}
+  .title .sep{color:var(--stone);padding:0 .1em;}
+  .subtitle{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--ink-soft);
+    margin:0 0 8px;letter-spacing:.02em;}
+  .standfirst{font-size:14px;color:var(--ink-soft);margin:0 0 32px;max-width:54ch;}
+
+  .summary{border-top:1px solid var(--ink);border-bottom:1px solid var(--rule);
+    padding:20px 0 16px;margin-bottom:14px;}
+  .sum-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:15px;}
+  .sum-head h2{font-family:"Song Myung",serif;font-weight:400;font-size:16px;margin:0;letter-spacing:.02em;color:var(--ink);}
+  .sum-total{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-faint);}
+  .bar-row{display:grid;grid-template-columns:82px 1fr 34px;align-items:center;gap:11px;margin-bottom:6px;}
+  .bar-name{font-size:12.5px;color:var(--ink-soft);}
+  .bar-track{height:8px;background:var(--paper-deep);}
+  .bar-fill{height:100%;display:block;}
+  .bar-fill.ge{background:var(--slate);}
+  .bar-fill.am{background:var(--apricot);}
+  .bar-fill.gr{background:var(--greece);}
+  .bar-fill.ae{background:var(--uae);}
+  .bar-fill.cn{background:var(--china);}
+  .bar-fill.air{background:repeating-linear-gradient(90deg,var(--stone) 0 3px,transparent 3px 6px);}
+  .bar-num{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-faint);text-align:right;}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-family:"IBM Plex Mono",monospace;
+    font-size:10.5px;color:var(--ink-faint);margin-top:14px;}
+  .legend span{display:flex;align-items:center;gap:5px;}
+  .swatch{width:9px;height:9px;display:inline-block;}
+  .swatch.ge{background:var(--slate);} .swatch.am{background:var(--apricot);}
+  .swatch.gr{background:var(--greece);} .swatch.ae{background:var(--uae);}
+  .swatch.cn{background:var(--china);}
+  .swatch.air{background:var(--stone);}
+
+  .section-label{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--ink-faint);margin:40px 0 12px;}
+  .flight{display:grid;grid-template-columns:70px 1fr;gap:14px;padding:13px 0;
+    border-bottom:1px solid var(--rule);}
+  .flight:first-of-type{border-top:1px solid var(--rule);}
+  .flight-date{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-faint);padding-top:2px;}
+  .flight-body{font-size:13.5px;color:var(--ink-soft);}
+  .flight-body b{font-weight:500;color:var(--ink);}
+
+  .day{display:grid;grid-template-columns:70px 28px 1fr;}
+  .day-date{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-soft);
+    padding:22px 11px 0 0;text-align:right;line-height:1.35;}
+  .day-date em{display:block;font-style:normal;font-size:10px;color:var(--ink-faint);}
+  .day-rail{position:relative;}
+  .day-rail::before{content:"";position:absolute;left:10px;top:0;bottom:0;width:2px;background:var(--stone);}
+  .day.ge .day-rail::before{background:var(--slate);}
+  .day.am .day-rail::before{background:var(--apricot);}
+  .day.gr .day-rail::before{background:var(--greece);}
+  .day.ae .day-rail::before{background:var(--uae);}
+  .day.cn .day-rail::before{background:var(--china);}
+  .day:first-of-type .day-rail::before{top:26px;}
+  .day.last .day-rail::before{bottom:auto;height:28px;}
+  .node{position:absolute;left:5px;top:24px;width:12px;height:12px;background:var(--paper);
+    border:2px solid var(--stone);transform:rotate(45deg);z-index:2;}
+  .day.ge .node{border-color:var(--slate);}
+  .day.am .node{border-color:var(--apricot);}
+  .day.gr .node{border-color:var(--greece);}
+  .day.ae .node{border-color:var(--uae);}
+  .day.cn .node{border-color:var(--china);}
+  .day.stay .node{background:var(--slate);}
+  .day.am.stay .node{background:var(--apricot);}
+  .day.gr.stay .node{background:var(--greece);}
+  .day.ae.stay .node{background:var(--uae);}
+  .day.cn.stay .node{background:var(--china);}
+
+  .day-body{padding:17px 0 26px 4px;}
+  .day-place{font-family:"Song Myung",serif;font-size:19px;font-weight:400;margin:0 0 3px;
+    letter-spacing:.01em;color:var(--ink);}
+  .day-sub{font-size:13px;color:var(--ink-soft);margin:0 0 12px;}
+
+  .sched{list-style:none;margin:0;padding:0;border-left:1px solid var(--rule);}
+  .sched li{display:grid;grid-template-columns:50px 1fr;gap:11px;padding:5px 0 5px 13px;font-size:13.5px;}
+  .sched .t{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-faint);padding-top:3px;}
+  .sched .a{color:var(--ink);}
+  .sched .a small{display:block;font-size:11.5px;color:var(--ink-faint);line-height:1.5;margin-top:1px;}
+  .bus{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--slate);
+    background:var(--busGe);padding:1px 5px;margin-right:5px;}
+  .day.am .bus{color:var(--apricot);background:var(--busAm);}
+  .day.gr .bus{color:var(--greece);background:var(--busGr);}
+  .day.ae .bus{color:var(--uae);background:var(--busAe);}
+  .day.cn .bus{color:var(--china);background:var(--busCn);}
+
+  .flag{margin-top:12px;padding:10px 12px;background:var(--card);border-left:2px solid var(--ink);
+    font-size:12.5px;color:var(--ink-soft);}
+  .flag b{font-weight:500;color:var(--ink);}
+  .tag{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.07em;
+    padding:2px 6px;border:1px solid var(--rule);color:var(--ink-faint);margin-left:7px;vertical-align:2px;}
+  .tag.hot{border-color:#8A2E2E;color:#B5453E;}
+
+  .border{display:grid;grid-template-columns:70px 28px 1fr;margin:4px 0;}
+  .border-rail{position:relative;}
+  .border-rail::before{content:"";position:absolute;left:3px;top:50%;width:16px;height:2px;background:var(--ink);}
+  .border-body{padding:13px 0 13px 4px;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);}
+  .border-title{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.24em;
+    text-transform:uppercase;margin:0 0 4px;color:var(--ink);}
+  .border-note{font-size:12.5px;color:var(--ink-soft);margin:0;}
+
+  .notes{margin-top:52px;border-top:1px solid var(--ink);padding-top:24px;}
+  .notes h2{font-family:"Song Myung",serif;font-weight:400;font-size:18px;margin:0 0 18px;color:var(--ink);}
+  .note{display:grid;grid-template-columns:100px 1fr;gap:15px;padding:11px 0;border-bottom:1px solid var(--rule);}
+  .note-key{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--ink-faint);
+    letter-spacing:.04em;padding-top:3px;}
+  .note-val{font-size:13px;color:var(--ink-soft);}
+  .note-val b{font-weight:500;color:var(--ink);}
+  .foot{margin-top:34px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;
+    color:var(--ink-faint);letter-spacing:.04em;}
+
+  @media (max-width:560px){
+    .wrap{padding:38px 18px 68px;}
+    .day,.border{grid-template-columns:54px 24px 1fr;}
+    .day-date{font-size:11px;padding-right:8px;}
+    .node{left:3px;} .day-rail::before{left:8px;}
+    .sched li{grid-template-columns:44px 1fr;gap:9px;padding-left:10px;}
+    .note{grid-template-columns:1fr;gap:2px;}
+    .bar-row{grid-template-columns:70px 1fr 30px;}
+    .flight{grid-template-columns:58px 1fr;gap:11px;}
+  }
+  @media print{
+    :root{
+      --paper:#FFF;--paper-deep:#E7E1D7;--card:#F8F5F0;--ink:#241E22;
+      --ink-soft:#5C5258;--ink-faint:#8C8289;--stone:#CDC3B6;
+      --slate:#42606E;--apricot:#C87518;--greece:#1F6FA5;--uae:#A97142;--china:#9E3B34;--rule:rgba(36,30,34,.14);
+    }
+    body{background:#fff;}
+    .wrap{padding:0;max-width:100%;}
+    .day,.note,.flight{break-inside:avoid;}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+
+  .opt-label{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.16em;
+    color:var(--slate);margin:16px 0 -2px;padding-top:9px;border-top:1px solid var(--rule);}
+  .day.ge .opt-label{color:var(--slate);}
+
+  /* ---- 일자별 경로 지도 (인라인 SVG · 오프라인 동작) ---- */
+  .daymap{margin:18px 0 4px;}
+  .mapsvg{display:block;width:100%;height:auto;border:1px solid var(--rule);}
+  .mapbg{fill:rgba(128,128,128,.045);}
+  .maplake{fill:rgba(31,111,165,.16);stroke:rgba(31,111,165,.45);stroke-width:.8;}
+  .maproad{fill:none;stroke:rgba(120,110,100,.55);stroke-width:2.6;stroke-linecap:round;
+    stroke-linejoin:round;}
+  .maptown{fill:var(--muted);opacity:.55;}
+  .maplbl{font-family:"IBM Plex Sans KR",-apple-system,sans-serif;paint-order:stroke;
+    stroke:#fff;stroke-width:2.6px;stroke-linejoin:round;}
+  .maplbl.town{font-size:8.5px;fill:var(--muted);}
+  .maplbl.stop{font-size:9.5px;font-weight:600;fill:var(--ink);}
+  .maplbl.lake{font-size:9px;fill:#1F6FA5;opacity:.8;text-anchor:middle;}
+  @media (prefers-color-scheme: dark){
+    .maplbl{stroke:#17171A;}
+    .maproad{stroke:rgba(210,200,190,.35);}
+  }
+  .maplake{fill:rgba(31,111,165,.16);stroke:rgba(31,111,165,.45);stroke-width:.8;}
+  .maproad{fill:none;stroke:rgba(120,110,100,.55);stroke-width:2.6;stroke-linecap:round;
+    stroke-linejoin:round;}
+  .maptown{fill:var(--muted);opacity:.55;}
+  .maplbl{font-family:"IBM Plex Sans KR",-apple-system,sans-serif;paint-order:stroke;
+    stroke:#fff;stroke-width:2.6px;stroke-linejoin:round;}
+  .maplbl.town{font-size:8.5px;fill:var(--muted);}
+  .maplbl.stop{font-size:9.5px;font-weight:600;fill:var(--ink);}
+  .maplbl.lake{font-size:9px;fill:#1F6FA5;opacity:.8;text-anchor:middle;}
+  @media (prefers-color-scheme: dark){
+    .maplbl{stroke:#17171A;}
+    .maproad{stroke:rgba(210,200,190,.35);}
+  }
+  .maplake{fill:rgba(31,111,165,.16);stroke:rgba(31,111,165,.45);stroke-width:.8;}
+  .maproad{fill:none;stroke:rgba(120,110,100,.55);stroke-width:2.6;stroke-linecap:round;
+    stroke-linejoin:round;}
+  .maptown{fill:var(--muted);opacity:.55;}
+  .maplbl{font-family:"IBM Plex Sans KR",-apple-system,sans-serif;paint-order:stroke;
+    stroke:#fff;stroke-width:2.6px;stroke-linejoin:round;}
+  .maplbl.town{font-size:8.5px;fill:var(--muted);}
+  .maplbl.stop{font-size:9.5px;font-weight:600;fill:var(--ink);}
+  .maplbl.lake{font-size:9px;fill:#1F6FA5;opacity:.8;text-anchor:middle;}
+  @media (prefers-color-scheme: dark){
+    .maplbl{stroke:#17171A;}
+    .maproad{stroke:rgba(210,200,190,.35);}
+  }
+  .mapn{font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:600;
+    fill:#fff;text-anchor:middle;}
+  .mapsm{font-family:"IBM Plex Mono",monospace;font-size:9.5px;fill:var(--muted);}
+  .mapscale{stroke:var(--muted);stroke-width:1;}
+  .mapseq{font-size:11.5px;line-height:1.75;color:var(--ink);margin:9px 0 0;}
+  .mapseq b{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--muted);
+    font-weight:600;margin-right:1px;}
+  .mapdot{color:var(--rule);margin:0 2px;}
+  .mapctl{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:8px 0 0;}
+  .maptog{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;
+    color:var(--slate);background:none;border:1px solid var(--rule);padding:5px 10px;
+    cursor:pointer;border-radius:2px;}
+  .maptog:hover{border-color:var(--slate);}
+  .maptog[disabled]{opacity:.45;cursor:default;}
+  .maplink{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;
+    color:var(--muted);text-decoration:none;border-bottom:1px solid var(--rule);}
+  .leafbox{height:300px;border:1px solid var(--rule);}
+  .mapnum{display:flex;align-items:center;justify-content:center;width:20px;height:20px;
+    border-radius:50%;color:#fff;font-family:"IBM Plex Mono",monospace;font-size:10.5px;
+    font-weight:600;box-shadow:0 0 0 2px #fff;}
+  .leaflet-container{font:inherit;}
+  .leaflet-control-attribution{font-size:9px !important;}
+  @media print{.mapctl{display:none;}}
+  .mapcap{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.05em;
+    color:var(--muted);margin:5px 0 0;line-height:1.6;}
+
+  /* ---- 오프라인 벡터 배경지도 · Natural Earth 10m + OpenStreetMap (인라인, 외부 요청 없음) ---- */
+  :root{--muted:#8C8289;}
+  @media (prefers-color-scheme:dark){:root{--muted:#8F8580;}}
+  .bm{pointer-events:none;}
+  .bm>path{stroke-linecap:round;stroke-linejoin:round;}
+  .bm-sea,.bm-water{stroke:none;}
+  .bm-riv,.bm-coast,.bm-r1,.bm-r2,.bm-r3,.bm-r4,.bm-r5,.bm-bord{fill:none;}
+  .bm-sea{fill:rgba(31,111,165,.13);}
+  .bm-water{fill:rgba(31,111,165,.17);}
+  .bm-riv{stroke:rgba(31,111,165,.34);stroke-width:.8;}
+  .bm-coast{stroke:rgba(31,111,165,.45);stroke-width:.7;}
+  .bm-r1{stroke:rgba(94,80,68,.34);stroke-width:1.5;}   /* 고속·간선 */
+  .bm-r2{stroke:rgba(94,80,68,.26);stroke-width:1.05;}  /* 1급 국도 */
+  .bm-r3{stroke:rgba(94,80,68,.21);stroke-width:.75;}   /* 2·3급 도로 */
+  .bm-r4{stroke:rgba(94,80,68,.17);stroke-width:.55;}   /* 시가지 도로 */
+  .bm-r5{stroke:rgba(94,80,68,.15);stroke-width:.4;stroke-dasharray:1.8 1.8;} /* 보행로·산길 */
+  .bm-bord{stroke:rgba(36,30,34,.38);stroke-width:1;stroke-dasharray:5 3;}
+  @media (prefers-color-scheme:dark){
+    .bm-sea{fill:rgba(126,193,232,.11);}
+    .bm-water{fill:rgba(126,193,232,.13);}
+    .bm-riv{stroke:rgba(126,193,232,.30);}
+    .bm-coast{stroke:rgba(126,193,232,.34);}
+    .bm-r1{stroke:rgba(226,216,206,.28);}
+    .bm-r2{stroke:rgba(226,216,206,.21);}
+    .bm-r3{stroke:rgba(226,216,206,.16);}
+    .bm-r4{stroke:rgba(226,216,206,.13);}
+    .bm-r5{stroke:rgba(226,216,206,.11);}
+    .bm-bord{stroke:rgba(239,233,228,.34);}
+  }
+</style>
+</head>
+<body>

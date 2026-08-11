@@ -1,0 +1,48 @@
+<script>
+/* 오프라인에서는 아무 요청도 하지 않습니다. 버튼을 누를 때만 Leaflet을 내려받습니다. */
+(function(){
+  var M=__MAPPOINTS__;
+  var loading=null;
+  function leaflet(){
+    if(window.L) return Promise.resolve();
+    if(loading) return loading;
+    loading=new Promise(function(res,rej){
+      var c=document.createElement('link');
+      c.rel='stylesheet'; c.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+      document.head.appendChild(c);
+      var j=document.createElement('script');
+      j.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+      j.onload=res; j.onerror=function(){rej(new Error('offline'));};
+      document.head.appendChild(j);
+    });
+    return loading;
+  }
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('.maptog'); if(!b) return;
+    var wrap=b.closest('.daymap'), pts=M[b.dataset.m];
+    var col=getComputedStyle(wrap.querySelector('path')).stroke || '#42606E';
+    b.disabled=true; b.textContent='불러오는 중…';
+    leaflet().then(function(){
+      var svg=wrap.querySelector('.mapsvg');
+      var box=document.createElement('div'); box.className='leafbox';
+      box.style.height=(svg.getBoundingClientRect().height||300)+'px';
+      svg.replaceWith(box);
+      var map=L.map(box,{scrollWheelZoom:false});
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+        {attribution:'&copy; OpenStreetMap &copy; CARTO',maxZoom:19}).addTo(map);
+      var ll=pts.map(function(p){return [p[1],p[2]];});
+      L.polyline(ll,{color:col,weight:2,opacity:.55,dashArray:'5,5'}).addTo(map);
+      pts.forEach(function(p,i){
+        L.marker([p[1],p[2]],{icon:L.divIcon({className:'',iconSize:[20,20],iconAnchor:[10,10],
+          html:'<div class="mapnum" style="background:'+col+'">'+(i+1)+'</div>'})})
+          .addTo(map).bindPopup((i+1)+'. '+p[0]);
+      });
+      map.fitBounds(L.latLngBounds(ll).pad(0.18));
+      setTimeout(function(){map.invalidateSize();},120);
+      b.textContent='실제 지도 표시됨';
+    }).catch(function(){
+      b.textContent='인터넷 연결 없음 — 아래 그림 지도를 쓰세요';
+    });
+  });
+})();
+</script>

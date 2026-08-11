@@ -1,0 +1,14 @@
+# Excel 임시 잠금 파일
+~$*
+
+# 빌드 중 대체 저장본 (원본이 Excel에서 열려 있을 때 생김)
+_new_*.xlsx
+
+# Python
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
