@@ -1,25 +1,74 @@
 # -*- coding: utf-8 -*-
 """
-src/일정.yaml  ->  조지아_아르메니아_최종일정_상하이반영.html
+src/일정.yaml  ->  <output>.html   (파일명은 일정.yaml 의 output 키)
 
 지도는 지점 위경도만 있으면 투영·축척·마커·라벨·경로선을 자동으로 그립니다.
 mapseq 텍스트와 Leaflet 데이터도 같은 소스에서 나오므로 어긋날 수 없습니다.
 
     python build.py
 """
-import io, sys, os, json, math
+import io, sys, os, json, math, re, urllib.parse
 import yaml
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 HERE = os.path.dirname(os.path.abspath(__file__))
 os.chdir(HERE)
 
-OUT = '조지아_아르메니아_최종일정_상하이반영.html'
-COLOR = {'ge': '#42606E', 'am': '#C87518', 'gr': '#1F6FA5',
-         'ae': '#A97142', 'cn': '#9E3B34', 'ov': '#42606E'}
 NICE_KM = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000]
 
 doc = yaml.safe_load(open('src/일정.yaml', encoding='utf-8'))
+
+# 여행에 관한 값은 전부 일정.yaml 에서 옵니다. 코드에는 여행별 상수가 없습니다.
+OUT = doc.get('output')
+if not OUT:
+    sys.exit("src/일정.yaml 에 'output: 파일명.html' 을 넣으세요.")
+RAW_COLORS = dict(doc.get('colors') or {})
+if not RAW_COLORS:
+    sys.exit("src/일정.yaml 에 'colors: {키: \"#RRGGBB\"}' 를 넣으세요 "
+             "(키는 blocks 의 cls 두 번째 낱말과 같아야 합니다).")
+
+
+def light_of(v):
+    """colors 값은 '#RRGGBB' 또는 {light: ..., dark: ...} 둘 다 됩니다."""
+    return v['light'] if isinstance(v, dict) else v
+
+
+def dark_of(v):
+    return v.get('dark', v['light']) if isinstance(v, dict) else v
+
+
+# SVG 안에 박히는 색(마커·경로선)은 라이트 값을 씁니다 — 파일에 굳어지므로
+COLOR = {k: light_of(v) for k, v in RAW_COLORS.items()}
+COLOR.setdefault('ov', next(iter(COLOR.values())))   # 개요 지도 경로선 색
+
+
+def _rgb(h):
+    h = h.lstrip('#')
+    return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
+
+
+def color_css():
+    """나라·지역 키마다 필요한 CSS를 만들어 head.html 의 __COLORCSS__ 자리에 넣습니다."""
+    def rules(k, col, alpha):
+        r, g, b = _rgb(col)
+        return ['.bar-fill.%s,.swatch.%s,.day.%s .day-rail::before,.day.%s.stay .node{background:%s;}'
+                % (k, k, k, k, col),
+                '.day.%s .node{border-color:%s;}' % (k, col),
+                '.day.%s .bus{color:%s;background:rgba(%d,%d,%d,%s);}' % (k, col, r, g, b, alpha)]
+    lt, dk = [], []
+    for k, v in RAW_COLORS.items():
+        if k == 'ov':
+            continue
+        lt += rules(k, light_of(v), '.10')
+        dk += rules(k, dark_of(v), '.14')
+    return ('  ' + '\n  '.join(lt) +
+            '\n  @media (prefers-color-scheme:dark){\n    ' + '\n    '.join(dk) + '\n  }')
+OVERVIEW_MAP = doc.get('overview_map')               # 없으면 개요 지도를 넣지 않습니다
+
+# 문단 제목. labels 로 덮어쓰거나 빈 문자열을 주면 그 구획이 사라집니다.
+LABELS = {'nights': '숙박 배분', 'overview': '루트 개요', 'flights': '항공편',
+          'days': '본 일정', 'notes': '미리 확인할 것'}
+LABELS.update(doc.get('labels') or {})
 PROJ = json.load(open('src/basemaps/_proj.json', encoding='utf-8'))
 HEAD = open('src/head.html', encoding='utf-8').read()
 SCRIPT = open('src/script.html', encoding='utf-8').read()
@@ -86,7 +135,7 @@ def build_map(mid, points, cap, color, trigger_pad=13, fit_pad=46):
         parts.append('<g transform="translate(%.1f,%.1f) scale(%.4f)">%s</g>' % (tx, ty, s, bm))
     else:
         parts.append(bm)
-    parts.append('<path d="M' + ' L'.join('%.1f,%.1f' % q for q in pt) +
+    parts.append('<path class="maproute" d="M' + ' L'.join('%.1f,%.1f' % q for q in pt) +
                  '" fill="none" stroke="%s" stroke-width="1.8" stroke-opacity=".62" '
                  'stroke-dasharray="5 4" stroke-linejoin="round"/>' % color)
     for n in nodes:
@@ -124,12 +173,53 @@ def gmaps(points):
     return u + '&travelmode=driving'
 
 
+# ───────────────────────── 관광지 → 구글 지도 ─────────────────────────
+# places: 이름 -> [위도, 경도] 이면 좌표 핀, 문자열이면 검색어.
+# 긴 이름부터 걸어야 '아크로폴리스 박물관'이 '아크로폴리스'에 먼저 먹히지 않습니다.
+PLACES = sorted((doc.get('places') or {}).items(), key=lambda kv: -len(kv[0]))
+
+
+def gmap_url(v):
+    if isinstance(v, (list, tuple)):
+        q = '%.7f,%.7f' % (v[0], v[1])
+    else:
+        q = urllib.parse.quote(str(v))
+    return 'https://www.google.com/maps/search/?api=1&amp;query=' + q
+
+
+def linkify(text):
+    """행 본문의 관광지 이름에 구글 지도 링크를 겁니다 (한 행에 이름당 한 번)."""
+    if not text or not PLACES:
+        return text
+    # 원래 있던 태그는 얼려두고, 링크로 바꾼 조각도 얼려서 중첩을 막습니다
+    chunks = [[s, s.startswith('<')] for s in re.split(r'(<[^>]+>)', text) if s]
+    for name, val in PLACES:
+        out, done = [], False
+        for c, frozen in chunks:
+            if frozen or done:
+                out.append([c, frozen])
+                continue
+            j = c.find(name)
+            if j < 0:
+                out.append([c, False])
+                continue
+            if j:
+                out.append([c[:j], False])
+            out.append(['<a class="gmap" href="%s" target="_blank" rel="noopener">%s</a>'
+                        % (gmap_url(val), name), True])
+            if j + len(name) < len(c):
+                out.append([c[j + len(name):], False])
+            done = True
+        chunks = out
+    return ''.join(c for c, _ in chunks)
+
+
 # ───────────────────────── 렌더 ─────────────────────────
 def li(r):
     a = ''
     if r.get('bus'):
         a += '<span class="bus">%s</span>' % r['bus']
-    a += r.get('text', '')
+    a += linkify(r.get('text', ''))
     if r.get('tag'):
         a += ' <span class="tag%s">%s</span>' % (' hot' if r['tag'].get('hot') else '', r['tag']['text'])
     for sm in r.get('small', []):
@@ -143,42 +233,59 @@ def render_daymap(mid, day_cls, cap):
     svg, seq = build_map(mid, pts, cap, col)
     return ('<div class="daymap" id="%s">%s<p class="mapseq">%s</p>'
             '<p class="mapcap">%s</p><p class="mapctl">'
-            '<button type="button" class="maptog" data-m="%s">실제 지도 불러오기</button>'
+            '<button type="button" class="maptog" data-m="%s" data-color="%s">실제 지도 불러오기</button>'
             '<a class="maplink" href="%s" target="_blank" rel="noopener">구글 지도로 열기 ↗</a></p></div>'
-            % (mid, svg, seq, cap, mid, gmaps(pts)))
+            % (mid, svg, seq, cap, mid, col, gmaps(pts)))
 
+
+def section(key):
+    """문단 제목. labels 에서 빈 문자열로 지우면 제목 없이 내용만 나옵니다."""
+    if LABELS.get(key):
+        B.append('  <p class="section-label">%s</p>' % LABELS[key])
+
+
+# 브라우저 탭 제목: doc_title 이 없으면 title 에서 태그만 벗겨 씁니다
+tab = doc.get('doc_title') or re.sub(r'<[^>]+>', '', str(doc.get('title', '여행 일정')))
 
 B = []
-B.append(HEAD)
+B.append(HEAD.replace('__TITLE__', tab).replace('__COLORCSS__', color_css()))
 B.append('<div class="wrap">\n')
-B.append('  <p class="eyebrow">%s</p>' % doc['eyebrow'])
-B.append('  <h1 class="title">%s</h1>' % doc['title'])
-B.append('  <p class="subtitle">%s</p>' % doc['subtitle'])
-B.append('  <p class="standfirst">%s</p>\n' % doc['standfirst'])
+for key, tpl in (('eyebrow', '  <p class="eyebrow">%s</p>'),
+                 ('title', '  <h1 class="title">%s</h1>'),
+                 ('subtitle', '  <p class="subtitle">%s</p>'),
+                 ('standfirst', '  <p class="standfirst">%s</p>\n')):
+    if doc.get(key):
+        B.append(tpl % doc[key])
 
-B.append('  <div class="summary">\n    <div class="sum-head">\n      <h2>숙박 배분</h2>')
-B.append('      <span class="sum-total">%s</span>\n    </div>' % doc['nights_total'])
-mx = max(n['n'] for n in doc['nights'])
-for n in doc['nights']:
-    B.append('    <div class="bar-row"><span class="bar-name">%s</span><span class="bar-track">'
-             '<span class="bar-fill %s" style="width:%d%%"></span></span>'
-             '<span class="bar-num">%d</span></div>'
-             % (n['name'], n['cls'], round(n['n'] / mx * 100), n['n']))
-B.append('    <div class="legend">')
-for g in doc['legend']:
-    B.append('      <span><i class="swatch %s"></i> %s</span>' % (g['cls'], g['label']))
-B.append('    </div>\n  </div>\n')
+nights = doc.get('nights') or []
+if nights:
+    B.append('  <div class="summary">\n    <div class="sum-head">\n      <h2>%s</h2>' % LABELS['nights'])
+    B.append('      <span class="sum-total">%s</span>\n    </div>' % doc.get('nights_total', ''))
+    mx = max(n['n'] for n in nights)
+    for n in nights:
+        B.append('    <div class="bar-row"><span class="bar-name">%s</span><span class="bar-track">'
+                 '<span class="bar-fill %s" style="width:%d%%"></span></span>'
+                 '<span class="bar-num">%d</span></div>'
+                 % (n['name'], n['cls'], round(n['n'] / mx * 100), n['n']))
+    if doc.get('legend'):
+        B.append('    <div class="legend">')
+        for g in doc['legend']:
+            B.append('      <span><i class="swatch %s"></i> %s</span>' % (g['cls'], g['label']))
+        B.append('    </div>')
+    B.append('  </div>\n')
 
-B.append('  <p class="section-label">지상 루트 개요</p>')
-ov = next(b for b in doc['blocks'] if b.get('type') == 'overview') if any(
-    b.get('type') == 'overview' for b in doc['blocks']) else None
-B.append('      ' + render_daymap('m00', 'ov', doc.get('overview_cap', '')) + '\n')
+if OVERVIEW_MAP:
+    section('overview')
+    B.append('      ' + render_daymap(OVERVIEW_MAP, 'ov', doc.get('overview_cap', '')) + '\n')
 
-B.append('  <p class="section-label">항공편 — 전편 확정</p>')
-for f in doc['flights']:
-    B.append('  <div class="flight">\n    <div class="flight-date">%s</div>'
-             '\n    <div class="flight-body">%s</div>\n  </div>' % (f['date'], f['body']))
-B.append('\n  <p class="section-label">본 일정</p>\n')
+if doc.get('flights'):
+    section('flights')
+    for f in doc['flights']:
+        B.append('  <div class="flight">\n    <div class="flight-date">%s</div>'
+                 '\n    <div class="flight-body">%s</div>\n  </div>' % (f['date'], f['body']))
+    B.append('')
+section('days')
+B.append('')
 
 for blk in doc['blocks']:
     if blk['type'] == 'border':
@@ -187,14 +294,19 @@ for blk in doc['blocks']:
                  '\n      <p class="border-note">%s</p>\n    </div>\n  </div>\n'
                  % (blk['title'], blk['note']))
         continue
-    cc = blk['cls'].split()[1]
+    parts_cls = blk['cls'].split()
+    cc = parts_cls[1] if len(parts_cls) > 1 else 'ov'
+    if cc not in COLOR:
+        sys.exit("%s: cls '%s' 의 색 키 '%s' 가 colors 에 없습니다."
+                 % (blk.get('date', '?'), blk['cls'], cc))
     B.append('  <div class="%s">' % blk['cls'])
     B.append('    <div class="day-date">%s<em>%s</em></div><div class="day-rail"><i class="node"></i></div>'
-             % (blk['date'], blk['dow']))
+             % (blk.get('date', ''), blk.get('dow', '')))
     B.append('    <div class="day-body">')
-    B.append('      <h3 class="day-place">%s</h3>' % blk['place'])
-    B.append('      <p class="day-sub">%s</p>' % blk['sub'])
-    for seg in blk['sched']:
+    B.append('      <h3 class="day-place">%s</h3>' % blk.get('place', ''))
+    if blk.get('sub'):
+        B.append('      <p class="day-sub">%s</p>' % blk['sub'])
+    for seg in blk.get('sched', []):
         if seg.get('label'):
             B.append('      <p class="opt-label">%s</p>' % seg['label'])
         B.append('      <ul class="sched">')
@@ -206,13 +318,19 @@ for blk in doc['blocks']:
         B.append('      <div class="flag">%s</div>' % f)
     B.append('    </div>\n  </div>\n')
 
-B.append('  <div class="notes">\n    <h2>미리 확인할 것</h2>')
-for n in doc['notes']:
-    B.append('    <div class="note">\n      <div class="note-key">%s</div>'
-             '\n      <div class="note-val">%s</div>\n    </div>' % (n['key'], n['val']))
-B.append('    <p class="foot">%s</p>\n  </div>\n' % doc['foot'])
+if doc.get('notes') or doc.get('foot'):
+    B.append('  <div class="notes">')
+    if doc.get('notes'):
+        if LABELS.get('notes'):
+            B.append('    <h2>%s</h2>' % LABELS['notes'])
+        for n in doc['notes']:
+            B.append('    <div class="note">\n      <div class="note-key">%s</div>'
+                     '\n      <div class="note-val">%s</div>\n    </div>' % (n['key'], n['val']))
+    if doc.get('foot'):
+        B.append('    <p class="foot">%s</p>' % doc['foot'])
+    B.append('  </div>\n')
 B.append('</div>\n')
-B.append(SCRIPT.replace('__MAPPOINTS__', json.dumps(doc['map_points'], ensure_ascii=False)))
+B.append(SCRIPT.replace('__MAPPOINTS__', json.dumps(doc.get('map_points') or {}, ensure_ascii=False)))
 B.append('\n</body>\n</html>\n')
 
 html = '\n'.join(B)

@@ -12,3 +12,6 @@ __pycache__/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# 바탕그림 생성기가 내려받는 Natural Earth 원본 (약 25MB)
+tools/_cache/

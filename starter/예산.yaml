@@ -1,0 +1,57 @@
+# 새 여행 시작용 최소 예시 — src/예산.yaml 로 복사해 쓰세요.
+#   cp starter/예산.yaml src/예산.yaml
+#   python build_xlsx.py
+
+output: 내여행_예산.xlsx            # (필수) 만들어질 파일 이름
+
+# (필수) 통화 → 원화 환산율, 그리고 템플릿 '환율' 시트에서 그 통화가 놓일 행 번호.
+# 통화를 5개보다 늘리려면 src/예산_템플릿.xlsx 의 환율 시트에 행을 먼저 만드세요.
+rates:
+  JPY: 9.1
+  USD: 1380
+rate_rows:
+  JPY: 4
+  USD: 5
+rate_labels:
+  JPY: 일본 엔 (JPY) → 원
+  USD: 미국 달러 (USD) → 원
+rate_notes:
+  JPY: 2026년 3월 기준
+
+# 시트 제목·설명. 비워두면 템플릿에 남은 이전 여행 문구가 지워집니다.
+sheet_titles:
+  환율: 환율 및 기본 가정
+  교통상세: 구간별 교통
+  입장료: 입장료
+  일자별예산: 일자별 예산 (1인 기준, 원)
+sheet_intros:
+  교통상세: '‘대중교통’ 열이 ○ 이면 대중교통으로 갈 수 있는 구간, △ 는 부분적, ✕ 는 택시가 사실상 필수인 구간입니다.'
+  일자별예산: 1인 기준입니다.
+
+people: 2
+total_budget: 2000000
+flights:
+  - {name: 인천→나리타 왕복, krw: 420000}
+
+transport:
+  - date: 4/3
+    seg: 나리타 → 우에노
+    mode: 스카이라이너
+    kind: 시외            # 시외 / 시내 — 일자별 집계 기준
+    amt: 2570
+    cur: JPY
+    pub: '○'              # ○ 대중교통 / △ 부분 / ✕ 택시 필수
+    note: 41분
+transport_notes:
+  - 표에 없는 짧은 지하철 이동은 일자별 시내교통에 포함했습니다.
+
+tickets:
+  - {date: 4/3, place: 센소지, amt: 0, cur: JPY, note: 무료}
+ticket_note: 무료인 곳도 0원으로 적어두면 빠뜨렸는지 알 수 있습니다.
+
+# date 문자열이 transport·tickets 와 정확히 같아야 집계됩니다 (4/3, 4/13 형식)
+days:
+  - {date: 4/3, dow: 금, desc: 도쿄 — 아사쿠사, food: 30000, stay: 60000, cafe: 6000}
+  - {date: 4/4, dow: 토, desc: 도쿄 — 시내, food: 35000, stay: 60000, cafe: 6000}
+budget_notes:
+  - 숙박비는 원화 정액입니다 (환율 연동 아님).

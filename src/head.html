@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
-<title>조지아 · 아르메니아 최종 일정</title>
+<title>__TITLE__</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Song+Myung&family=IBM+Plex+Sans+KR:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -18,16 +18,7 @@
     --ink-faint:#8C8289;
     --stone:#CDC3B6;
     --slate:#42606E;
-    --apricot:#C87518;
-    --greece:#1F6FA5;
-    --uae:#A97142;
-    --china:#9E3B34;
     --rule:rgba(36,30,34,.14);
-    --busGe:rgba(66,96,110,.09);
-    --busAm:rgba(200,117,24,.10);
-    --busGr:rgba(31,111,165,.10);
-    --busAe:rgba(169,113,66,.10);
-    --busCn:rgba(158,59,52,.10);
     color-scheme:light dark;
   }
   @media (prefers-color-scheme:dark){
@@ -40,16 +31,7 @@
       --ink-faint:#8F8580;
       --stone:#4E463F;
       --slate:#8FB4C4;
-      --apricot:#E5A153;
-      --greece:#7EC1E8;
-      --uae:#D9A66C;
-      --china:#DE8B82;
       --rule:rgba(239,233,228,.18);
-      --busGe:rgba(143,180,196,.14);
-      --busAm:rgba(229,161,83,.14);
-      --busGr:rgba(126,193,232,.14);
-      --busAe:rgba(217,166,108,.14);
-      --busCn:rgba(222,139,130,.14);
     }
   }
   *{box-sizing:border-box;}
@@ -80,21 +62,16 @@
   .bar-name{font-size:12.5px;color:var(--ink-soft);}
   .bar-track{height:8px;background:var(--paper-deep);}
   .bar-fill{height:100%;display:block;}
-  .bar-fill.ge{background:var(--slate);}
-  .bar-fill.am{background:var(--apricot);}
-  .bar-fill.gr{background:var(--greece);}
-  .bar-fill.ae{background:var(--uae);}
-  .bar-fill.cn{background:var(--china);}
   .bar-fill.air{background:repeating-linear-gradient(90deg,var(--stone) 0 3px,transparent 3px 6px);}
   .bar-num{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-faint);text-align:right;}
   .legend{display:flex;gap:16px;flex-wrap:wrap;font-family:"IBM Plex Mono",monospace;
     font-size:10.5px;color:var(--ink-faint);margin-top:14px;}
   .legend span{display:flex;align-items:center;gap:5px;}
   .swatch{width:9px;height:9px;display:inline-block;}
-  .swatch.ge{background:var(--slate);} .swatch.am{background:var(--apricot);}
-  .swatch.gr{background:var(--greece);} .swatch.ae{background:var(--uae);}
-  .swatch.cn{background:var(--china);}
   .swatch.air{background:var(--stone);}
+
+  /* 나라·지역별 색 — colors 에서 자동 생성됩니다 */
+__COLORCSS__
 
   .section-label{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.2em;
     text-transform:uppercase;color:var(--ink-faint);margin:40px 0 12px;}
@@ -111,25 +88,11 @@
   .day-date em{display:block;font-style:normal;font-size:10px;color:var(--ink-faint);}
   .day-rail{position:relative;}
   .day-rail::before{content:"";position:absolute;left:10px;top:0;bottom:0;width:2px;background:var(--stone);}
-  .day.ge .day-rail::before{background:var(--slate);}
-  .day.am .day-rail::before{background:var(--apricot);}
-  .day.gr .day-rail::before{background:var(--greece);}
-  .day.ae .day-rail::before{background:var(--uae);}
-  .day.cn .day-rail::before{background:var(--china);}
   .day:first-of-type .day-rail::before{top:26px;}
   .day.last .day-rail::before{bottom:auto;height:28px;}
   .node{position:absolute;left:5px;top:24px;width:12px;height:12px;background:var(--paper);
     border:2px solid var(--stone);transform:rotate(45deg);z-index:2;}
-  .day.ge .node{border-color:var(--slate);}
-  .day.am .node{border-color:var(--apricot);}
-  .day.gr .node{border-color:var(--greece);}
-  .day.ae .node{border-color:var(--uae);}
-  .day.cn .node{border-color:var(--china);}
   .day.stay .node{background:var(--slate);}
-  .day.am.stay .node{background:var(--apricot);}
-  .day.gr.stay .node{background:var(--greece);}
-  .day.ae.stay .node{background:var(--uae);}
-  .day.cn.stay .node{background:var(--china);}
 
   .day-body{padding:17px 0 26px 4px;}
   .day-place{font-family:"Song Myung",serif;font-size:19px;font-weight:400;margin:0 0 3px;
@@ -142,11 +105,7 @@
   .sched .a{color:var(--ink);}
   .sched .a small{display:block;font-size:11.5px;color:var(--ink-faint);line-height:1.5;margin-top:1px;}
   .bus{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--slate);
-    background:var(--busGe);padding:1px 5px;margin-right:5px;}
-  .day.am .bus{color:var(--apricot);background:var(--busAm);}
-  .day.gr .bus{color:var(--greece);background:var(--busGr);}
-  .day.ae .bus{color:var(--uae);background:var(--busAe);}
-  .day.cn .bus{color:var(--china);background:var(--busCn);}
+    background:rgba(128,128,128,.10);padding:1px 5px;margin-right:5px;}
 
   .flag{margin-top:12px;padding:10px 12px;background:var(--card);border-left:2px solid var(--ink);
     font-size:12.5px;color:var(--ink-soft);}
@@ -187,7 +146,7 @@
     :root{
       --paper:#FFF;--paper-deep:#E7E1D7;--card:#F8F5F0;--ink:#241E22;
       --ink-soft:#5C5258;--ink-faint:#8C8289;--stone:#CDC3B6;
-      --slate:#42606E;--apricot:#C87518;--greece:#1F6FA5;--uae:#A97142;--china:#9E3B34;--rule:rgba(36,30,34,.14);
+      --slate:#42606E;--rule:rgba(36,30,34,.14);
     }
     body{background:#fff;}
     .wrap{padding:0;max-width:100%;}
@@ -198,7 +157,6 @@
 
   .opt-label{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.16em;
     color:var(--slate);margin:16px 0 -2px;padding-top:9px;border-top:1px solid var(--rule);}
-  .day.ge .opt-label{color:var(--slate);}
 
   /* ---- 일자별 경로 지도 (인라인 SVG · 오프라인 동작) ---- */
   .daymap{margin:18px 0 4px;}
@@ -260,9 +218,15 @@
   .maplink{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;
     color:var(--muted);text-decoration:none;border-bottom:1px solid var(--rule);}
   .leafbox{height:300px;border:1px solid var(--rule);}
-  .mapnum{display:flex;align-items:center;justify-content:center;width:20px;height:20px;
+  .mapnum{display:flex;align-items:center;justify-content:center;width:22px;height:22px;
     border-radius:50%;color:#fff;font-family:"IBM Plex Mono",monospace;font-size:10.5px;
-    font-weight:600;box-shadow:0 0 0 2px #fff;}
+    font-weight:600;background:#42606E;
+    /* 흰 테두리만 두면 밝은 타일 위에서 사라져서, 바깥에 옅은 검은 테두리를 한 겹 더 둡니다 */
+    box-shadow:0 0 0 2px #fff, 0 0 0 3px rgba(0,0,0,.35);}
+  /* 관광지 이름 → 구글 지도 (점선 밑줄이 링크 표시입니다) */
+  .gmap{color:inherit;text-decoration:none;border-bottom:1px dotted var(--ink-faint);}
+  .gmap:hover,.gmap:focus{color:var(--slate);border-bottom-style:solid;}
+  @media print{.gmap{border-bottom:none;}}
   .leaflet-container{font:inherit;}
   .leaflet-control-attribution{font-size:9px !important;}
   @media print{.mapctl{display:none;}}

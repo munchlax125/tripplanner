@@ -1,0 +1,111 @@
+# 새 여행 시작용 최소 예시 — src/일정.yaml 로 복사해 쓰세요.
+#   cp starter/일정.yaml src/일정.yaml
+#   python build.py
+# 지도는 아직 없습니다. tools/make_basemap.py 로 만든 뒤 map_points 를 채우면 붙습니다.
+
+output: 내여행.html                 # (필수) 만들어질 파일 이름
+doc_title: 도쿄 5박 6일             # 브라우저 탭 제목. 없으면 title 에서 태그를 벗겨 씁니다
+
+# (필수) 지역·나라별 색. 키는 blocks 의 cls 두 번째 낱말과 같아야 합니다.
+# '#RRGGBB' 하나만 줘도 되고, 다크 모드에서 밝은 색을 쓰려면 light/dark 를 나눠 주세요.
+colors:
+  jp:
+    light: '#42606E'
+    dark: '#8FB4C4'
+  air: '#A97142'
+
+# 문단 제목. 빈 문자열로 두면 그 제목이 사라집니다.
+labels:
+  nights: 숙박 배분
+  overview: 루트 개요
+  flights: 항공편
+  days: 본 일정
+  notes: 미리 확인할 것
+
+eyebrow: 2026 · 간토
+title: 도쿄<span class="sep">·</span>하코네
+subtitle: 4월 3일 – 4월 8일 · 2인 · 나리타 IN · 하네다 OUT
+standfirst: 한 문단으로 이 일정의 성격을 적습니다. 왜 이렇게 짰는지, 무엇을 포기했는지.
+
+nights_total: 도쿄 3박 + 하코네 2박 = 5박
+nights:
+  - {name: 도쿄, cls: jp, n: 3}
+  - {name: 하코네, cls: jp, n: 2}
+legend:
+  - {cls: jp, label: 일본}
+
+flights:
+  - {date: 4.3 금, body: '<b>인천 09:00 → 나리타 11:30</b> · 대한항공 KE703'}
+  - {date: 4.8 수, body: '<b>하네다 18:20 → 인천 21:00</b>'}
+
+blocks:
+  - type: day
+    cls: day jp stay          # 'day' + 색키 + (stay = 그날 숙박)
+    date: '4.3'
+    dow: 금
+    place: 나리타 → 아사쿠사 <span class="tag">스카이라이너</span>
+    sub: 도착일. 짐 풀고 저녁 산책만.
+    sched:
+      - label: null           # 'A안' 같은 분기 제목. 없으면 null
+        rows:
+          - t: '11:30'
+            text: 나리타 공항 도착
+          - t: '12:40'
+            bus: 스카이라이너   # 교통수단 알약 뱃지
+            text: 우에노까지
+            tag: {text: 2,570엔, hot: false}   # hot: true 면 빨간 태그
+            small:
+              - 41분 · 20~40분 간격
+              - 보조 설명은 여러 줄 쓸 수 있습니다
+          - t: '14:00'
+            text: 숙소 체크인
+          - t: '16:00'
+            text: 센소지
+            tag: {text: 무료, hot: false}
+    # 지도를 만들었다면 여기에 붙입니다
+    # map:
+    #   id: m01
+    #   cap: 지도 아래 붙는 설명 한 줄
+    flags:
+      - <b>굵게</b> 쓸 수 있는 주의 박스. 무너지기 쉬운 지점이나 판단 근거를 적습니다.
+
+  - type: border              # 도시·나라가 바뀌는 구간
+    title: 4/5 — 도쿄 → 하코네
+    note: 신주쿠에서 오다큐 로망스카 90분. 프리패스를 미리 삽니다.
+
+  - type: day
+    cls: day jp stay
+    date: '4.5'
+    dow: 일
+    place: 하코네
+    sub: 온천과 아시노코 유람선.
+    sched:
+      - label: null
+        rows:
+          - t: '09:00'
+            text: 신주쿠역
+          - t: '10:30'
+            text: 하코네유모토 도착
+
+# 지도를 만들면 여기에 [이름, 위도, 경도] 로 넣습니다. 나머지는 전부 자동입니다.
+# overview_map: m00          # 맨 위 전체 개요 지도로 쓸 id (없으면 개요 지도 없음)
+map_points: {}
+# map_points:
+#   m01:
+#     - [나리타 공항, 35.7720, 140.3929]
+#     - [우에노역, 35.7141, 139.7774]
+#     - [센소지, 35.7148, 139.7967]
+
+# 일정 본문의 관광지 이름 → 구글 지도 검색어.
+# 좌표가 아니라 '검색어'입니다. 그래야 링크를 눌렀을 때 영업시간·사진·리뷰가 바로 뜹니다.
+# 현지/영문 표기 + 도시명으로 두면 동명이인을 피할 수 있습니다.
+places:
+  센소지: Senso-ji Temple Asakusa Tokyo
+  나리타 공항: Narita International Airport
+  하코네유모토: Hakone-Yumoto Station
+
+notes:
+  - key: 교통패스
+    val: 하코네 프리패스는 신주쿠에서 사면 로망스카 왕복과 지역 교통이 묶입니다.
+
+foot: 2인 여행 · 이동은 대중교통 우선

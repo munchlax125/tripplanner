@@ -20,7 +20,9 @@
   document.addEventListener('click',function(e){
     var b=e.target.closest('.maptog'); if(!b) return;
     var wrap=b.closest('.daymap'), pts=M[b.dataset.m];
-    var col=getComputedStyle(wrap.querySelector('path')).stroke || '#42606E';
+    /* 색은 빌드 때 data-color로 박아둡니다. 예전처럼 첫 <path>의 stroke를 읽으면
+       배경지도 path(stroke:none)를 집어 마커가 투명해집니다. */
+    var col=b.dataset.color||'#42606E';
     b.disabled=true; b.textContent='불러오는 중…';
     leaflet().then(function(){
       var svg=wrap.querySelector('.mapsvg');
@@ -33,7 +35,7 @@
       var ll=pts.map(function(p){return [p[1],p[2]];});
       L.polyline(ll,{color:col,weight:2,opacity:.55,dashArray:'5,5'}).addTo(map);
       pts.forEach(function(p,i){
-        L.marker([p[1],p[2]],{icon:L.divIcon({className:'',iconSize:[20,20],iconAnchor:[10,10],
+        L.marker([p[1],p[2]],{icon:L.divIcon({className:'',iconSize:[22,22],iconAnchor:[11,11],
           html:'<div class="mapnum" style="background:'+col+'">'+(i+1)+'</div>'})})
           .addTo(map).bindPopup((i+1)+'. '+p[0]);
       });
