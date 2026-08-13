@@ -31,6 +31,11 @@
     --border:240 5.9% 90%;
     --ring:240 5% 64.9%;
     --radius:0.625rem;
+    /* 한글이 섞여도 깨지지 않게: 라틴·숫자는 모노, 한글은 본문 글꼴로 떨어집니다 */
+    --font-sans:Inter,"IBM Plex Sans KR",-apple-system,BlinkMacSystemFont,
+      "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+    --font-mono:"JetBrains Mono","IBM Plex Sans KR",ui-monospace,SFMono-Regular,
+      Menlo,"Malgun Gothic",monospace;
     --shadow-sm:0 1px 2px 0 rgb(0 0 0 / .05);
     --shadow:0 1px 3px 0 rgb(0 0 0 / .1), 0 1px 2px -1px rgb(0 0 0 / .1);
     color-scheme:light dark;
@@ -68,8 +73,7 @@
   html{-webkit-text-size-adjust:100%;background:hsl(var(--background));}
   body{
     margin:0;background:hsl(var(--background));color:hsl(var(--foreground));
-    font-family:Inter,"IBM Plex Sans KR",-apple-system,BlinkMacSystemFont,
-      "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+    font-family:var(--font-sans);
     font-weight:400;font-size:14px;line-height:1.6;
     -webkit-font-smoothing:antialiased;font-feature-settings:"cv02","cv03","cv04","cv11";
   }
@@ -77,8 +81,8 @@
   ::selection{background:hsl(var(--foreground));color:hsl(var(--background));}
 
   /* ── 머리말 ───────────────────────────────────────────── */
-  .eyebrow{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;
-    letter-spacing:.14em;text-transform:uppercase;color:hsl(var(--muted-foreground));margin:0 0 14px;}
+  .eyebrow{font-size:12px;font-weight:500;letter-spacing:.06em;
+    color:hsl(var(--muted-foreground));margin:0 0 14px;}
   .title{font-size:clamp(30px,5.4vw,44px);line-height:1.15;margin:0 0 10px;
     font-weight:700;letter-spacing:-.028em;color:hsl(var(--foreground));}
   .title .sep{color:hsl(var(--muted-foreground));padding:0 .12em;font-weight:400;}
@@ -94,7 +98,7 @@
     gap:12px;flex-wrap:wrap;margin-bottom:18px;}
   .sum-head h2{font-size:15px;font-weight:600;margin:0;letter-spacing:-.01em;
     color:hsl(var(--card-foreground));}
-  .sum-total{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;
+  .sum-total{font-family:var(--font-mono);font-size:12px;
     color:hsl(var(--muted-foreground));}
   /* Progress */
   .bar-row{display:grid;grid-template-columns:88px 1fr 30px;align-items:center;
@@ -105,7 +109,7 @@
     background:hsl(var(--primary));}
   .bar-fill.air{background:repeating-linear-gradient(90deg,
     hsl(var(--muted-foreground)) 0 3px,transparent 3px 7px);}
-  .bar-num{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;
+  .bar-num{font-family:var(--font-mono);font-size:12px;
     color:hsl(var(--muted-foreground));text-align:right;font-variant-numeric:tabular-nums;}
   .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;
     color:hsl(var(--muted-foreground));margin-top:16px;padding-top:14px;
@@ -117,43 +121,53 @@
   /* 나라·지역별 색 — colors 에서 자동 생성됩니다 */
   .bar-fill.ge,.swatch.ge,.day.ge .day-rail::before,.day.ge.stay .node{background:#42606E;}
   .ccard.ge{border-left-color:#42606E;}
+  .ctr.ge .cdate{border-left-color:#42606E;}
   .day.ge .node{border-color:#42606E;}
   .day.ge .bus{color:#42606E;background:rgba(66,96,110,.10);}
   .bar-fill.am,.swatch.am,.day.am .day-rail::before,.day.am.stay .node{background:#C87518;}
   .ccard.am{border-left-color:#C87518;}
+  .ctr.am .cdate{border-left-color:#C87518;}
   .day.am .node{border-color:#C87518;}
   .day.am .bus{color:#C87518;background:rgba(200,117,24,.10);}
   .bar-fill.gr,.swatch.gr,.day.gr .day-rail::before,.day.gr.stay .node{background:#1F6FA5;}
   .ccard.gr{border-left-color:#1F6FA5;}
+  .ctr.gr .cdate{border-left-color:#1F6FA5;}
   .day.gr .node{border-color:#1F6FA5;}
   .day.gr .bus{color:#1F6FA5;background:rgba(31,111,165,.10);}
   .bar-fill.ae,.swatch.ae,.day.ae .day-rail::before,.day.ae.stay .node{background:#A97142;}
   .ccard.ae{border-left-color:#A97142;}
+  .ctr.ae .cdate{border-left-color:#A97142;}
   .day.ae .node{border-color:#A97142;}
   .day.ae .bus{color:#A97142;background:rgba(169,113,66,.10);}
   .bar-fill.cn,.swatch.cn,.day.cn .day-rail::before,.day.cn.stay .node{background:#9E3B34;}
   .ccard.cn{border-left-color:#9E3B34;}
+  .ctr.cn .cdate{border-left-color:#9E3B34;}
   .day.cn .node{border-color:#9E3B34;}
   .day.cn .bus{color:#9E3B34;background:rgba(158,59,52,.10);}
   @media (prefers-color-scheme:dark){
     .bar-fill.ge,.swatch.ge,.day.ge .day-rail::before,.day.ge.stay .node{background:#8FB4C4;}
     .ccard.ge{border-left-color:#8FB4C4;}
+    .ctr.ge .cdate{border-left-color:#8FB4C4;}
     .day.ge .node{border-color:#8FB4C4;}
     .day.ge .bus{color:#8FB4C4;background:rgba(143,180,196,.14);}
     .bar-fill.am,.swatch.am,.day.am .day-rail::before,.day.am.stay .node{background:#E5A153;}
     .ccard.am{border-left-color:#E5A153;}
+    .ctr.am .cdate{border-left-color:#E5A153;}
     .day.am .node{border-color:#E5A153;}
     .day.am .bus{color:#E5A153;background:rgba(229,161,83,.14);}
     .bar-fill.gr,.swatch.gr,.day.gr .day-rail::before,.day.gr.stay .node{background:#7EC1E8;}
     .ccard.gr{border-left-color:#7EC1E8;}
+    .ctr.gr .cdate{border-left-color:#7EC1E8;}
     .day.gr .node{border-color:#7EC1E8;}
     .day.gr .bus{color:#7EC1E8;background:rgba(126,193,232,.14);}
     .bar-fill.ae,.swatch.ae,.day.ae .day-rail::before,.day.ae.stay .node{background:#D9A66C;}
     .ccard.ae{border-left-color:#D9A66C;}
+    .ctr.ae .cdate{border-left-color:#D9A66C;}
     .day.ae .node{border-color:#D9A66C;}
     .day.ae .bus{color:#D9A66C;background:rgba(217,166,108,.14);}
     .bar-fill.cn,.swatch.cn,.day.cn .day-rail::before,.day.cn.stay .node{background:#DE8B82;}
     .ccard.cn{border-left-color:#DE8B82;}
+    .ctr.cn .cdate{border-left-color:#DE8B82;}
     .day.cn .node{border-color:#DE8B82;}
     .day.cn .bus{color:#DE8B82;background:rgba(222,139,130,.14);}
   }
@@ -161,10 +175,12 @@
   /* ── Tabs — 나라별 보기 (라디오 + :checked, 자바스크립트 없음) ── */
 @media screen{
   .vsw{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;}
-  .stage>.home,.stage>.days{display:none;}
+  .stage>.home,.stage>.days,.stage>.cost{display:none;}
   #view-home:checked~.stage>.home,
+  #view-cost:checked~.stage>.cost,
   #view-all:checked~.stage>.home,
   #view-all:checked~.stage>.days{display:block;}
+  #view-cost:checked~.stage>.notes{display:none;}
   #view-cn:checked~.stage>.days{display:block;}
   #view-cn:checked~.stage>.days>:not(.cn):not(.keep){display:none;}
   #view-ge:checked~.stage>.days{display:block;}
@@ -181,7 +197,8 @@
   #view-am:checked~.tabs .tab[for="view-am"],
   #view-gr:checked~.tabs .tab[for="view-gr"],
   #view-ae:checked~.tabs .tab[for="view-ae"],
-  #view-all:checked~.tabs .tab[for="view-all"]{background:hsl(var(--background));color:hsl(var(--foreground));box-shadow:var(--shadow-sm);}
+  #view-all:checked~.tabs .tab[for="view-all"],
+  #view-cost:checked~.tabs .tab[for="view-cost"]{background:hsl(var(--background));color:hsl(var(--foreground));box-shadow:var(--shadow-sm);}
 }
   .tabs{display:flex;gap:4px;flex-wrap:wrap;margin:26px 0 30px;padding:4px;
     background:hsl(var(--muted));border-radius:var(--radius-lg);}
@@ -203,9 +220,54 @@
     transition:box-shadow .15s,transform .15s;}
   .ccard:hover{box-shadow:var(--shadow);transform:translateY(-1px);}
   .cc-name{font-size:15px;font-weight:600;letter-spacing:-.015em;}
-  .cc-span,.cc-num{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11.5px;
+  .cc-span,.cc-num{font-family:var(--font-mono);font-size:11.5px;
     color:hsl(var(--muted-foreground));}
   .cc-city{font-size:12px;color:hsl(var(--muted-foreground));margin-top:6px;line-height:1.5;}
+
+  /* ── 예상경비 ─────────────────────────────────────────── */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;
+    margin-bottom:8px;}
+  .kpi{display:flex;flex-direction:column;gap:3px;padding:16px 18px;
+    background:hsl(var(--card));border:1px solid hsl(var(--border));
+    border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);}
+  .kpi-l{font-size:12.5px;color:hsl(var(--muted-foreground));}
+  .kpi-v{font-family:var(--font-mono);font-size:19px;font-weight:500;
+    letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:hsl(var(--card-foreground));}
+  .kpi-s{font-size:11.5px;color:hsl(var(--muted-foreground));min-height:1em;}
+  .kpi.good .kpi-v{color:#15803D;}
+  .kpi.bad .kpi-v{color:hsl(var(--destructive));}
+  @media (prefers-color-scheme:dark){.kpi.good .kpi-v{color:#4ADE80;}}
+
+  /* 일자별 표 */
+  .ctab{border:1px solid hsl(var(--border));border-radius:var(--radius-lg);
+    overflow:hidden;box-shadow:var(--shadow-sm);background:hsl(var(--card));}
+  .ctr{display:grid;grid-template-columns:64px 1fr 92px 92px;gap:12px;
+    padding:11px 16px;border-top:1px solid hsl(var(--border));align-items:baseline;}
+  .ctr:first-child{border-top:0;}
+  .chead,.cfoot{background:hsl(var(--muted));font-size:12px;font-weight:600;
+    color:hsl(var(--muted-foreground));}
+  .chead span:nth-child(3),.chead span:nth-child(4),
+  .cfoot span:nth-child(3),.cfoot span:nth-child(4){text-align:right;}
+  .cfoot{border-top:1px solid hsl(var(--border));color:hsl(var(--foreground));}
+  .cdate{font-family:var(--font-mono);font-size:12px;font-weight:500;
+    color:hsl(var(--foreground));border-left:3px solid transparent;padding-left:8px;
+    margin-left:-8px;}
+  .cdate em{font-style:normal;color:hsl(var(--muted-foreground));margin-left:4px;}
+  .cdesc{font-size:13px;color:hsl(var(--card-foreground));line-height:1.5;}
+  .cdesc small{display:block;font-size:11.5px;color:hsl(var(--muted-foreground));
+    margin-top:2px;line-height:1.55;}
+  .cnum{font-family:var(--font-mono);font-size:12.5px;text-align:right;
+    font-variant-numeric:tabular-nums;color:hsl(var(--card-foreground));}
+  .cacc{color:hsl(var(--muted-foreground));}
+
+  /* 환율 */
+  .rates{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:10px;}
+  .rate{display:flex;justify-content:space-between;align-items:baseline;gap:8px;
+    padding:11px 14px;background:hsl(var(--muted));border-radius:var(--radius-md);}
+  .rate b{font-family:var(--font-mono);font-size:12.5px;font-weight:500;
+    color:hsl(var(--foreground));}
+  .rate span{font-family:var(--font-mono);font-size:12.5px;
+    color:hsl(var(--muted-foreground));font-variant-numeric:tabular-nums;}
 
   /* 나라가 바뀌는 자리의 머리글 */
   .rgn-head{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;
@@ -213,13 +275,13 @@
   .rgn-head:first-of-type{margin-top:8px;}
   .rgn-head .swatch{width:9px;height:9px;border-radius:9999px;align-self:center;}
   .rgn-head b{font-size:17px;font-weight:600;letter-spacing:-.022em;color:hsl(var(--foreground));}
-  .rgn-head span{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;
+  .rgn-head span{font-family:var(--font-mono);font-size:12px;
     color:hsl(var(--muted-foreground));}
 
   /* ── 구획 제목 ────────────────────────────────────────── */
-  .section-label{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;
-    letter-spacing:.13em;text-transform:uppercase;color:hsl(var(--muted-foreground));
-    margin:44px 0 14px;}
+  /* 한글 제목이라 모노·대문자·자간을 걷어냈습니다 — 그러면 글꼴이 섞여 이상해집니다 */
+  .section-label{font-size:13px;font-weight:600;letter-spacing:-.01em;
+    color:hsl(var(--muted-foreground));margin:44px 0 14px;}
 
   /* ── 항공편 — Card 안의 표 ────────────────────────────── */
   .flight{display:grid;grid-template-columns:78px 1fr;gap:16px;padding:13px 18px;
@@ -228,14 +290,14 @@
   .flight:first-of-type{border-top-left-radius:var(--radius-lg);border-top-right-radius:var(--radius-lg);}
   .flight:last-of-type{border-bottom-width:1px;box-shadow:var(--shadow-sm);
     border-bottom-left-radius:var(--radius-lg);border-bottom-right-radius:var(--radius-lg);}
-  .flight-date{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;
+  .flight-date{font-family:var(--font-mono);font-size:12px;
     color:hsl(var(--muted-foreground));padding-top:2px;}
   .flight-body{color:hsl(var(--muted-foreground));}
   .flight-body b{font-weight:600;color:hsl(var(--card-foreground));}
 
   /* ── 날짜 블록 ────────────────────────────────────────── */
   .day{display:grid;grid-template-columns:74px 26px 1fr;}
-  .day-date{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12.5px;
+  .day-date{font-family:var(--font-mono);font-size:12.5px;
     font-weight:500;color:hsl(var(--foreground));padding:26px 12px 0 0;text-align:right;line-height:1.4;}
   .day-date em{display:block;font-style:normal;font-size:11px;font-weight:400;
     color:hsl(var(--muted-foreground));}
@@ -263,7 +325,7 @@
   .sched li{display:grid;grid-template-columns:52px 1fr;gap:12px;
     padding:7px 0;font-size:13.5px;border-top:1px solid hsl(var(--border));}
   .sched li:first-child{border-top:0;}
-  .sched .t{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;
+  .sched .t{font-family:var(--font-mono);font-size:12px;
     font-variant-numeric:tabular-nums;color:hsl(var(--muted-foreground));padding-top:2px;}
   .sched .a{color:hsl(var(--card-foreground));line-height:1.6;}
   .sched .a small{display:block;font-size:12.5px;color:hsl(var(--muted-foreground));
@@ -315,8 +377,7 @@
   .foot{margin-top:40px;padding-top:18px;border-top:1px solid hsl(var(--border));
     font-size:12px;color:hsl(var(--muted-foreground));}
 
-  .opt-label{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;
-    letter-spacing:.1em;text-transform:uppercase;color:hsl(var(--muted-foreground));
+  .opt-label{font-size:12.5px;font-weight:600;color:hsl(var(--muted-foreground));
     margin:16px 0 6px;padding-top:12px;border-top:1px solid hsl(var(--border));}
 
   /* ── 일자별 경로 지도 (인라인 SVG · 오프라인) ─────────── */
@@ -324,19 +385,19 @@
   .mapsvg{display:block;width:100%;height:auto;border:1px solid hsl(var(--border));
     border-radius:var(--radius-md);background:hsl(var(--muted));}
   .mapbg{fill:transparent;}
-  .maplbl{font-family:Inter,"IBM Plex Sans KR",-apple-system,sans-serif;paint-order:stroke;
+  .maplbl{font-family:var(--font-sans);paint-order:stroke;
     stroke:hsl(var(--card));stroke-width:2.8px;stroke-linejoin:round;}
   .maplbl.town{font-size:8.5px;fill:hsl(var(--muted-foreground));}
   .maplbl.stop{font-size:10px;font-weight:600;fill:hsl(var(--foreground));}
   .maplbl.lake{font-size:9px;fill:#1F6FA5;opacity:.8;text-anchor:middle;}
   .maptown{fill:hsl(var(--muted-foreground));opacity:.55;}
-  .mapn{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:10.5px;
+  .mapn{font-family:var(--font-mono);font-size:10.5px;
     font-weight:600;fill:#fff;text-anchor:middle;}
-  .mapsm{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:9.5px;
+  .mapsm{font-family:var(--font-mono);font-size:9.5px;
     fill:hsl(var(--muted-foreground));}
   .mapscale{stroke:hsl(var(--muted-foreground));stroke-width:1;}
   .mapseq{font-size:12.5px;line-height:1.8;color:hsl(var(--muted-foreground));margin:10px 0 0;}
-  .mapseq b{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:10.5px;
+  .mapseq b{font-family:var(--font-mono);font-size:10.5px;
     color:hsl(var(--foreground));font-weight:600;margin-right:2px;}
   .mapdot{color:hsl(var(--border));margin:0 3px;}
   .mapcap{font-size:12px;color:hsl(var(--muted-foreground));margin:8px 0 0;line-height:1.65;}
@@ -357,7 +418,7 @@
   .maplink:hover{background:hsl(var(--accent));color:hsl(var(--accent-foreground));}
   .leafbox{height:320px;border:1px solid hsl(var(--border));border-radius:var(--radius-md);}
   .mapnum{display:flex;align-items:center;justify-content:center;width:22px;height:22px;
-    border-radius:50%;color:#fff;font-family:"JetBrains Mono",ui-monospace,monospace;
+    border-radius:50%;color:#fff;font-family:var(--font-mono);
     font-size:10.5px;font-weight:600;background:#42606E;
     /* 흰 테두리만 두면 밝은 타일 위에서 사라져서, 바깥에 옅은 검은 테두리를 한 겹 더 둡니다 */
     box-shadow:0 0 0 2px #fff, 0 0 0 3px rgba(0,0,0,.35);}
@@ -409,6 +470,16 @@
     .note{grid-template-columns:1fr;gap:4px;padding:13px 15px;}
     .bar-row{grid-template-columns:74px 1fr 26px;}
     .flight{grid-template-columns:62px 1fr;gap:12px;padding:12px 15px;}
+    /* 일자별 표: 좁으면 날짜·내용 한 줄, 금액 아래 줄 */
+    .ctr{grid-template-columns:58px 1fr;gap:4px 10px;padding:11px 14px;}
+    .ctr .cnum{grid-column:2;text-align:left;}
+    .ctr .cacc::before{content:"누계 ";color:hsl(var(--muted-foreground));}
+    .ctr .cnum::before{content:"하루 ";color:hsl(var(--muted-foreground));}
+    .chead span:nth-child(3),.chead span:nth-child(4){display:none;}
+    .cfoot span:nth-child(4){display:none;}
+    .cfoot span:nth-child(3){text-align:left;}
+    .kpis{grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;}
+    .kpi{padding:14px 15px;} .kpi-v{font-size:17px;}
   }
 
   /* ── 인쇄 ─────────────────────────────────────────────── */
@@ -448,6 +519,7 @@
   <input class="vsw" type="radio" name="view" id="view-gr">
   <input class="vsw" type="radio" name="view" id="view-ae">
   <input class="vsw" type="radio" name="view" id="view-all">
+  <input class="vsw" type="radio" name="view" id="view-cost">
   <nav class="tabs">
     <label class="tab" for="view-home">개요</label>
     <label class="tab" for="view-cn"><i class="swatch cn"></i>중국</label>
@@ -456,6 +528,7 @@
     <label class="tab" for="view-gr"><i class="swatch gr"></i>그리스</label>
     <label class="tab" for="view-ae"><i class="swatch ae"></i>UAE</label>
     <label class="tab" for="view-all">전체 일정</label>
+    <label class="tab" for="view-cost">예상경비</label>
   </nav>
 
   <div class="stage">
@@ -951,6 +1024,67 @@
     </div>
   </div>
 
+  </div>
+
+  <div class="cost">
+  <div class="kpis">
+    <div class="kpi"><span class="kpi-l">총예산</span><span class="kpi-v">3,000,000원</span><span class="kpi-s"></span></div>
+    <div class="kpi"><span class="kpi-l">항공권</span><span class="kpi-v">1,406,600원</span><span class="kpi-s">결제 완료</span></div>
+    <div class="kpi"><span class="kpi-l">현지 지출</span><span class="kpi-v">1,505,616원</span><span class="kpi-s">17일</span></div>
+    <div class="kpi good"><span class="kpi-l">남는 돈</span><span class="kpi-v">87,784원</span><span class="kpi-s">소계 2,912,216원</span></div>
+  </div>
+  <p class="section-label">무엇에 쓰나</p>
+  <div class="summary">
+    <div class="bar-row"><span class="bar-name">교통</span><span class="bar-track"><span class="bar-fill " style="width:87%"></span></span><span class="bar-num">423,397</span></div>
+    <div class="bar-row"><span class="bar-name">입장료</span><span class="bar-track"><span class="bar-fill " style="width:36%"></span></span><span class="bar-num">176,667</span></div>
+    <div class="bar-row"><span class="bar-name">식비</span><span class="bar-track"><span class="bar-fill " style="width:100%"></span></span><span class="bar-num">489,000</span></div>
+    <div class="bar-row"><span class="bar-name">숙박</span><span class="bar-track"><span class="bar-fill " style="width:67%"></span></span><span class="bar-num">329,552</span></div>
+    <div class="bar-row"><span class="bar-name">카페</span><span class="bar-track"><span class="bar-fill " style="width:18%"></span></span><span class="bar-num">87,000</span></div>
+  </div>
+  <p class="section-label">어디에 쓰나</p>
+  <div class="summary">
+    <div class="bar-row"><span class="bar-name">중국</span><span class="bar-track"><span class="bar-fill cn" style="width:12%"></span></span><span class="bar-num">71,090</span></div>
+    <div class="bar-row"><span class="bar-name">조지아</span><span class="bar-track"><span class="bar-fill ge" style="width:69%"></span></span><span class="bar-num">397,530</span></div>
+    <div class="bar-row"><span class="bar-name">아르메니아</span><span class="bar-track"><span class="bar-fill am" style="width:100%"></span></span><span class="bar-num">574,704</span></div>
+    <div class="bar-row"><span class="bar-name">그리스</span><span class="bar-track"><span class="bar-fill gr" style="width:43%"></span></span><span class="bar-num">245,640</span></div>
+    <div class="bar-row"><span class="bar-name">UAE</span><span class="bar-track"><span class="bar-fill ae" style="width:38%"></span></span><span class="bar-num">216,652</span></div>
+  </div>
+  <p class="section-label">일자별</p>
+  <div class="ctab"><div class="ctr chead"><span>날짜</span><span>내용</span><span>하루</span><span>누계</span></div>
+    <div class="ctr cn"><span class="cdate">9/19<em>토</em></span><span class="cdesc">상하이 — 예원·성황묘·와이탄 야경<small>교통 2,743 · 입장료 8,440 · 식비 25,000 · 숙박 28,907 · 카페 6,000</small></span><span class="cnum">71,090</span><span class="cnum cacc">71,090</span></div>
+    <div class="ctr ge"><span class="cdate">9/20<em>일</em></span><span class="cdesc">상하이 오전 → 트빌리시 19:00 도착<small>교통 2,229 · 식비 20,000 · 숙박 15,689</small></span><span class="cnum">37,918</span><span class="cnum cacc">109,008</span></div>
+    <div class="ctr ge"><span class="cdate">9/21<em>월</em></span><span class="cdesc">트빌리시 — 구시가·유황온천<small>교통 2,164 · 입장료 3,787 · 식비 25,000 · 숙박 15,689 · 카페 6,000</small></span><span class="cnum">52,640</span><span class="cnum cacc">161,648</span></div>
+    <div class="ctr ge"><span class="cdate">9/22<em>화</em></span><span class="cdesc">트빌리시 — 므츠헤타 반나절<small>교통 15,148 · 식비 25,000 · 숙박 15,689 · 카페 6,000</small></span><span class="cnum">61,837</span><span class="cnum cacc">223,485</span></div>
+    <div class="ctr ge"><span class="cdate">9/23<em>수</em></span><span class="cdesc">카즈베기 — 군사도로 · 게르게티 (1박)<small>교통 21,640 · 식비 25,000 · 숙박 28,000 · 카페 5,000</small></span><span class="cnum">79,640</span><span class="cnum cacc">303,125</span></div>
+    <div class="ctr ge"><span class="cdate">9/24<em>목</em></span><span class="cdesc">주타 데이 트레킹 → 트빌리시 복귀<small>교통 52,477 · 식비 25,000 · 숙박 15,689 · 카페 5,000</small></span><span class="cnum">98,166</span><span class="cnum cacc">401,291</span></div>
+    <div class="ctr ge"><span class="cdate">9/25<em>금</em></span><span class="cdesc">시그나기 · 보드베 당일치기 (카헤티)<small>교통 13,525 · 입장료 8,115 · 식비 25,000 · 숙박 15,689 · 카페 5,000</small></span><span class="cnum">67,329</span><span class="cnum cacc">468,620</span></div>
+    <div class="ctr am"><span class="cdate">9/26<em>토</em></span><span class="cdesc">알라베르디 — 하흐파트·사나힌<small>교통 24,744 · 식비 25,000 · 숙박 25,000 · 카페 5,000</small></span><span class="cnum">79,744</span><span class="cnum cacc">548,364</span></div>
+    <div class="ctr am"><span class="cdate">9/27<em>일</em></span><span class="cdesc">귬리 — 쿠마이리 구시가<small>교통 8,148 · 입장료 3,880 · 식비 27,000 · 숙박 20,000 · 카페 5,000</small></span><span class="cnum">64,028</span><span class="cnum cacc">612,392</span></div>
+    <div class="ctr am"><span class="cdate">9/28<em>월</em></span><span class="cdesc">예레반 — 귬리에서 이동 · 시내<small>교통 7,760 · 식비 30,000 · 숙박 20,000 · 카페 6,000</small></span><span class="cnum">63,760</span><span class="cnum cacc">676,152</span></div>
+    <div class="ctr am"><span class="cdate">9/29<em>화</em></span><span class="cdesc">예레반 — 타테브 1일 투어<small>교통 100,880 · 식비 35,000 · 숙박 20,000 · 카페 6,000</small></span><span class="cnum">161,880</span><span class="cnum cacc">838,032</span></div>
+    <div class="ctr am"><span class="cdate">9/30<em>수</em></span><span class="cdesc">예레반 — 가르니·게하르트<small>교통 13,580 · 입장료 6,984 · 식비 30,000 · 숙박 20,000 · 카페 5,000</small></span><span class="cnum">75,564</span><span class="cnum cacc">913,596</span></div>
+    <div class="ctr am"><span class="cdate">10/1<em>목</em></span><span class="cdesc">예레반 — 에치미아진·즈바르트노츠<small>교통 2,328 · 입장료 11,640 · 식비 30,000 · 숙박 20,000 · 카페 5,000</small></span><span class="cnum">68,968</span><span class="cnum cacc">982,564</span></div>
+    <div class="ctr am"><span class="cdate">10/2<em>금</em></span><span class="cdesc">예레반 — 마테나다란·도심 도보<small>입장료 7,760 · 식비 27,000 · 숙박 20,000 · 카페 6,000</small></span><span class="cnum">60,760</span><span class="cnum cacc">1,043,324</span></div>
+    <div class="ctr gr"><span class="cdate">10/3<em>토</em></span><span class="cdesc">아테네 — 종일 관광 (숙소 30유로 확정)<small>교통 41,760 · 입장료 101,680 · 식비 45,000 · 숙박 49,200 · 카페 8,000</small></span><span class="cnum">245,640</span><span class="cnum cacc">1,288,964</span></div>
+    <div class="ctr ae"><span class="cdate">10/4<em>일</em></span><span class="cdesc">아부다비 — 루브르·그랜드 모스크 (TRYP, 숙박 항공권 포함)<small>교통 108,853 · 입장료 24,381 · 식비 55,000 · 카페 8,000</small></span><span class="cnum">196,234</span><span class="cnum cacc">1,485,198</span></div>
+    <div class="ctr ae"><span class="cdate">10/5<em>월</em></span><span class="cdesc">아부다비 → 인천 (08:35 출발) · 새벽 A2 버스<small>교통 5,418 · 식비 15,000</small></span><span class="cnum">20,418</span><span class="cnum cacc">1,505,616</span></div>
+    <div class="ctr cfoot"><span>합계</span><span></span><span class="cnum">1,505,616</span><span class="cnum"></span></div>
+  </div>
+  <p class="section-label">적용 환율</p>
+  <div class="rates">
+    <div class="rate"><b>1 GEL</b><span>541원</span></div>
+    <div class="rate"><b>1 AMD</b><span>3.88원</span></div>
+    <div class="rate"><b>1 EUR</b><span>1,640원</span></div>
+    <div class="rate"><b>1 AED</b><span>387원</span></div>
+    <div class="rate"><b>1 CNY</b><span>211원</span></div>
+  </div>
+  <div class="flag">※ 여행자보험·유심(중국은 로밍 권장 / 조지아·아르메니아·그리스·UAE 각각)·기념품·와인 구매 등은 별도 고려하세요.</div>
+  <div class="flag">※ 확정 숙소 — 상하이 Hi Cozy International Youth Hostel 137위안/1박(황푸구, 난징둥루역 도보권), 트빌리시 Cosy Koala Hostel 58라리/2박. 트빌리시는 9/22·9/25 두 밤이 추가로 필요합니다.</div>
+  <div class="flag">※ 미예약 숙소(카즈베기·알라베르디·딜리잔·예레반·고리스)는 도미토리 기준 추정치입니다. 개인실을 잡으면 1인 여행이라 이 금액의 두 배 가까이 올라갑니다.</div>
+  <div class="flag">※ 아테네 숙소는 30유로/1박 확정 — 신타그마 근처. 원래 잡아둔 90,000원에서 40,800원 줄었습니다. 08:00 짐 보관이 가능한 곳이어야 합니다(아크로폴리스 큰 가방 반입 불가).</div>
+  <div class="flag">※ 아부다비 숙소는 TRYP by Wyndham Abu Dhabi City Center(칼리파 bin 자이드 St) — 항공권 스톱오버에 포함되어 숙박비 0원. A2 공항버스가 이 도로에 정차합니다.</div>
+  <div class="flag">※ 9/24 주타는 대중교통이 없어 4WD 택시 왕복 80라리(1인 전액)입니다. 카즈베기 게스트하우스에서 동행을 구하면 40라리로 줄어듭니다.</div>
+  <div class="flag">아부다비 10/4는 루브르(사디야트, 북쪽)와 모스크(알 마크타, 남쪽)가 정반대 방향이라 전 구간 택시로 잡았습니다. 루브르→모스크만 94번 버스로 바꾸면 75→2디르함이지만 60~75분이 걸립니다.</div>
   </div>
 
   <div class="notes">

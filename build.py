@@ -54,6 +54,7 @@ def color_css():
         return ['.bar-fill.%s,.swatch.%s,.day.%s .day-rail::before,.day.%s.stay .node{background:%s;}'
                 % (k, k, k, k, col),
                 '.ccard.%s{border-left-color:%s;}' % (k, col),
+                '.ctr.%s .cdate{border-left-color:%s;}' % (k, col),
                 '.day.%s .node{border-color:%s;}' % (k, col),
                 '.day.%s .bus{color:%s;background:rgba(%d,%d,%d,%s);}' % (k, col, r, g, b, alpha)]
     lt, dk = [], []
@@ -69,11 +70,20 @@ OVERVIEW_MAP = doc.get('overview_map')               # 없으면 개요 지도�
 # 문단 제목. labels 로 덮어쓰거나 빈 문자열을 주면 그 구획이 사라집니다.
 LABELS = {'nights': '숙박 배분', 'overview': '루트 개요', 'flights': '항공편',
           'days': '본 일정', 'notes': '미리 확인할 것', 'regions': '나라별로 보기',
-          'view_home': '개요', 'view_all': '전체 일정'}
+          'view_home': '개요', 'view_all': '전체 일정', 'view_cost': '예상경비',
+          'cost_kind': '무엇에 쓰나', 'cost_region': '어디에 쓰나',
+          'cost_daily': '일자별', 'cost_rate': '적용 환율'}
 LABELS.update(doc.get('labels') or {})
 PROJ = json.load(open('src/basemaps/_proj.json', encoding='utf-8'))
 HEAD = open('src/head.html', encoding='utf-8').read()
 SCRIPT = open('src/script.html', encoding='utf-8').read()
+
+# 예산.yaml 이 있으면 '예상경비' 탭이 자동으로 붙습니다 (없으면 그 탭만 빠집니다)
+BUDGET_SRC = doc.get('budget_source', 'src/예산.yaml')
+BUD = (yaml.safe_load(open(BUDGET_SRC, encoding='utf-8'))
+       if BUDGET_SRC and os.path.exists(BUDGET_SRC) else None)
+if BUD and not BUD.get('days'):
+    BUD = None
 
 
 # ───────────────────────── 지도 생성 ─────────────────────────
@@ -294,25 +304,140 @@ def region_meta(k):
     return LEG.get(k, k), span, len(ds), nn, cities
 
 
+VIEWS = ['home'] + REGIONS + ['all'] + (['cost'] if BUD else [])
+
+
 def view_css():
     """탭 전환 CSS. 나라 키는 colors/blocks 에서 오므로 하드코딩이 없습니다."""
     if not REGIONS:
         return '  .tabs,.ccards{display:none;}'
     out = ['@media screen{',
            '  .vsw{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;}',
-           '  .stage>.home,.stage>.days{display:none;}',
+           '  .stage>.home,.stage>.days,.stage>.cost{display:none;}',
            '  #view-home:checked~.stage>.home,',
+           '  #view-cost:checked~.stage>.cost,',
            '  #view-all:checked~.stage>.home,',
-           '  #view-all:checked~.stage>.days{display:block;}']
+           '  #view-all:checked~.stage>.days{display:block;}',
+           '  #view-cost:checked~.stage>.notes{display:none;}']
     for k in REGIONS:
         out += ['  #view-%s:checked~.stage>.days{display:block;}' % k,
                 '  #view-%s:checked~.stage>.days>:not(.%s):not(.keep){display:none;}' % (k, k)]
-    act = ',\n'.join('  #view-%s:checked~.tabs .tab[for="view-%s"]' % (v, v)
-                     for v in ['home'] + REGIONS + ['all'])
+    act = ',\n'.join('  #view-%s:checked~.tabs .tab[for="view-%s"]' % (v, v) for v in VIEWS)
     out += [act + '{background:hsl(var(--background));color:hsl(var(--foreground));'
                   'box-shadow:var(--shadow-sm);}',
             '}']
     return '\n'.join(out)
+
+
+# ───────────────────────── 예상경비 ─────────────────────────
+def money(n):
+    return format(int(round(n)), ',')
+
+
+def build_budget():
+    """예산.yaml 을 그대로 계산해 보여줍니다 — 엑셀과 같은 식, 같은 값."""
+    R = BUD['rates']
+    krw = lambda a, c: round(a * R[c])
+
+    # 날짜 문자열이 일정.yaml('9.19')과 예산.yaml('9/19')에서 다를 수 있습니다
+    norm = lambda d: str(d).replace('/', '.').strip()
+    date_cc = {norm(b['date']): cckey(b)
+               for b in doc['blocks'] if b['type'] == 'day' and b.get('date')}
+
+    tr, en = {}, {}
+    for t in BUD.get('transport') or []:
+        tr[norm(t['date'])] = tr.get(norm(t['date']), 0) + krw(t['amt'], t['cur'])
+    for t in BUD.get('tickets') or []:
+        en[norm(t['date'])] = en.get(norm(t['date']), 0) + krw(t['amt'], t['cur'])
+
+    rows, cum, last_cc = [], 0, None
+    kind = {'교통': 0, '입장료': 0, '식비': 0, '숙박': 0, '카페': 0}
+    per_cc = {}
+    for d in BUD.get('days') or []:
+        k = norm(d['date'])
+        cells = {'교통': tr.get(k, 0), '입장료': en.get(k, 0),
+                 '식비': d.get('food', 0), '숙박': d.get('stay', 0), '카페': d.get('cafe', 0)}
+        tot = sum(cells.values())
+        cum += tot
+        for kk, v in cells.items():
+            kind[kk] += v
+        # 일정에 날짜 블록이 없는 날(귀국일 등)은 직전 나라에 붙입니다 — 합계가 새면 안 됩니다
+        cc = date_cc.get(k) or last_cc
+        last_cc = cc or last_cc
+        if cc:
+            per_cc[cc] = per_cc.get(cc, 0) + tot
+        rows.append((d, cells, tot, cum, cc))
+
+    local = cum
+    air = sum(f['krw'] for f in (BUD.get('flights') or []))
+    budget = BUD.get('total_budget') or 0
+    left = budget - air - local
+
+    O = ['  <div class="cost">']
+
+    def kpi(lbl, val, sub='', cls=''):
+        O.append('    <div class="kpi%s"><span class="kpi-l">%s</span>'
+                 '<span class="kpi-v">%s</span><span class="kpi-s">%s</span></div>'
+                 % ((' ' + cls) if cls else '', lbl, val, sub))
+
+    O.append('  <div class="kpis">')
+    if budget:
+        kpi('총예산', money(budget) + '원')
+    kpi('항공권', money(air) + '원', '결제 완료')
+    kpi('현지 지출', money(local) + '원', '%d일' % len(rows))
+    if budget:
+        kpi('남는 돈', money(left) + '원',
+            '소계 %s원' % money(air + local), 'good' if left >= 0 else 'bad')
+    O.append('  </div>')
+
+    def bars(title, pairs, cls_of=lambda k: ''):
+        if not pairs:
+            return
+        O.append('  <p class="section-label">%s</p>' % title)
+        O.append('  <div class="summary">')
+        mx = max(v for _, v in pairs) or 1
+        for name, v in pairs:
+            O.append('    <div class="bar-row"><span class="bar-name">%s</span>'
+                     '<span class="bar-track"><span class="bar-fill %s" style="width:%d%%"></span></span>'
+                     '<span class="bar-num">%s</span></div>'
+                     % (name, cls_of(name), round(v / mx * 100), money(v)))
+        O.append('  </div>')
+
+    bars(LABELS['cost_kind'], [(k, v) for k, v in kind.items() if v])
+    if per_cc:
+        order = [k for k in REGIONS if k in per_cc]
+        bars(LABELS['cost_region'], [(LEG.get(k, k), per_cc[k]) for k in order],
+             cls_of=lambda n: next((k for k in order if LEG.get(k, k) == n), ''))
+
+    # 일자별
+    O.append('  <p class="section-label">%s</p>' % LABELS['cost_daily'])
+    O.append('  <div class="ctab"><div class="ctr chead">'
+             '<span>날짜</span><span>내용</span><span>하루</span><span>누계</span></div>')
+    for d, cells, tot, cu, cc in rows:
+        det = ' · '.join('%s %s' % (k, money(v)) for k, v in cells.items() if v)
+        O.append('    <div class="ctr%s"><span class="cdate">%s<em>%s</em></span>'
+                 '<span class="cdesc">%s<small>%s</small></span>'
+                 '<span class="cnum">%s</span><span class="cnum cacc">%s</span></div>'
+                 % ((' ' + cc) if cc else '', d.get('date', ''), d.get('dow', ''),
+                    d.get('desc', ''), det, money(tot), money(cu)))
+    O.append('    <div class="ctr cfoot"><span>합계</span><span></span>'
+             '<span class="cnum">%s</span><span class="cnum"></span></div>' % money(local))
+    O.append('  </div>')
+
+    # 환율
+    if BUD.get('rates'):
+        O.append('  <p class="section-label">%s</p>' % LABELS['cost_rate'])
+        O.append('  <div class="rates">')
+        for c, v in R.items():
+            O.append('    <div class="rate"><b>1 %s</b><span>%s원</span></div>'
+                     % (c, format(v, ',')))
+        O.append('  </div>')
+
+    notes = (BUD.get('budget_notes') or []) + (BUD.get('transport_notes') or [])
+    for n in notes:
+        O.append('  <div class="flag">%s</div>' % n)
+    O.append('  </div>\n')
+    return '\n'.join(O)
 
 
 # 브라우저 탭 제목: doc_title 이 없으면 title 에서 태그만 벗겨 씁니다
@@ -331,7 +456,7 @@ for key, tpl in (('eyebrow', '  <p class="eyebrow">%s</p>'),
         B.append(tpl % doc[key])
 
 # 보기 전환 스위치 — .tabs·.stage 보다 앞에 있어야 ~ 선택자가 걸립니다
-for v in ['home'] + REGIONS + ['all']:
+for v in VIEWS:
     B.append('  <input class="vsw" type="radio" name="view" id="view-%s"%s>'
              % (v, ' checked' if v == 'home' else ''))
 if REGIONS:
@@ -341,6 +466,8 @@ if REGIONS:
         B.append('    <label class="tab" for="view-%s"><i class="swatch %s"></i>%s</label>'
                  % (k, k, LEG.get(k, k)))
     B.append('    <label class="tab" for="view-all">%s</label>' % LABELS['view_all'])
+    if BUD:
+        B.append('    <label class="tab" for="view-cost">%s</label>' % LABELS['view_cost'])
     B.append('  </nav>\n')
 B.append('  <div class="stage">\n  <div class="home">')
 
@@ -427,6 +554,9 @@ for blk in doc['blocks']:
     B.append('    </div>\n  </div>\n')
 
 B.append('  </div>\n')                                   # .days 닫기
+
+if BUD:
+    B.append(build_budget())
 
 if doc.get('notes') or doc.get('foot'):
     B.append('  <div class="notes">')

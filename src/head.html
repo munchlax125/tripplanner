@@ -31,6 +31,11 @@
     --border:240 5.9% 90%;
     --ring:240 5% 64.9%;
     --radius:0.625rem;
+    /* 한글이 섞여도 깨지지 않게: 라틴·숫자는 모노, 한글은 본문 글꼴로 떨어집니다 */
+    --font-sans:Inter,"IBM Plex Sans KR",-apple-system,BlinkMacSystemFont,
+      "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+    --font-mono:"JetBrains Mono","IBM Plex Sans KR",ui-monospace,SFMono-Regular,
+      Menlo,"Malgun Gothic",monospace;
     --shadow-sm:0 1px 2px 0 rgb(0 0 0 / .05);
     --shadow:0 1px 3px 0 rgb(0 0 0 / .1), 0 1px 2px -1px rgb(0 0 0 / .1);
     color-scheme:light dark;
@@ -68,8 +73,7 @@
   html{-webkit-text-size-adjust:100%;background:hsl(var(--background));}
   body{
     margin:0;background:hsl(var(--background));color:hsl(var(--foreground));
-    font-family:Inter,"IBM Plex Sans KR",-apple-system,BlinkMacSystemFont,
-      "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+    font-family:var(--font-sans);
     font-weight:400;font-size:14px;line-height:1.6;
     -webkit-font-smoothing:antialiased;font-feature-settings:"cv02","cv03","cv04","cv11";
   }
@@ -77,8 +81,8 @@
   ::selection{background:hsl(var(--foreground));color:hsl(var(--background));}
 
   /* ── 머리말 ───────────────────────────────────────────── */
-  .eyebrow{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;
-    letter-spacing:.14em;text-transform:uppercase;color:hsl(var(--muted-foreground));margin:0 0 14px;}
+  .eyebrow{font-size:12px;font-weight:500;letter-spacing:.06em;
+    color:hsl(var(--muted-foreground));margin:0 0 14px;}
   .title{font-size:clamp(30px,5.4vw,44px);line-height:1.15;margin:0 0 10px;
     font-weight:700;letter-spacing:-.028em;color:hsl(var(--foreground));}
   .title .sep{color:hsl(var(--muted-foreground));padding:0 .12em;font-weight:400;}
@@ -94,7 +98,7 @@
     gap:12px;flex-wrap:wrap;margin-bottom:18px;}
   .sum-head h2{font-size:15px;font-weight:600;margin:0;letter-spacing:-.01em;
     color:hsl(var(--card-foreground));}
-  .sum-total{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;
+  .sum-total{font-family:var(--font-mono);font-size:12px;
     color:hsl(var(--muted-foreground));}
   /* Progress */
   .bar-row{display:grid;grid-template-columns:88px 1fr 30px;align-items:center;
@@ -105,7 +109,7 @@
     background:hsl(var(--primary));}
   .bar-fill.air{background:repeating-linear-gradient(90deg,
     hsl(var(--muted-foreground)) 0 3px,transparent 3px 7px);}
-  .bar-num{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;
+  .bar-num{font-family:var(--font-mono);font-size:12px;
     color:hsl(var(--muted-foreground));text-align:right;font-variant-numeric:tabular-nums;}
   .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;
     color:hsl(var(--muted-foreground));margin-top:16px;padding-top:14px;
@@ -139,9 +143,54 @@ __VIEWCSS__
     transition:box-shadow .15s,transform .15s;}
   .ccard:hover{box-shadow:var(--shadow);transform:translateY(-1px);}
   .cc-name{font-size:15px;font-weight:600;letter-spacing:-.015em;}
-  .cc-span,.cc-num{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11.5px;
+  .cc-span,.cc-num{font-family:var(--font-mono);font-size:11.5px;
     color:hsl(var(--muted-foreground));}
   .cc-city{font-size:12px;color:hsl(var(--muted-foreground));margin-top:6px;line-height:1.5;}
+
+  /* ── 예상경비 ─────────────────────────────────────────── */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;
+    margin-bottom:8px;}
+  .kpi{display:flex;flex-direction:column;gap:3px;padding:16px 18px;
+    background:hsl(var(--card));border:1px solid hsl(var(--border));
+    border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);}
+  .kpi-l{font-size:12.5px;color:hsl(var(--muted-foreground));}
+  .kpi-v{font-family:var(--font-mono);font-size:19px;font-weight:500;
+    letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:hsl(var(--card-foreground));}
+  .kpi-s{font-size:11.5px;color:hsl(var(--muted-foreground));min-height:1em;}
+  .kpi.good .kpi-v{color:#15803D;}
+  .kpi.bad .kpi-v{color:hsl(var(--destructive));}
+  @media (prefers-color-scheme:dark){.kpi.good .kpi-v{color:#4ADE80;}}
+
+  /* 일자별 표 */
+  .ctab{border:1px solid hsl(var(--border));border-radius:var(--radius-lg);
+    overflow:hidden;box-shadow:var(--shadow-sm);background:hsl(var(--card));}
+  .ctr{display:grid;grid-template-columns:64px 1fr 92px 92px;gap:12px;
+    padding:11px 16px;border-top:1px solid hsl(var(--border));align-items:baseline;}
+  .ctr:first-child{border-top:0;}
+  .chead,.cfoot{background:hsl(var(--muted));font-size:12px;font-weight:600;
+    color:hsl(var(--muted-foreground));}
+  .chead span:nth-child(3),.chead span:nth-child(4),
+  .cfoot span:nth-child(3),.cfoot span:nth-child(4){text-align:right;}
+  .cfoot{border-top:1px solid hsl(var(--border));color:hsl(var(--foreground));}
+  .cdate{font-family:var(--font-mono);font-size:12px;font-weight:500;
+    color:hsl(var(--foreground));border-left:3px solid transparent;padding-left:8px;
+    margin-left:-8px;}
+  .cdate em{font-style:normal;color:hsl(var(--muted-foreground));margin-left:4px;}
+  .cdesc{font-size:13px;color:hsl(var(--card-foreground));line-height:1.5;}
+  .cdesc small{display:block;font-size:11.5px;color:hsl(var(--muted-foreground));
+    margin-top:2px;line-height:1.55;}
+  .cnum{font-family:var(--font-mono);font-size:12.5px;text-align:right;
+    font-variant-numeric:tabular-nums;color:hsl(var(--card-foreground));}
+  .cacc{color:hsl(var(--muted-foreground));}
+
+  /* 환율 */
+  .rates{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:10px;}
+  .rate{display:flex;justify-content:space-between;align-items:baseline;gap:8px;
+    padding:11px 14px;background:hsl(var(--muted));border-radius:var(--radius-md);}
+  .rate b{font-family:var(--font-mono);font-size:12.5px;font-weight:500;
+    color:hsl(var(--foreground));}
+  .rate span{font-family:var(--font-mono);font-size:12.5px;
+    color:hsl(var(--muted-foreground));font-variant-numeric:tabular-nums;}
 
   /* 나라가 바뀌는 자리의 머리글 */
   .rgn-head{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;
@@ -149,13 +198,13 @@ __VIEWCSS__
   .rgn-head:first-of-type{margin-top:8px;}
   .rgn-head .swatch{width:9px;height:9px;border-radius:9999px;align-self:center;}
   .rgn-head b{font-size:17px;font-weight:600;letter-spacing:-.022em;color:hsl(var(--foreground));}
-  .rgn-head span{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;
+  .rgn-head span{font-family:var(--font-mono);font-size:12px;
     color:hsl(var(--muted-foreground));}
 
   /* ── 구획 제목 ────────────────────────────────────────── */
-  .section-label{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;
-    letter-spacing:.13em;text-transform:uppercase;color:hsl(var(--muted-foreground));
-    margin:44px 0 14px;}
+  /* 한글 제목이라 모노·대문자·자간을 걷어냈습니다 — 그러면 글꼴이 섞여 이상해집니다 */
+  .section-label{font-size:13px;font-weight:600;letter-spacing:-.01em;
+    color:hsl(var(--muted-foreground));margin:44px 0 14px;}
 
   /* ── 항공편 — Card 안의 표 ────────────────────────────── */
   .flight{display:grid;grid-template-columns:78px 1fr;gap:16px;padding:13px 18px;
@@ -164,14 +213,14 @@ __VIEWCSS__
   .flight:first-of-type{border-top-left-radius:var(--radius-lg);border-top-right-radius:var(--radius-lg);}
   .flight:last-of-type{border-bottom-width:1px;box-shadow:var(--shadow-sm);
     border-bottom-left-radius:var(--radius-lg);border-bottom-right-radius:var(--radius-lg);}
-  .flight-date{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;
+  .flight-date{font-family:var(--font-mono);font-size:12px;
     color:hsl(var(--muted-foreground));padding-top:2px;}
   .flight-body{color:hsl(var(--muted-foreground));}
   .flight-body b{font-weight:600;color:hsl(var(--card-foreground));}
 
   /* ── 날짜 블록 ────────────────────────────────────────── */
   .day{display:grid;grid-template-columns:74px 26px 1fr;}
-  .day-date{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12.5px;
+  .day-date{font-family:var(--font-mono);font-size:12.5px;
     font-weight:500;color:hsl(var(--foreground));padding:26px 12px 0 0;text-align:right;line-height:1.4;}
   .day-date em{display:block;font-style:normal;font-size:11px;font-weight:400;
     color:hsl(var(--muted-foreground));}
@@ -199,7 +248,7 @@ __VIEWCSS__
   .sched li{display:grid;grid-template-columns:52px 1fr;gap:12px;
     padding:7px 0;font-size:13.5px;border-top:1px solid hsl(var(--border));}
   .sched li:first-child{border-top:0;}
-  .sched .t{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;
+  .sched .t{font-family:var(--font-mono);font-size:12px;
     font-variant-numeric:tabular-nums;color:hsl(var(--muted-foreground));padding-top:2px;}
   .sched .a{color:hsl(var(--card-foreground));line-height:1.6;}
   .sched .a small{display:block;font-size:12.5px;color:hsl(var(--muted-foreground));
@@ -251,8 +300,7 @@ __VIEWCSS__
   .foot{margin-top:40px;padding-top:18px;border-top:1px solid hsl(var(--border));
     font-size:12px;color:hsl(var(--muted-foreground));}
 
-  .opt-label{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;
-    letter-spacing:.1em;text-transform:uppercase;color:hsl(var(--muted-foreground));
+  .opt-label{font-size:12.5px;font-weight:600;color:hsl(var(--muted-foreground));
     margin:16px 0 6px;padding-top:12px;border-top:1px solid hsl(var(--border));}
 
   /* ── 일자별 경로 지도 (인라인 SVG · 오프라인) ─────────── */
@@ -260,19 +308,19 @@ __VIEWCSS__
   .mapsvg{display:block;width:100%;height:auto;border:1px solid hsl(var(--border));
     border-radius:var(--radius-md);background:hsl(var(--muted));}
   .mapbg{fill:transparent;}
-  .maplbl{font-family:Inter,"IBM Plex Sans KR",-apple-system,sans-serif;paint-order:stroke;
+  .maplbl{font-family:var(--font-sans);paint-order:stroke;
     stroke:hsl(var(--card));stroke-width:2.8px;stroke-linejoin:round;}
   .maplbl.town{font-size:8.5px;fill:hsl(var(--muted-foreground));}
   .maplbl.stop{font-size:10px;font-weight:600;fill:hsl(var(--foreground));}
   .maplbl.lake{font-size:9px;fill:#1F6FA5;opacity:.8;text-anchor:middle;}
   .maptown{fill:hsl(var(--muted-foreground));opacity:.55;}
-  .mapn{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:10.5px;
+  .mapn{font-family:var(--font-mono);font-size:10.5px;
     font-weight:600;fill:#fff;text-anchor:middle;}
-  .mapsm{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:9.5px;
+  .mapsm{font-family:var(--font-mono);font-size:9.5px;
     fill:hsl(var(--muted-foreground));}
   .mapscale{stroke:hsl(var(--muted-foreground));stroke-width:1;}
   .mapseq{font-size:12.5px;line-height:1.8;color:hsl(var(--muted-foreground));margin:10px 0 0;}
-  .mapseq b{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:10.5px;
+  .mapseq b{font-family:var(--font-mono);font-size:10.5px;
     color:hsl(var(--foreground));font-weight:600;margin-right:2px;}
   .mapdot{color:hsl(var(--border));margin:0 3px;}
   .mapcap{font-size:12px;color:hsl(var(--muted-foreground));margin:8px 0 0;line-height:1.65;}
@@ -293,7 +341,7 @@ __VIEWCSS__
   .maplink:hover{background:hsl(var(--accent));color:hsl(var(--accent-foreground));}
   .leafbox{height:320px;border:1px solid hsl(var(--border));border-radius:var(--radius-md);}
   .mapnum{display:flex;align-items:center;justify-content:center;width:22px;height:22px;
-    border-radius:50%;color:#fff;font-family:"JetBrains Mono",ui-monospace,monospace;
+    border-radius:50%;color:#fff;font-family:var(--font-mono);
     font-size:10.5px;font-weight:600;background:#42606E;
     /* 흰 테두리만 두면 밝은 타일 위에서 사라져서, 바깥에 옅은 검은 테두리를 한 겹 더 둡니다 */
     box-shadow:0 0 0 2px #fff, 0 0 0 3px rgba(0,0,0,.35);}
@@ -345,6 +393,16 @@ __VIEWCSS__
     .note{grid-template-columns:1fr;gap:4px;padding:13px 15px;}
     .bar-row{grid-template-columns:74px 1fr 26px;}
     .flight{grid-template-columns:62px 1fr;gap:12px;padding:12px 15px;}
+    /* 일자별 표: 좁으면 날짜·내용 한 줄, 금액 아래 줄 */
+    .ctr{grid-template-columns:58px 1fr;gap:4px 10px;padding:11px 14px;}
+    .ctr .cnum{grid-column:2;text-align:left;}
+    .ctr .cacc::before{content:"누계 ";color:hsl(var(--muted-foreground));}
+    .ctr .cnum::before{content:"하루 ";color:hsl(var(--muted-foreground));}
+    .chead span:nth-child(3),.chead span:nth-child(4){display:none;}
+    .cfoot span:nth-child(4){display:none;}
+    .cfoot span:nth-child(3){text-align:left;}
+    .kpis{grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;}
+    .kpi{padding:14px 15px;} .kpi-v{font-size:17px;}
   }
 
   /* ── 인쇄 ─────────────────────────────────────────────── */

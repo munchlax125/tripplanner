@@ -28,6 +28,7 @@
 | 탭 제목 | `일정.yaml: doc_title` → `head.html`의 `__TITLE__` |
 | 지역별 색 | `일정.yaml: colors` → CSS를 `build.py`가 생성해 `__COLORCSS__`에 넣음 |
 | 나라별 보기 탭 | 날짜 블록 `cls`의 색 키에서 자동 → CSS를 `build.py`가 생성해 `__VIEWCSS__`에 넣음 |
+| 예상경비 탭 | `일정.yaml: budget_source` (기본 `src/예산.yaml`, 파일이 없으면 탭이 빠짐) |
 | 문단 제목 | `일정.yaml: labels` (`view_home`·`view_all`·`regions` 포함) |
 | 개요 지도 id | `일정.yaml: overview_map` |
 | 통화·시트 제목·설명 | `예산.yaml: rates / rate_rows / rate_labels / rate_notes / sheet_titles / sheet_intros` |
@@ -97,6 +98,13 @@ yaml.safe_dump(d, open(P,'w',encoding='utf-8'),
 **Overpass는 자주 실패합니다.** 504·429가 정상입니다. 서버 3곳을 6번까지 재시도하니 기다리면 됩니다. 광역 지도는 몇 분 걸립니다.
 
 **엑셀이 열려 있으면 저장이 막힙니다.** `_new_예산.xlsx`로 빠지면 원본이 Excel에 열려 있는 것입니다.
+
+**예상경비 탭은 `build.py`가 예산 YAML을 직접 계산합니다.** `build_xlsx.py`와 **같은 식이어야 합니다** —
+한쪽만 고치면 HTML과 엑셀 숫자가 갈라집니다. 일자별 집계 키는 날짜 문자열이고 `9/19`·`9.19`를 같게 봅니다.
+
+**한글 제목에 모노 글꼴·대문자·넓은 자간을 쓰지 마세요.** 라틴 모노에는 한글이 없어 아무 글꼴로 떨어지고
+`text-transform:uppercase`는 한글에 효과가 없습니다. 숫자·시각처럼 라틴만 있는 곳에만 `var(--font-mono)`를 쓰고,
+그 변수에도 한글 대체 글꼴이 들어 있어야 섞인 문자열이 깨지지 않습니다.
 
 **나라별 보기는 라디오 + `:checked` 로만 돕니다.** `.vsw` 입력들이 `.tabs`·`.stage` 보다 **앞에** 있어야
 `~` 선택자가 걸립니다. 숨김 규칙은 전부 `@media screen` 안에 있어 **인쇄하면 모든 나라가 나옵니다** — 이 구조를 깨지 마세요.
