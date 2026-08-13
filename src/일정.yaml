@@ -1,5 +1,70 @@
 output: 조지아_아르메니아_최종일정_상하이반영.html
 doc_title: 조지아 · 아르메니아 최종 일정
+map_queries:
+  Cosy Koala 호스텔: Cosy Koala Hostel Tbilisi
+  Hi Cozy 호스텔: Hi Cozy Hostel Shanghai
+  TRYP by Wyndham (칼리파 St): TRYP by Wyndham Abu Dhabi City Center
+  가르니 신전: Garni Temple Armenia
+  검은 요새: Sev Berd Black Fortress Gyumri
+  게르게티 삼위일체 교회: Gergeti Trinity Church
+  게하르트 수도원: Geghard Monastery Armenia
+  공화국 광장: Republic Square Yerevan
+  구다우리 전망대: Russia Georgia Friendship Monument Gudauri
+  귬리: Gyumri Armenia
+  나리칼라 요새: Narikala Fortress Tbilisi
+  난징둥루 보행가: Nanjing Road Pedestrian Street Shanghai
+  노라방크: Noravank Monastery Armenia
+  대학살 추모관: Tsitsernakaberd Armenian Genocide Memorial Yerevan
+  드라이 브리지 벼룩시장: Dry Bridge Market Tbilisi
+  디두베 터미널: Didube Bus Station Tbilisi
+  루브르 아부다비: Louvre Abu Dhabi
+  리케 공원 케이블카: Rike Park Ropeway Tbilisi
+  리퍼블릭 스퀘어: Republic Square Yerevan
+  마더 아르메니아: Mother Armenia Monument Gyumri
+  마테나다란: Matenadaran Yerevan
+  모나스티라키 벼룩시장: Monastiraki Flea Market Athens
+  므츠헤타: Mtskheta Georgia
+  바나조르: Vanadzor Armenia
+  바르다난츠 광장: Vardanants Square Gyumri
+  보드베 수도원: Bodbe Monastery Sighnaghi
+  블루 모스크: Blue Mosque Yerevan
+  사나힌 수도원: Sanahin Monastery Armenia
+  삼고리 터미널: Samgori Bus Station Tbilisi
+  성황묘: Shanghai City God Temple
+  셰이크 자이드 그랜드 모스크: Sheikh Zayed Grand Mosque Abu Dhabi
+  스베티츠호벨리 대성당: Svetitskhoveli Cathedral Mtskheta
+  스테판츠민다: Stepantsminda Georgia
+  시그나기: Sighnaghi Georgia
+  시오니 대성당: Sioni Cathedral Tbilisi
+  신타그마 광장: Syntagma Square Athens
+  아나누리 요새: Ananuri Fortress Georgia
+  아바노투바니 유황온천: Abanotubani Sulphur Baths Tbilisi
+  아크로폴리스: Acropolis of Athens
+  아크로폴리스 박물관: Acropolis Museum Athens
+  알라베르디: Alaverdi Armenia
+  에치미아진 대성당: Etchmiadzin Cathedral Vagharshapat
+  예레반: Yerevan Armenia
+  예원: Yu Garden Shanghai
+  예원 라오제: Yuyuan Old Street Shanghai
+  오르타찰라 터미널: Ortachala Bus Station Tbilisi
+  와이탄: The Bund Shanghai
+  자유광장: Freedom Square Tbilisi
+  자이드 국제공항: Zayed International Airport Abu Dhabi
+  조지아의 어머니 상: Kartlis Deda Mother of Georgia Tbilisi
+  주타 · 차우키: Juta Kazbegi Georgia
+  중앙시장: Gyumri Central Market
+  즈바르트노츠 유적: Zvartnots Cathedral Armenia
+  즈바리 수도원: Jvari Monastery Mtskheta
+  캐스케이드 · 카페시안: Yerevan Cascade
+  코르 비랍: Khor Virap Monastery Armenia
+  타테브: Tatev Monastery Armenia
+  타테브 수도원: Tatev Monastery Armenia
+  트빌리시: Tbilisi Georgia
+  트빌리시 국제공항: Tbilisi International Airport
+  평화의 다리: Bridge of Peace Tbilisi
+  플라카: Plaka Athens
+  하흐파트 수도원: Haghpat Monastery Armenia
+  헤파이스토스 신전 · 고대 아고라: Ancient Agora of Athens
 overview_map: m00
 colors:
   ge:

@@ -160,9 +160,19 @@ def build_map(mid, points, cap, color, trigger_pad=13, fit_pad=46):
     return ''.join(parts), seq
 
 
+MAP_Q = doc.get('map_queries') or {}
+
+
 def gmaps(points):
+    """'구글 지도로 열기' 링크.
+
+    경유지를 좌표로 넘기면 구글에서 핀이 전부 무명(42°39'43.9"N …)으로 떠서
+    사진·영업시간·리뷰를 볼 수 없습니다. map_queries 에 검색어가 있으면 이름으로
+    넘겨 각 지점이 제대로 된 장소 카드로 열리게 합니다.
+    """
     def one(p):
-        return '%.5f,%.5f' % (p[1], p[2])
+        q = MAP_Q.get(p[0])
+        return urllib.parse.quote(q) if q else '%.5f,%.5f' % (p[1], p[2])
     if len(points) == 1:
         return 'https://www.google.com/maps/search/?api=1&query=' + one(points[0])
     mid = '%7C'.join(one(p) for p in points[1:-1]) if len(points) > 2 else ''
