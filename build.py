@@ -53,6 +53,7 @@ def color_css():
         r, g, b = _rgb(col)
         return ['.bar-fill.%s,.swatch.%s,.day.%s .day-rail::before,.day.%s.stay .node{background:%s;}'
                 % (k, k, k, k, col),
+                '.ccard.%s{border-left-color:%s;}' % (k, col),
                 '.day.%s .node{border-color:%s;}' % (k, col),
                 '.day.%s .bus{color:%s;background:rgba(%d,%d,%d,%s);}' % (k, col, r, g, b, alpha)]
     lt, dk = [], []
@@ -67,7 +68,8 @@ OVERVIEW_MAP = doc.get('overview_map')               # 없으면 개요 지도�
 
 # 문단 제목. labels 로 덮어쓰거나 빈 문자열을 주면 그 구획이 사라집니다.
 LABELS = {'nights': '숙박 배분', 'overview': '루트 개요', 'flights': '항공편',
-          'days': '본 일정', 'notes': '미리 확인할 것'}
+          'days': '본 일정', 'notes': '미리 확인할 것', 'regions': '나라별로 보기',
+          'view_home': '개요', 'view_all': '전체 일정'}
 LABELS.update(doc.get('labels') or {})
 PROJ = json.load(open('src/basemaps/_proj.json', encoding='utf-8'))
 HEAD = open('src/head.html', encoding='utf-8').read()
@@ -248,17 +250,78 @@ def render_daymap(mid, day_cls, cap):
             % (mid, svg, seq, cap, mid, col, gmaps(pts)))
 
 
-def section(key):
-    """문단 제목. labels 에서 빈 문자열로 지우면 제목 없이 내용만 나옵니다."""
+def section(key, cls=''):
+    """문단 제목. labels 에서 빈 문자열로 지우면 그 구획이 사라집니다."""
     if LABELS.get(key):
-        B.append('  <p class="section-label">%s</p>' % LABELS[key])
+        B.append('  <p class="section-label%s">%s</p>'
+                 % ((' ' + cls) if cls else '', LABELS[key]))
+
+
+# ───────────────────────── 나라(지역)별 보기 ─────────────────────────
+# 라디오 + :checked 로만 전환합니다. 자바스크립트가 없어도, 인쇄해도 전부 보입니다.
+LEG = {g['cls']: g['label'] for g in (doc.get('legend') or [])}
+
+
+def cckey(blk):
+    """cls 의 두 번째 낱말이 색 키이자 나라 키입니다."""
+    p = blk.get('cls', '').split()
+    return p[1] if len(p) > 1 else 'ov'
+
+
+REGIONS = []                      # 날짜 블록에 실제로 쓰인 키를 문서 순서대로
+for _b in doc['blocks']:
+    if _b['type'] == 'day' and cckey(_b) not in REGIONS:
+        REGIONS.append(cckey(_b))
+
+# 국경·이동 블록은 '도착하는 쪽'에 붙입니다 — 뒤에 오는 날짜 블록을 따라갑니다
+BLK_CC, _nx = {}, REGIONS[-1] if REGIONS else 'ov'
+for _b in reversed(doc['blocks']):
+    if _b['type'] == 'day':
+        _nx = cckey(_b)
+    BLK_CC[id(_b)] = _nx
+
+
+def region_meta(k):
+    """(이름, 날짜 범위, 일수, 박수, 도시 목록)"""
+    ds = [b for b in doc['blocks'] if b['type'] == 'day' and cckey(b) == k]
+    dates = [b.get('date', '') for b in ds if b.get('date')]
+    span = dates[0] if len(dates) < 2 else '%s – %s' % (dates[0], dates[-1])
+    nn = sum(n['n'] for n in (doc.get('nights') or []) if n['cls'] == k)
+    cities = []
+    for n in (doc.get('nights') or []):
+        if n['cls'] == k and n['name'] not in cities:
+            cities.append(n['name'])
+    return LEG.get(k, k), span, len(ds), nn, cities
+
+
+def view_css():
+    """탭 전환 CSS. 나라 키는 colors/blocks 에서 오므로 하드코딩이 없습니다."""
+    if not REGIONS:
+        return '  .tabs,.ccards{display:none;}'
+    out = ['@media screen{',
+           '  .vsw{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;}',
+           '  .stage>.home,.stage>.days{display:none;}',
+           '  #view-home:checked~.stage>.home,',
+           '  #view-all:checked~.stage>.home,',
+           '  #view-all:checked~.stage>.days{display:block;}']
+    for k in REGIONS:
+        out += ['  #view-%s:checked~.stage>.days{display:block;}' % k,
+                '  #view-%s:checked~.stage>.days>:not(.%s):not(.keep){display:none;}' % (k, k)]
+    act = ',\n'.join('  #view-%s:checked~.tabs .tab[for="view-%s"]' % (v, v)
+                     for v in ['home'] + REGIONS + ['all'])
+    out += [act + '{background:hsl(var(--background));color:hsl(var(--foreground));'
+                  'box-shadow:var(--shadow-sm);}',
+            '}']
+    return '\n'.join(out)
 
 
 # 브라우저 탭 제목: doc_title 이 없으면 title 에서 태그만 벗겨 씁니다
 tab = doc.get('doc_title') or re.sub(r'<[^>]+>', '', str(doc.get('title', '여행 일정')))
 
 B = []
-B.append(HEAD.replace('__TITLE__', tab).replace('__COLORCSS__', color_css()))
+B.append(HEAD.replace('__TITLE__', tab)
+             .replace('__COLORCSS__', color_css())
+             .replace('__VIEWCSS__', view_css()))
 B.append('<div class="wrap">\n')
 for key, tpl in (('eyebrow', '  <p class="eyebrow">%s</p>'),
                  ('title', '  <h1 class="title">%s</h1>'),
@@ -266,6 +329,20 @@ for key, tpl in (('eyebrow', '  <p class="eyebrow">%s</p>'),
                  ('standfirst', '  <p class="standfirst">%s</p>\n')):
     if doc.get(key):
         B.append(tpl % doc[key])
+
+# 보기 전환 스위치 — .tabs·.stage 보다 앞에 있어야 ~ 선택자가 걸립니다
+for v in ['home'] + REGIONS + ['all']:
+    B.append('  <input class="vsw" type="radio" name="view" id="view-%s"%s>'
+             % (v, ' checked' if v == 'home' else ''))
+if REGIONS:
+    B.append('  <nav class="tabs">')
+    B.append('    <label class="tab" for="view-home">%s</label>' % LABELS['view_home'])
+    for k in REGIONS:
+        B.append('    <label class="tab" for="view-%s"><i class="swatch %s"></i>%s</label>'
+                 % (k, k, LEG.get(k, k)))
+    B.append('    <label class="tab" for="view-all">%s</label>' % LABELS['view_all'])
+    B.append('  </nav>\n')
+B.append('  <div class="stage">\n  <div class="home">')
 
 nights = doc.get('nights') or []
 if nights:
@@ -294,18 +371,39 @@ if doc.get('flights'):
         B.append('  <div class="flight">\n    <div class="flight-date">%s</div>'
                  '\n    <div class="flight-body">%s</div>\n  </div>' % (f['date'], f['body']))
     B.append('')
-section('days')
+
+# 나라 카드 — 눌러서 그 나라만 보기
+if REGIONS:
+    section('regions')
+    B.append('  <div class="ccards">')
+    for k in REGIONS:
+        name, span, nd, nn, cities = region_meta(k)
+        B.append('    <label class="ccard %s" for="view-%s">'
+                 '<span class="cc-name">%s</span>'
+                 '<span class="cc-span">%s</span>'
+                 '<span class="cc-num">%d일%s</span>'
+                 '<span class="cc-city">%s</span></label>'
+                 % (k, k, name, span, nd, (' · %d박' % nn) if nn else '', ' · '.join(cities)))
+    B.append('  </div>')
+B.append('  </div>\n\n  <div class="days">')
+section('days', 'keep')
 B.append('')
 
+seen_cc = set()
 for blk in doc['blocks']:
+    cc = BLK_CC[id(blk)]
+    if cc not in seen_cc and cc in REGIONS:      # 나라가 바뀌는 자리에 머리글
+        seen_cc.add(cc)
+        name, span, nd, nn, cities = region_meta(cc)
+        B.append('  <p class="rgn-head %s"><i class="swatch %s"></i><b>%s</b>'
+                 '<span>%s · %d일%s</span></p>'
+                 % (cc, cc, name, span, nd, (' · %d박' % nn) if nn else ''))
     if blk['type'] == 'border':
-        B.append('  <div class="border">\n    <div class="day-date"></div><div class="border-rail"></div>'
+        B.append('  <div class="border %s">\n    <div class="day-date"></div><div class="border-rail"></div>'
                  '\n    <div class="border-body">\n      <p class="border-title">%s</p>'
                  '\n      <p class="border-note">%s</p>\n    </div>\n  </div>\n'
-                 % (blk['title'], blk['note']))
+                 % (cc, blk['title'], blk['note']))
         continue
-    parts_cls = blk['cls'].split()
-    cc = parts_cls[1] if len(parts_cls) > 1 else 'ov'
     if cc not in COLOR:
         sys.exit("%s: cls '%s' 의 색 키 '%s' 가 colors 에 없습니다."
                  % (blk.get('date', '?'), blk['cls'], cc))
@@ -328,6 +426,8 @@ for blk in doc['blocks']:
         B.append('      <div class="flag">%s</div>' % f)
     B.append('    </div>\n  </div>\n')
 
+B.append('  </div>\n')                                   # .days 닫기
+
 if doc.get('notes') or doc.get('foot'):
     B.append('  <div class="notes">')
     if doc.get('notes'):
@@ -339,6 +439,7 @@ if doc.get('notes') or doc.get('foot'):
     if doc.get('foot'):
         B.append('    <p class="foot">%s</p>' % doc['foot'])
     B.append('  </div>\n')
+B.append('  </div>\n')                                   # .stage 닫기
 B.append('</div>\n')
 B.append(SCRIPT.replace('__MAPPOINTS__', json.dumps(doc.get('map_points') or {}, ensure_ascii=False)))
 B.append('\n</body>\n</html>\n')

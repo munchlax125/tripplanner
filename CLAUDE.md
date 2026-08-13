@@ -11,8 +11,8 @@
 - 예산 수정 → `src/예산.yaml` → `python build_xlsx.py`
 - 디자인 → `src/head.html`(CSS) · `src/script.html`([실제 지도] 버튼)
 
-생성된 `.html`·`.xlsx`는 **저장소에 없습니다**(`.gitignore`). 읽지도 고치지도 마세요 —
-사용자 컴퓨터에만 있고, 없을 수도 있고, 다음 빌드에서 덮어써집니다.
+생성된 `.html`·`.xlsx`는 **저장소에 함께 커밋합니다** — 폰이나 다른 기기에서 바로 열어 보기 위해서입니다.
+다만 **손으로 고치지는 마세요.** 다음 빌드에서 통째로 덮어써집니다.
 확인이 필요하면 **직접 빌드해서 그 산출물을 보세요.**
 
 `src/예산_템플릿.xlsx`는 예외입니다 — 서식·수식 원본이라 소스 자산입니다.
@@ -27,7 +27,8 @@
 | 출력 파일명 | `일정.yaml: output` · `예산.yaml: output` (없으면 빌드가 안내 메시지와 함께 멈춤) |
 | 탭 제목 | `일정.yaml: doc_title` → `head.html`의 `__TITLE__` |
 | 지역별 색 | `일정.yaml: colors` → CSS를 `build.py`가 생성해 `__COLORCSS__`에 넣음 |
-| 문단 제목 | `일정.yaml: labels` |
+| 나라별 보기 탭 | 날짜 블록 `cls`의 색 키에서 자동 → CSS를 `build.py`가 생성해 `__VIEWCSS__`에 넣음 |
+| 문단 제목 | `일정.yaml: labels` (`view_home`·`view_all`·`regions` 포함) |
 | 개요 지도 id | `일정.yaml: overview_map` |
 | 통화·시트 제목·설명 | `예산.yaml: rates / rate_rows / rate_labels / rate_notes / sheet_titles / sheet_intros` |
 
@@ -97,6 +98,10 @@ yaml.safe_dump(d, open(P,'w',encoding='utf-8'),
 
 **엑셀이 열려 있으면 저장이 막힙니다.** `_new_예산.xlsx`로 빠지면 원본이 Excel에 열려 있는 것입니다.
 
+**나라별 보기는 라디오 + `:checked` 로만 돕니다.** `.vsw` 입력들이 `.tabs`·`.stage` 보다 **앞에** 있어야
+`~` 선택자가 걸립니다. 숨김 규칙은 전부 `@media screen` 안에 있어 **인쇄하면 모든 나라가 나옵니다** — 이 구조를 깨지 마세요.
+`.days`의 **직계 자식**만 필터링되므로 날짜·국경 블록을 다른 요소로 한 번 더 감싸면 안 됩니다.
+
 **오프라인 동작을 깨지 마세요.** 페이지 로드 시점에 나가는 요청은 구글 폰트뿐이고, Leaflet·구글 지도는 사용자가 눌렀을 때만 나갑니다. 지도·아이콘·데이터를 외부에서 가져오는 코드를 새로 넣지 마세요.
 
 ## 일정을 짤 때 확인할 것
@@ -121,5 +126,6 @@ yaml.safe_dump(d, open(P,'w',encoding='utf-8'),
 
 ## 커밋
 
-요청받았을 때만 커밋하세요. 생성물(`.html`·`.xlsx`)은 `.gitignore`에 있으니 커밋 대상이 아닙니다.
-`tools/_cache/`(Natural Earth 원본 약 25MB)도 무시됩니다.
+요청받았을 때만 커밋하세요. 소스를 고쳤으면 **빌드해서 생성물까지 함께 커밋**합니다 —
+저장소만 받아도 폰에서 바로 열리도록.
+`tools/_cache/`(Natural Earth 원본 약 25MB)는 무시됩니다.

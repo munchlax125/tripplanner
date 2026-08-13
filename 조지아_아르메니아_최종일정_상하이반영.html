@@ -116,37 +116,105 @@
 
   /* 나라·지역별 색 — colors 에서 자동 생성됩니다 */
   .bar-fill.ge,.swatch.ge,.day.ge .day-rail::before,.day.ge.stay .node{background:#42606E;}
+  .ccard.ge{border-left-color:#42606E;}
   .day.ge .node{border-color:#42606E;}
   .day.ge .bus{color:#42606E;background:rgba(66,96,110,.10);}
   .bar-fill.am,.swatch.am,.day.am .day-rail::before,.day.am.stay .node{background:#C87518;}
+  .ccard.am{border-left-color:#C87518;}
   .day.am .node{border-color:#C87518;}
   .day.am .bus{color:#C87518;background:rgba(200,117,24,.10);}
   .bar-fill.gr,.swatch.gr,.day.gr .day-rail::before,.day.gr.stay .node{background:#1F6FA5;}
+  .ccard.gr{border-left-color:#1F6FA5;}
   .day.gr .node{border-color:#1F6FA5;}
   .day.gr .bus{color:#1F6FA5;background:rgba(31,111,165,.10);}
   .bar-fill.ae,.swatch.ae,.day.ae .day-rail::before,.day.ae.stay .node{background:#A97142;}
+  .ccard.ae{border-left-color:#A97142;}
   .day.ae .node{border-color:#A97142;}
   .day.ae .bus{color:#A97142;background:rgba(169,113,66,.10);}
   .bar-fill.cn,.swatch.cn,.day.cn .day-rail::before,.day.cn.stay .node{background:#9E3B34;}
+  .ccard.cn{border-left-color:#9E3B34;}
   .day.cn .node{border-color:#9E3B34;}
   .day.cn .bus{color:#9E3B34;background:rgba(158,59,52,.10);}
   @media (prefers-color-scheme:dark){
     .bar-fill.ge,.swatch.ge,.day.ge .day-rail::before,.day.ge.stay .node{background:#8FB4C4;}
+    .ccard.ge{border-left-color:#8FB4C4;}
     .day.ge .node{border-color:#8FB4C4;}
     .day.ge .bus{color:#8FB4C4;background:rgba(143,180,196,.14);}
     .bar-fill.am,.swatch.am,.day.am .day-rail::before,.day.am.stay .node{background:#E5A153;}
+    .ccard.am{border-left-color:#E5A153;}
     .day.am .node{border-color:#E5A153;}
     .day.am .bus{color:#E5A153;background:rgba(229,161,83,.14);}
     .bar-fill.gr,.swatch.gr,.day.gr .day-rail::before,.day.gr.stay .node{background:#7EC1E8;}
+    .ccard.gr{border-left-color:#7EC1E8;}
     .day.gr .node{border-color:#7EC1E8;}
     .day.gr .bus{color:#7EC1E8;background:rgba(126,193,232,.14);}
     .bar-fill.ae,.swatch.ae,.day.ae .day-rail::before,.day.ae.stay .node{background:#D9A66C;}
+    .ccard.ae{border-left-color:#D9A66C;}
     .day.ae .node{border-color:#D9A66C;}
     .day.ae .bus{color:#D9A66C;background:rgba(217,166,108,.14);}
     .bar-fill.cn,.swatch.cn,.day.cn .day-rail::before,.day.cn.stay .node{background:#DE8B82;}
+    .ccard.cn{border-left-color:#DE8B82;}
     .day.cn .node{border-color:#DE8B82;}
     .day.cn .bus{color:#DE8B82;background:rgba(222,139,130,.14);}
   }
+
+  /* ── Tabs — 나라별 보기 (라디오 + :checked, 자바스크립트 없음) ── */
+@media screen{
+  .vsw{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;}
+  .stage>.home,.stage>.days{display:none;}
+  #view-home:checked~.stage>.home,
+  #view-all:checked~.stage>.home,
+  #view-all:checked~.stage>.days{display:block;}
+  #view-cn:checked~.stage>.days{display:block;}
+  #view-cn:checked~.stage>.days>:not(.cn):not(.keep){display:none;}
+  #view-ge:checked~.stage>.days{display:block;}
+  #view-ge:checked~.stage>.days>:not(.ge):not(.keep){display:none;}
+  #view-am:checked~.stage>.days{display:block;}
+  #view-am:checked~.stage>.days>:not(.am):not(.keep){display:none;}
+  #view-gr:checked~.stage>.days{display:block;}
+  #view-gr:checked~.stage>.days>:not(.gr):not(.keep){display:none;}
+  #view-ae:checked~.stage>.days{display:block;}
+  #view-ae:checked~.stage>.days>:not(.ae):not(.keep){display:none;}
+  #view-home:checked~.tabs .tab[for="view-home"],
+  #view-cn:checked~.tabs .tab[for="view-cn"],
+  #view-ge:checked~.tabs .tab[for="view-ge"],
+  #view-am:checked~.tabs .tab[for="view-am"],
+  #view-gr:checked~.tabs .tab[for="view-gr"],
+  #view-ae:checked~.tabs .tab[for="view-ae"],
+  #view-all:checked~.tabs .tab[for="view-all"]{background:hsl(var(--background));color:hsl(var(--foreground));box-shadow:var(--shadow-sm);}
+}
+  .tabs{display:flex;gap:4px;flex-wrap:wrap;margin:26px 0 30px;padding:4px;
+    background:hsl(var(--muted));border-radius:var(--radius-lg);}
+  .tab{display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 14px;
+    border-radius:var(--radius-md);font-size:13px;font-weight:500;
+    color:hsl(var(--muted-foreground));cursor:pointer;
+    -webkit-user-select:none;user-select:none;white-space:nowrap;
+    transition:background-color .15s,color .15s;}
+  .tab:hover{color:hsl(var(--foreground));}
+  .tab .swatch{width:8px;height:8px;border-radius:9999px;flex:none;}
+  .vsw:focus-visible+.tabs .tab,.vsw:focus-visible~.tabs .tab[for]{outline:none;}
+
+  /* 나라 카드 — 홈에서 눌러 들어갑니다 */
+  .ccards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;}
+  .ccard{display:flex;flex-direction:column;gap:2px;padding:16px 18px;cursor:pointer;
+    background:hsl(var(--card));color:hsl(var(--card-foreground));
+    border:1px solid hsl(var(--border));border-left-width:3px;
+    border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);
+    transition:box-shadow .15s,transform .15s;}
+  .ccard:hover{box-shadow:var(--shadow);transform:translateY(-1px);}
+  .cc-name{font-size:15px;font-weight:600;letter-spacing:-.015em;}
+  .cc-span,.cc-num{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11.5px;
+    color:hsl(var(--muted-foreground));}
+  .cc-city{font-size:12px;color:hsl(var(--muted-foreground));margin-top:6px;line-height:1.5;}
+
+  /* 나라가 바뀌는 자리의 머리글 */
+  .rgn-head{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;
+    margin:40px 0 16px;padding-bottom:11px;border-bottom:1px solid hsl(var(--border));}
+  .rgn-head:first-of-type{margin-top:8px;}
+  .rgn-head .swatch{width:9px;height:9px;border-radius:9999px;align-self:center;}
+  .rgn-head b{font-size:17px;font-weight:600;letter-spacing:-.022em;color:hsl(var(--foreground));}
+  .rgn-head span{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;
+    color:hsl(var(--muted-foreground));}
 
   /* ── 구획 제목 ────────────────────────────────────────── */
   .section-label{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;
@@ -354,7 +422,10 @@
     }
     body{background:#fff;font-size:11pt;}
     .wrap{padding:0;max-width:100%;}
-    .day,.note,.flight,.daymap,.summary,.border{break-inside:avoid;}
+    .day,.note,.flight,.daymap,.summary,.border,.ccard{break-inside:avoid;}
+    /* 탭 CSS 는 @media screen 안에만 있으므로 인쇄하면 모든 나라가 그대로 나옵니다 */
+    .tabs,.ccards,.vsw{display:none;}
+    .rgn-head{break-after:avoid;}
     .mapctl{display:none;}
     .gmap{border-bottom:none;}
     *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
@@ -370,6 +441,25 @@
   <p class="subtitle">9월 19일 – 10월 5일 · 1인 · 상하이 경유 · 트빌리시 IN · 아테네·아부다비 경유 · 인천 도착</p>
   <p class="standfirst">저가 항공 조합으로 예산을 맞춘 대신 이동이 많습니다. 가는 길에 상하이 1박이 붙어 반나절 시내 관광이 가능해졌고, 지상 13박은 대중교통 우선으로 짜되 최장 이동일은 이틀로 쪼갰습니다. 카즈베기를 1박으로 줄여 얻은 하루는 카헤티(시그나기)에 넣었고, 아르메니아는 <b>알라베르디에서 내려오는 길에 귬리 1박</b>을 넣어 예레반을 닷새 붙박이로 만든 뒤, 남부 타테브만 <b>하루짜리 투어</b>로 다녀옵니다. 돌아오는 길은 예레반발 새벽 직항 → 아테네 1박 → 아부다비 1박입니다. 공항 노숙 구간은 없습니다.</p>
 
+  <input class="vsw" type="radio" name="view" id="view-home" checked>
+  <input class="vsw" type="radio" name="view" id="view-cn">
+  <input class="vsw" type="radio" name="view" id="view-ge">
+  <input class="vsw" type="radio" name="view" id="view-am">
+  <input class="vsw" type="radio" name="view" id="view-gr">
+  <input class="vsw" type="radio" name="view" id="view-ae">
+  <input class="vsw" type="radio" name="view" id="view-all">
+  <nav class="tabs">
+    <label class="tab" for="view-home">개요</label>
+    <label class="tab" for="view-cn"><i class="swatch cn"></i>중국</label>
+    <label class="tab" for="view-ge"><i class="swatch ge"></i>조지아</label>
+    <label class="tab" for="view-am"><i class="swatch am"></i>아르메니아</label>
+    <label class="tab" for="view-gr"><i class="swatch gr"></i>그리스</label>
+    <label class="tab" for="view-ae"><i class="swatch ae"></i>UAE</label>
+    <label class="tab" for="view-all">전체 일정</label>
+  </nav>
+
+  <div class="stage">
+  <div class="home">
   <div class="summary">
     <div class="sum-head">
       <h2>숙박 배분</h2>
@@ -422,8 +512,20 @@
     <div class="flight-body">도착은 <b>훙차오</b>, 출발은 <b>푸동</b>. 서로 다른 공항입니다 (약 60km)</div>
   </div>
 
-  <p class="section-label">본 일정</p>
+  <p class="section-label">나라별로 보기</p>
+  <div class="ccards">
+    <label class="ccard cn" for="view-cn"><span class="cc-name">중국</span><span class="cc-span">9.19</span><span class="cc-num">1일 · 1박</span><span class="cc-city">상하이</span></label>
+    <label class="ccard ge" for="view-ge"><span class="cc-name">조지아</span><span class="cc-span">9.20 – 9.25</span><span class="cc-num">6일 · 6박</span><span class="cc-city">트빌리시 · 카즈베기</span></label>
+    <label class="ccard am" for="view-am"><span class="cc-name">아르메니아</span><span class="cc-span">9.26 – 10.2</span><span class="cc-num">7일 · 7박</span><span class="cc-city">알라베르디 · 귬리 · 예레반</span></label>
+    <label class="ccard gr" for="view-gr"><span class="cc-name">그리스</span><span class="cc-span">10.3</span><span class="cc-num">1일 · 1박</span><span class="cc-city">아테네</span></label>
+    <label class="ccard ae" for="view-ae"><span class="cc-name">UAE</span><span class="cc-span">10.4</span><span class="cc-num">1일 · 1박</span><span class="cc-city">아부다비</span></label>
+  </div>
+  </div>
 
+  <div class="days">
+  <p class="section-label keep">본 일정</p>
+
+  <p class="rgn-head cn"><i class="swatch cn"></i><b>중국</b><span>9.19 · 1일 · 1박</span></p>
   <div class="day cn stay">
     <div class="day-date">9.19<em>토</em></div><div class="day-rail"><i class="node"></i></div>
     <div class="day-body">
@@ -455,7 +557,8 @@
     </div>
   </div>
 
-  <div class="border">
+  <p class="rgn-head ge"><i class="swatch ge"></i><b>조지아</b><span>9.20 – 9.25 · 6일 · 6박</span></p>
+  <div class="border ge">
     <div class="day-date"></div><div class="border-rail"></div>
     <div class="border-body">
       <p class="border-title">상하이 푸동 12:50 → 트빌리시 19:00</p>
@@ -598,6 +701,7 @@
     </div>
   </div>
 
+  <p class="rgn-head am"><i class="swatch am"></i><b>아르메니아</b><span>9.26 – 10.2 · 7일 · 7박</span></p>
   <div class="day am stay">
     <div class="day-date">9.26<em>토</em></div><div class="day-rail"><i class="node"></i></div>
     <div class="day-body">
@@ -760,7 +864,8 @@
     </div>
   </div>
 
-  <div class="border">
+  <p class="rgn-head gr"><i class="swatch gr"></i><b>그리스</b><span>10.3 · 1일 · 1박</span></p>
+  <div class="border gr">
     <div class="day-date"></div><div class="border-rail"></div>
     <div class="border-body">
       <p class="border-title">10/3 새벽 — 예레반 04:25 → 아테네 06:20 <span class="tag">에게안 A3 3899 · XD9TVH</span></p>
@@ -801,7 +906,8 @@
     </div>
   </div>
 
-  <div class="border">
+  <p class="rgn-head ae"><i class="swatch ae"></i><b>UAE</b><span>10.4 · 1일 · 1박</span></p>
+  <div class="border ae">
     <div class="day-date"></div><div class="border-rail"></div>
     <div class="border-body">
       <p class="border-title">아테네 07:20 → 아부다비 13:05</p>
@@ -837,12 +943,14 @@
     </div>
   </div>
 
-  <div class="border">
+  <div class="border ae">
     <div class="day-date"></div><div class="border-rail"></div>
     <div class="border-body">
       <p class="border-title">아부다비 08:35 → 인천 22:15</p>
       <p class="border-note">비행 약 8시간 40분 (시차 5시간 포함 소요 13시간 40분). 마지막 구간에서 몰아 자는 것을 목표로.</p>
     </div>
+  </div>
+
   </div>
 
   <div class="notes">
@@ -941,6 +1049,8 @@
       <div class="note-val">수도원·성당·모스크는 어깨와 무릎을 가릴 것. 9월 말 카즈베기는 일교차가 크니 바람막이 필수.</div>
     </div>
     <p class="foot">1인 여행 · 지상 이동은 대중교통 우선 · 택시 구간은 즈바리 · 게하르트 · 아부다비 10/4 시내 이동뿐 (아테네·아부다비 새벽 공항행은 모두 공항버스)</p>
+  </div>
+
   </div>
 
 </div>
