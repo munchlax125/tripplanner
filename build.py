@@ -54,7 +54,7 @@ def color_css():
         return ['.bar-fill.%s,.swatch.%s,.day.%s .day-rail::before,.day.%s.stay .node{background:%s;}'
                 % (k, k, k, k, col),
                 '.ccard.%s{border-left-color:%s;}' % (k, col),
-                '.ctr.%s .cdate{border-left-color:%s;}' % (k, col),
+                '.ctr.%s .cdate,.tl.%s .tl-d{border-left-color:%s;}' % (k, k, col),
                 '.day.%s .node{border-color:%s;}' % (k, col),
                 '.day.%s .bus{color:%s;background:rgba(%d,%d,%d,%s);}' % (k, col, r, g, b, alpha)]
     lt, dk = [], []
@@ -71,8 +71,10 @@ OVERVIEW_MAP = doc.get('overview_map')               # 없으면 개요 지도�
 LABELS = {'nights': '숙박 배분', 'overview': '루트 개요', 'flights': '항공편',
           'days': '본 일정', 'notes': '미리 확인할 것', 'regions': '나라별로 보기',
           'view_home': '개요', 'view_all': '전체 일정', 'view_cost': '예상경비',
+          'outline': '하루씩 훑어보기',
           'cost_kind': '무엇에 쓰나', 'cost_region': '어디에 쓰나',
-          'cost_daily': '일자별', 'cost_rate': '적용 환율'}
+          'cost_cash': '통화별로 얼마나 필요한가', 'cost_daily': '일자별',
+          'cost_move': '구간별 교통비', 'cost_tick': '입장료', 'cost_rate': '적용 환율'}
 LABELS.update(doc.get('labels') or {})
 PROJ = json.load(open('src/basemaps/_proj.json', encoding='utf-8'))
 HEAD = open('src/head.html', encoding='utf-8').read()
@@ -319,9 +321,25 @@ def view_css():
            '  #view-all:checked~.stage>.home,',
            '  #view-all:checked~.stage>.days{display:block;}',
            '  #view-cost:checked~.stage>.notes{display:none;}']
+    # .days 의 div 자식(날짜·국경 블록) 순번 — 나라별로 첫/마지막 날의 세로선을 다듬습니다
+    idx, first_d, last_d = 0, {}, {}
+    for b in doc['blocks']:
+        idx += 1
+        if b['type'] == 'day':
+            k = cckey(b)
+            first_d.setdefault(k, idx)
+            last_d[k] = idx
     for k in REGIONS:
         out += ['  #view-%s:checked~.stage>.days{display:block;}' % k,
                 '  #view-%s:checked~.stage>.days>:not(.%s):not(.keep){display:none;}' % (k, k)]
+        if k in first_d:
+            out.append('  #view-%s:checked~.stage>.days>div:nth-of-type(%d) .day-rail::before'
+                       '{top:30px;}' % (k, first_d[k]))
+            out.append('  #view-%s:checked~.stage>.days>div:nth-of-type(%d) .day-rail::before'
+                       '{bottom:auto;height:32px;}' % (k, last_d[k]))
+            if first_d[k] == last_d[k]:      # 하루짜리 나라는 점 하나만
+                out.append('  #view-%s:checked~.stage>.days>div:nth-of-type(%d) .day-rail::before'
+                           '{top:30px;height:0;}' % (k, first_d[k]))
     act = ',\n'.join('  #view-%s:checked~.tabs .tab[for="view-%s"]' % (v, v) for v in VIEWS)
     out += [act + '{background:hsl(var(--background));color:hsl(var(--foreground));'
                   'box-shadow:var(--shadow-sm);}',
@@ -390,24 +408,49 @@ def build_budget():
             '소계 %s원' % money(air + local), 'good' if left >= 0 else 'bad')
     O.append('  </div>')
 
-    def bars(title, pairs, cls_of=lambda k: ''):
-        if not pairs:
+    def bars(title, items):
+        """items: [(표시이름, 금액, 색키, 보조설명)]"""
+        items = [i for i in items if i[1]]
+        if not items:
             return
         O.append('  <p class="section-label">%s</p>' % title)
         O.append('  <div class="summary">')
-        mx = max(v for _, v in pairs) or 1
-        for name, v in pairs:
-            O.append('    <div class="bar-row"><span class="bar-name">%s</span>'
+        mx = max(i[1] for i in items) or 1
+        for name, v, cls, sub in items:
+            O.append('    <div class="bar-row"><span class="bar-name">%s%s</span>'
                      '<span class="bar-track"><span class="bar-fill %s" style="width:%d%%"></span></span>'
                      '<span class="bar-num">%s</span></div>'
-                     % (name, cls_of(name), round(v / mx * 100), money(v)))
+                     % (name, ('<small>%s</small>' % sub) if sub else '',
+                        cls, round(v / mx * 100), money(v)))
         O.append('  </div>')
 
-    bars(LABELS['cost_kind'], [(k, v) for k, v in kind.items() if v])
+    bars(LABELS['cost_kind'],
+         [(k, v, '', '%d%%' % round(v / local * 100) if local else '') for k, v in kind.items()])
     if per_cc:
-        order = [k for k in REGIONS if k in per_cc]
-        bars(LABELS['cost_region'], [(LEG.get(k, k), per_cc[k]) for k in order],
-             cls_of=lambda n: next((k for k in order if LEG.get(k, k) == n), ''))
+        ndays = {}
+        for d, _c, _t, _u, cc in rows:
+            if cc:
+                ndays[cc] = ndays.get(cc, 0) + 1
+        bars(LABELS['cost_region'],
+             [(LEG.get(k, k), per_cc[k], k,
+               '%d일 · 하루 평균 %s원' % (ndays.get(k, 0), money(per_cc[k] / max(ndays.get(k, 1), 1))))
+              for k in REGIONS if k in per_cc])
+
+    # 통화별로 얼마나 필요한가 — 현지에서 실제로 쥐고 있어야 하는 돈
+    cash = {}
+    for t in (BUD.get('transport') or []) + (BUD.get('tickets') or []):
+        c = t['cur']
+        a, w = cash.get(c, (0, 0))
+        cash[c] = (a + t['amt'], w + krw(t['amt'], t['cur']))
+    if cash:
+        O.append('  <p class="section-label">%s</p>' % LABELS['cost_cash'])
+        O.append('  <div class="rates">')
+        for c, (a, w) in cash.items():
+            amt = format(int(a), ',') if float(a).is_integer() else format(a, ',')
+            O.append('    <div class="rate"><b>%s %s</b><span>%s원</span></div>'
+                     % (amt, c, money(w)))
+        O.append('  </div>')
+        O.append('  <p class="mapcap">교통·입장료만 더한 값입니다. 식비·숙박은 카드로 낼 수 있는지에 따라 달라져 뺐습니다.</p>')
 
     # 일자별
     O.append('  <p class="section-label">%s</p>' % LABELS['cost_daily'])
@@ -423,6 +466,34 @@ def build_budget():
     O.append('    <div class="ctr cfoot"><span>합계</span><span></span>'
              '<span class="cnum">%s</span><span class="cnum"></span></div>' % money(local))
     O.append('  </div>')
+
+    # 구간별 교통비 · 입장료 — 엑셀을 열지 않아도 되게
+    def detail(title, items, name_of, sub_of, total=None):
+        if not items:
+            return
+        O.append('  <p class="section-label">%s</p>' % title)
+        O.append('  <div class="ctab">')
+        for t in items:
+            cc = date_cc.get(norm(t['date']), '')
+            w = krw(t['amt'], t['cur'])
+            num = ('%s<small>%s %s</small>' % (money(w), format(t['amt'], ','), t['cur'])
+                   if w else '<span class="cfree">무료</span>')
+            O.append('    <div class="ctr d3%s"><span class="cdate">%s</span>'
+                     '<span class="cdesc">%s<small>%s</small></span>'
+                     '<span class="cnum">%s</span></div>'
+                     % ((' ' + cc) if cc else '', t['date'], name_of(t), sub_of(t), num))
+        if total is not None:
+            O.append('    <div class="ctr d3 cfoot"><span>합계</span><span></span>'
+                     '<span class="cnum">%s</span></div>' % money(total))
+        O.append('  </div>')
+
+    detail(LABELS['cost_move'], BUD.get('transport') or [],
+           lambda t: t.get('seg', ''),
+           lambda t: ' · '.join(x for x in [t.get('mode', ''), t.get('note', '')] if x),
+           total=kind['교통'])
+    detail(LABELS['cost_tick'], BUD.get('tickets') or [],
+           lambda t: t.get('place', ''), lambda t: t.get('note', ''),
+           total=kind['입장료'])
 
     # 환율
     if BUD.get('rates'):
@@ -511,6 +582,19 @@ if REGIONS:
                  '<span class="cc-num">%d일%s</span>'
                  '<span class="cc-city">%s</span></label>'
                  % (k, k, name, span, nd, (' · %d박' % nn) if nn else '', ' · '.join(cities)))
+    B.append('  </div>')
+
+# 하루씩 훑어보기 — 16일을 한 화면에. 누르면 그 나라로 들어갑니다
+_days = [b for b in doc['blocks'] if b['type'] == 'day']
+if _days:
+    section('outline')
+    B.append('  <div class="tline">')
+    for b in _days:
+        k = cckey(b)
+        B.append('    <label class="tl %s" for="view-%s"><span class="tl-d">%s<em>%s</em></span>'
+                 '<span class="tl-p">%s</span></label>'
+                 % (k, k if k in REGIONS else 'all', b.get('date', ''), b.get('dow', ''),
+                    re.sub(r'<[^>]+>', '', b.get('place', '')).strip()))
     B.append('  </div>')
 B.append('  </div>\n\n  <div class="days">')
 section('days', 'keep')

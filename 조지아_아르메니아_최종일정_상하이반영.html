@@ -121,53 +121,53 @@
   /* 나라·지역별 색 — colors 에서 자동 생성됩니다 */
   .bar-fill.ge,.swatch.ge,.day.ge .day-rail::before,.day.ge.stay .node{background:#42606E;}
   .ccard.ge{border-left-color:#42606E;}
-  .ctr.ge .cdate{border-left-color:#42606E;}
+  .ctr.ge .cdate,.tl.ge .tl-d{border-left-color:#42606E;}
   .day.ge .node{border-color:#42606E;}
   .day.ge .bus{color:#42606E;background:rgba(66,96,110,.10);}
   .bar-fill.am,.swatch.am,.day.am .day-rail::before,.day.am.stay .node{background:#C87518;}
   .ccard.am{border-left-color:#C87518;}
-  .ctr.am .cdate{border-left-color:#C87518;}
+  .ctr.am .cdate,.tl.am .tl-d{border-left-color:#C87518;}
   .day.am .node{border-color:#C87518;}
   .day.am .bus{color:#C87518;background:rgba(200,117,24,.10);}
   .bar-fill.gr,.swatch.gr,.day.gr .day-rail::before,.day.gr.stay .node{background:#1F6FA5;}
   .ccard.gr{border-left-color:#1F6FA5;}
-  .ctr.gr .cdate{border-left-color:#1F6FA5;}
+  .ctr.gr .cdate,.tl.gr .tl-d{border-left-color:#1F6FA5;}
   .day.gr .node{border-color:#1F6FA5;}
   .day.gr .bus{color:#1F6FA5;background:rgba(31,111,165,.10);}
   .bar-fill.ae,.swatch.ae,.day.ae .day-rail::before,.day.ae.stay .node{background:#A97142;}
   .ccard.ae{border-left-color:#A97142;}
-  .ctr.ae .cdate{border-left-color:#A97142;}
+  .ctr.ae .cdate,.tl.ae .tl-d{border-left-color:#A97142;}
   .day.ae .node{border-color:#A97142;}
   .day.ae .bus{color:#A97142;background:rgba(169,113,66,.10);}
   .bar-fill.cn,.swatch.cn,.day.cn .day-rail::before,.day.cn.stay .node{background:#9E3B34;}
   .ccard.cn{border-left-color:#9E3B34;}
-  .ctr.cn .cdate{border-left-color:#9E3B34;}
+  .ctr.cn .cdate,.tl.cn .tl-d{border-left-color:#9E3B34;}
   .day.cn .node{border-color:#9E3B34;}
   .day.cn .bus{color:#9E3B34;background:rgba(158,59,52,.10);}
   @media (prefers-color-scheme:dark){
     .bar-fill.ge,.swatch.ge,.day.ge .day-rail::before,.day.ge.stay .node{background:#8FB4C4;}
     .ccard.ge{border-left-color:#8FB4C4;}
-    .ctr.ge .cdate{border-left-color:#8FB4C4;}
+    .ctr.ge .cdate,.tl.ge .tl-d{border-left-color:#8FB4C4;}
     .day.ge .node{border-color:#8FB4C4;}
     .day.ge .bus{color:#8FB4C4;background:rgba(143,180,196,.14);}
     .bar-fill.am,.swatch.am,.day.am .day-rail::before,.day.am.stay .node{background:#E5A153;}
     .ccard.am{border-left-color:#E5A153;}
-    .ctr.am .cdate{border-left-color:#E5A153;}
+    .ctr.am .cdate,.tl.am .tl-d{border-left-color:#E5A153;}
     .day.am .node{border-color:#E5A153;}
     .day.am .bus{color:#E5A153;background:rgba(229,161,83,.14);}
     .bar-fill.gr,.swatch.gr,.day.gr .day-rail::before,.day.gr.stay .node{background:#7EC1E8;}
     .ccard.gr{border-left-color:#7EC1E8;}
-    .ctr.gr .cdate{border-left-color:#7EC1E8;}
+    .ctr.gr .cdate,.tl.gr .tl-d{border-left-color:#7EC1E8;}
     .day.gr .node{border-color:#7EC1E8;}
     .day.gr .bus{color:#7EC1E8;background:rgba(126,193,232,.14);}
     .bar-fill.ae,.swatch.ae,.day.ae .day-rail::before,.day.ae.stay .node{background:#D9A66C;}
     .ccard.ae{border-left-color:#D9A66C;}
-    .ctr.ae .cdate{border-left-color:#D9A66C;}
+    .ctr.ae .cdate,.tl.ae .tl-d{border-left-color:#D9A66C;}
     .day.ae .node{border-color:#D9A66C;}
     .day.ae .bus{color:#D9A66C;background:rgba(217,166,108,.14);}
     .bar-fill.cn,.swatch.cn,.day.cn .day-rail::before,.day.cn.stay .node{background:#DE8B82;}
     .ccard.cn{border-left-color:#DE8B82;}
-    .ctr.cn .cdate{border-left-color:#DE8B82;}
+    .ctr.cn .cdate,.tl.cn .tl-d{border-left-color:#DE8B82;}
     .day.cn .node{border-color:#DE8B82;}
     .day.cn .bus{color:#DE8B82;background:rgba(222,139,130,.14);}
   }
@@ -183,14 +183,27 @@
   #view-cost:checked~.stage>.notes{display:none;}
   #view-cn:checked~.stage>.days{display:block;}
   #view-cn:checked~.stage>.days>:not(.cn):not(.keep){display:none;}
+  #view-cn:checked~.stage>.days>div:nth-of-type(1) .day-rail::before{top:30px;}
+  #view-cn:checked~.stage>.days>div:nth-of-type(1) .day-rail::before{bottom:auto;height:32px;}
+  #view-cn:checked~.stage>.days>div:nth-of-type(1) .day-rail::before{top:30px;height:0;}
   #view-ge:checked~.stage>.days{display:block;}
   #view-ge:checked~.stage>.days>:not(.ge):not(.keep){display:none;}
+  #view-ge:checked~.stage>.days>div:nth-of-type(3) .day-rail::before{top:30px;}
+  #view-ge:checked~.stage>.days>div:nth-of-type(8) .day-rail::before{bottom:auto;height:32px;}
   #view-am:checked~.stage>.days{display:block;}
   #view-am:checked~.stage>.days>:not(.am):not(.keep){display:none;}
+  #view-am:checked~.stage>.days>div:nth-of-type(9) .day-rail::before{top:30px;}
+  #view-am:checked~.stage>.days>div:nth-of-type(15) .day-rail::before{bottom:auto;height:32px;}
   #view-gr:checked~.stage>.days{display:block;}
   #view-gr:checked~.stage>.days>:not(.gr):not(.keep){display:none;}
+  #view-gr:checked~.stage>.days>div:nth-of-type(17) .day-rail::before{top:30px;}
+  #view-gr:checked~.stage>.days>div:nth-of-type(17) .day-rail::before{bottom:auto;height:32px;}
+  #view-gr:checked~.stage>.days>div:nth-of-type(17) .day-rail::before{top:30px;height:0;}
   #view-ae:checked~.stage>.days{display:block;}
   #view-ae:checked~.stage>.days>:not(.ae):not(.keep){display:none;}
+  #view-ae:checked~.stage>.days>div:nth-of-type(19) .day-rail::before{top:30px;}
+  #view-ae:checked~.stage>.days>div:nth-of-type(19) .day-rail::before{bottom:auto;height:32px;}
+  #view-ae:checked~.stage>.days>div:nth-of-type(19) .day-rail::before{top:30px;height:0;}
   #view-home:checked~.tabs .tab[for="view-home"],
   #view-cn:checked~.tabs .tab[for="view-cn"],
   #view-ge:checked~.tabs .tab[for="view-ge"],
@@ -224,7 +237,24 @@
     color:hsl(var(--muted-foreground));}
   .cc-city{font-size:12px;color:hsl(var(--muted-foreground));margin-top:6px;line-height:1.5;}
 
+  /* ── 하루씩 훑어보기 — 개요에서 16일을 한 화면에 ─────── */
+  .tline{border:1px solid hsl(var(--border));border-radius:var(--radius-lg);
+    overflow:hidden;box-shadow:var(--shadow-sm);background:hsl(var(--card));}
+  .tl{display:grid;grid-template-columns:74px 1fr;gap:12px;align-items:baseline;
+    padding:9px 16px;border-top:1px solid hsl(var(--border));cursor:pointer;
+    transition:background-color .12s;}
+  .tl:first-child{border-top:0;}
+  .tl:hover{background:hsl(var(--muted));}
+  .tl-d{font-family:var(--font-mono);font-size:12px;font-weight:500;
+    color:hsl(var(--foreground));border-left:3px solid transparent;
+    padding-left:9px;margin-left:-9px;}
+  .tl-d em{font-style:normal;color:hsl(var(--muted-foreground));margin-left:4px;}
+  .tl-p{font-size:13.5px;color:hsl(var(--card-foreground));line-height:1.5;}
+
   /* ── 예상경비 ─────────────────────────────────────────── */
+  .bar-name small{display:block;font-size:11px;font-weight:400;
+    color:hsl(var(--muted-foreground));margin-top:1px;}
+  .bar-row{align-items:center;}
   .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;
     margin-bottom:8px;}
   .kpi{display:flex;flex-direction:column;gap:3px;padding:16px 18px;
@@ -258,7 +288,10 @@
     margin-top:2px;line-height:1.55;}
   .cnum{font-family:var(--font-mono);font-size:12.5px;text-align:right;
     font-variant-numeric:tabular-nums;color:hsl(var(--card-foreground));}
+  .cnum small{display:block;font-size:11px;color:hsl(var(--muted-foreground));margin-top:2px;}
   .cacc{color:hsl(var(--muted-foreground));}
+  .ctr.d3{grid-template-columns:56px 1fr 104px;}   /* 구간별 교통비·입장료 */
+  .cfree{font-family:var(--font-sans);font-size:11.5px;color:hsl(var(--muted-foreground));}
 
   /* 환율 */
   .rates{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:10px;}
@@ -478,8 +511,13 @@
     .chead span:nth-child(3),.chead span:nth-child(4){display:none;}
     .cfoot span:nth-child(4){display:none;}
     .cfoot span:nth-child(3){text-align:left;}
+    .ctr.d3{grid-template-columns:52px 1fr;}
+    .ctr.d3 .cnum{grid-column:2;text-align:left;}
+    .ctr.d3 .cnum::before{content:none;}
+    .ctr.d3 .cnum small{display:inline;margin-left:6px;}
     .kpis{grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;}
     .kpi{padding:14px 15px;} .kpi-v{font-size:17px;}
+    .tl{grid-template-columns:62px 1fr;gap:10px;padding:9px 14px;}
   }
 
   /* ── 인쇄 ─────────────────────────────────────────────── */
@@ -592,6 +630,25 @@
     <label class="ccard am" for="view-am"><span class="cc-name">아르메니아</span><span class="cc-span">9.26 – 10.2</span><span class="cc-num">7일 · 7박</span><span class="cc-city">알라베르디 · 귬리 · 예레반</span></label>
     <label class="ccard gr" for="view-gr"><span class="cc-name">그리스</span><span class="cc-span">10.3</span><span class="cc-num">1일 · 1박</span><span class="cc-city">아테네</span></label>
     <label class="ccard ae" for="view-ae"><span class="cc-name">UAE</span><span class="cc-span">10.4</span><span class="cc-num">1일 · 1박</span><span class="cc-city">아부다비</span></label>
+  </div>
+  <p class="section-label">하루씩 훑어보기</p>
+  <div class="tline">
+    <label class="tl cn" for="view-cn"><span class="tl-d">9.19<em>토</em></span><span class="tl-p">상하이 훙차오 12:55 도착</span></label>
+    <label class="tl ge" for="view-ge"><span class="tl-d">9.20<em>일</em></span><span class="tl-p">트빌리시 도착</span></label>
+    <label class="tl ge" for="view-ge"><span class="tl-d">9.21<em>월</em></span><span class="tl-p">트빌리시 구시가</span></label>
+    <label class="tl ge" for="view-ge"><span class="tl-d">9.22<em>화</em></span><span class="tl-p">므츠헤타 반나절</span></label>
+    <label class="tl ge" for="view-ge"><span class="tl-d">9.23<em>수</em></span><span class="tl-p">군사도로 → 카즈베기 첫차로 최대한 일찍</span></label>
+    <label class="tl ge" for="view-ge"><span class="tl-d">9.24<em>목</em></span><span class="tl-p">주타 데이 트레킹 → 트빌리시 쉬운 코스</span></label>
+    <label class="tl ge" for="view-ge"><span class="tl-d">9.25<em>금</em></span><span class="tl-p">시그나기 · 보드베 카헤티 와인 지역</span></label>
+    <label class="tl am" for="view-am"><span class="tl-d">9.26<em>토</em></span><span class="tl-p">국경 → 알라베르디 수도원 두 곳</span></label>
+    <label class="tl am" for="view-am"><span class="tl-d">9.27<em>일</em></span><span class="tl-p">알라베르디 → 귬리 바나조르 환승</span></label>
+    <label class="tl am" for="view-am"><span class="tl-d">9.28<em>월</em></span><span class="tl-p">귬리 → 예레반 월요일 = 박물관 휴관</span></label>
+    <label class="tl am" for="view-am"><span class="tl-d">9.29<em>화</em></span><span class="tl-p">타테브 예레반발 1일 투어 · 14~15시간</span></label>
+    <label class="tl am" for="view-am"><span class="tl-d">9.30<em>수</em></span><span class="tl-p">가르니 · 게하르트 종일</span></label>
+    <label class="tl am" for="view-am"><span class="tl-d">10.1<em>목</em></span><span class="tl-p">에치미아진 · 즈바르트노츠</span></label>
+    <label class="tl am" for="view-am"><span class="tl-d">10.2<em>금</em></span><span class="tl-p">예레반 도심 도보 숙소 유지</span></label>
+    <label class="tl gr" for="view-gr"><span class="tl-d">10.3<em>토</em></span><span class="tl-p">아테네 06:20 도착, 하루 전체</span></label>
+    <label class="tl ae" for="view-ae"><span class="tl-d">10.4<em>일</em></span><span class="tl-p">아부다비 낮 40도+</span></label>
   </div>
   </div>
 
@@ -1035,20 +1092,29 @@
   </div>
   <p class="section-label">무엇에 쓰나</p>
   <div class="summary">
-    <div class="bar-row"><span class="bar-name">교통</span><span class="bar-track"><span class="bar-fill " style="width:87%"></span></span><span class="bar-num">423,397</span></div>
-    <div class="bar-row"><span class="bar-name">입장료</span><span class="bar-track"><span class="bar-fill " style="width:36%"></span></span><span class="bar-num">176,667</span></div>
-    <div class="bar-row"><span class="bar-name">식비</span><span class="bar-track"><span class="bar-fill " style="width:100%"></span></span><span class="bar-num">489,000</span></div>
-    <div class="bar-row"><span class="bar-name">숙박</span><span class="bar-track"><span class="bar-fill " style="width:67%"></span></span><span class="bar-num">329,552</span></div>
-    <div class="bar-row"><span class="bar-name">카페</span><span class="bar-track"><span class="bar-fill " style="width:18%"></span></span><span class="bar-num">87,000</span></div>
+    <div class="bar-row"><span class="bar-name">교통<small>28%</small></span><span class="bar-track"><span class="bar-fill " style="width:87%"></span></span><span class="bar-num">423,397</span></div>
+    <div class="bar-row"><span class="bar-name">입장료<small>12%</small></span><span class="bar-track"><span class="bar-fill " style="width:36%"></span></span><span class="bar-num">176,667</span></div>
+    <div class="bar-row"><span class="bar-name">식비<small>32%</small></span><span class="bar-track"><span class="bar-fill " style="width:100%"></span></span><span class="bar-num">489,000</span></div>
+    <div class="bar-row"><span class="bar-name">숙박<small>22%</small></span><span class="bar-track"><span class="bar-fill " style="width:67%"></span></span><span class="bar-num">329,552</span></div>
+    <div class="bar-row"><span class="bar-name">카페<small>6%</small></span><span class="bar-track"><span class="bar-fill " style="width:18%"></span></span><span class="bar-num">87,000</span></div>
   </div>
   <p class="section-label">어디에 쓰나</p>
   <div class="summary">
-    <div class="bar-row"><span class="bar-name">중국</span><span class="bar-track"><span class="bar-fill cn" style="width:12%"></span></span><span class="bar-num">71,090</span></div>
-    <div class="bar-row"><span class="bar-name">조지아</span><span class="bar-track"><span class="bar-fill ge" style="width:69%"></span></span><span class="bar-num">397,530</span></div>
-    <div class="bar-row"><span class="bar-name">아르메니아</span><span class="bar-track"><span class="bar-fill am" style="width:100%"></span></span><span class="bar-num">574,704</span></div>
-    <div class="bar-row"><span class="bar-name">그리스</span><span class="bar-track"><span class="bar-fill gr" style="width:43%"></span></span><span class="bar-num">245,640</span></div>
-    <div class="bar-row"><span class="bar-name">UAE</span><span class="bar-track"><span class="bar-fill ae" style="width:38%"></span></span><span class="bar-num">216,652</span></div>
+    <div class="bar-row"><span class="bar-name">중국<small>1일 · 하루 평균 71,090원</small></span><span class="bar-track"><span class="bar-fill cn" style="width:12%"></span></span><span class="bar-num">71,090</span></div>
+    <div class="bar-row"><span class="bar-name">조지아<small>6일 · 하루 평균 66,255원</small></span><span class="bar-track"><span class="bar-fill ge" style="width:69%"></span></span><span class="bar-num">397,530</span></div>
+    <div class="bar-row"><span class="bar-name">아르메니아<small>7일 · 하루 평균 82,101원</small></span><span class="bar-track"><span class="bar-fill am" style="width:100%"></span></span><span class="bar-num">574,704</span></div>
+    <div class="bar-row"><span class="bar-name">그리스<small>1일 · 하루 평균 245,640원</small></span><span class="bar-track"><span class="bar-fill gr" style="width:43%"></span></span><span class="bar-num">245,640</span></div>
+    <div class="bar-row"><span class="bar-name">UAE<small>2일 · 하루 평균 108,326원</small></span><span class="bar-track"><span class="bar-fill ae" style="width:38%"></span></span><span class="bar-num">216,652</span></div>
   </div>
+  <p class="section-label">통화별로 얼마나 필요한가</p>
+  <div class="rates">
+    <div class="rate"><b>61 CNY</b><span>12,871원</span></div>
+    <div class="rate"><b>257 GEL</b><span>139,037원</span></div>
+    <div class="rate"><b>46,800 AMD</b><span>181,584원</span></div>
+    <div class="rate"><b>84.2 EUR</b><span>138,088원</span></div>
+    <div class="rate"><b>332 AED</b><span>128,484원</span></div>
+  </div>
+  <p class="mapcap">교통·입장료만 더한 값입니다. 식비·숙박은 카드로 낼 수 있는지에 따라 달라져 뺐습니다.</p>
   <p class="section-label">일자별</p>
   <div class="ctab"><div class="ctr chead"><span>날짜</span><span>내용</span><span>하루</span><span>누계</span></div>
     <div class="ctr cn"><span class="cdate">9/19<em>토</em></span><span class="cdesc">상하이 — 예원·성황묘·와이탄 야경<small>교통 2,743 · 입장료 8,440 · 식비 25,000 · 숙박 28,907 · 카페 6,000</small></span><span class="cnum">71,090</span><span class="cnum cacc">71,090</span></div>
@@ -1069,6 +1135,75 @@
     <div class="ctr ae"><span class="cdate">10/4<em>일</em></span><span class="cdesc">아부다비 — 루브르·그랜드 모스크 (TRYP, 숙박 항공권 포함)<small>교통 108,853 · 입장료 24,381 · 식비 55,000 · 카페 8,000</small></span><span class="cnum">196,234</span><span class="cnum cacc">1,485,198</span></div>
     <div class="ctr ae"><span class="cdate">10/5<em>월</em></span><span class="cdesc">아부다비 → 인천 (08:35 출발) · 새벽 A2 버스<small>교통 5,418 · 식비 15,000</small></span><span class="cnum">20,418</span><span class="cnum cacc">1,505,616</span></div>
     <div class="ctr cfoot"><span>합계</span><span></span><span class="cnum">1,505,616</span><span class="cnum"></span></div>
+  </div>
+  <p class="section-label">구간별 교통비</p>
+  <div class="ctab">
+    <div class="ctr d3 cn"><span class="cdate">9/19</span><span class="cdesc">훙차오 공항 T1 → 난징둥루<small>지하철 10호선 · 환승 없이 직통, 약 45분</small></span><span class="cnum">1,055<small>5 CNY</small></span></div>
+    <div class="ctr d3 cn"><span class="cdate">9/19</span><span class="cdesc">상하이 시내 이동 (예원·와이탄)<small>지하철 10호선 · 도보 · 1회 3~4위안. 대부분 도보권</small></span><span class="cnum">1,688<small>8 CNY</small></span></div>
+    <div class="ctr d3 ge"><span class="cdate">9/20</span><span class="cdesc">시내 → 푸동 국제공항<small>지하철 2호선 · 광란루역에서 열차 갈아탐, 1시간 15분</small></span><span class="cnum">1,688<small>8 CNY</small></span></div>
+    <div class="ctr d3 ge"><span class="cdate">9/20</span><span class="cdesc">공항 → 트빌리시 시내<small>버스 37번 · 24시간 운행</small></span><span class="cnum">541<small>1 GEL</small></span></div>
+    <div class="ctr d3 ge"><span class="cdate">9/21</span><span class="cdesc">트빌리시 시내<small>지하철·버스 (메트로머니) · 1회 1라리, 90분 내 환승 무료</small></span><span class="cnum">2,164<small>4 GEL</small></span></div>
+    <div class="ctr d3 ge"><span class="cdate">9/22</span><span class="cdesc">디두베 → 므츠헤타 왕복<small>마르슈르트카 · 20분 간격, 30분 소요</small></span><span class="cnum">1,623<small>3 GEL</small></span></div>
+    <div class="ctr d3 ge"><span class="cdate">9/22</span><span class="cdesc">므츠헤타 → 즈바리 수도원 왕복<small>택시 (대기 포함) · 대중교통 없음 · 1인 단독이라 전액 부담</small></span><span class="cnum">13,525<small>25 GEL</small></span></div>
+    <div class="ctr d3 ge"><span class="cdate">9/23</span><span class="cdesc">디두베 → 스테판츠민다<small>마르슈르트카 · 3.5~4시간 · 06:40 터미널 도착해 첫 편 탑승 권장</small></span><span class="cnum">8,115<small>15 GEL</small></span></div>
+    <div class="ctr d3 ge"><span class="cdate">9/23</span><span class="cdesc">스테판츠민다 → 게르게티 교회<small>4WD (편도) · 하산은 도보 · 카즈베기 1박이라 도착일 오후에 확정 이용. 하산은 도보. 흐리면 B안(1박 연장)</small></span><span class="cnum">13,525<small>25 GEL</small></span></div>
+    <div class="ctr d3 ge"><span class="cdate">9/24</span><span class="cdesc">스테판츠민다 → 트빌리시<small>마르슈르트카 · 주타 복귀 후 14:00 편 · 약 3~3.5시간</small></span><span class="cnum">8,115<small>15 GEL</small></span></div>
+    <div class="ctr d3 ge"><span class="cdate">9/24</span><span class="cdesc">트빌리시 시내 (디두베 → 숙소)<small>지하철·버스 · 지하철</small></span><span class="cnum">1,082<small>2 GEL</small></span></div>
+    <div class="ctr d3 am"><span class="cdate">9/26</span><span class="cdesc">오르타찰라 → 알라베르디<small>합승택시 (예레반행) · 오전 정시편(08:20) 이용 — 대기 불확실성 해소</small></span><span class="cnum">21,640<small>40 GEL</small></span></div>
+    <div class="ctr d3 am"><span class="cdate">9/26</span><span class="cdesc">알라베르디 → 사나힌 왕복<small>3번 버스 · 왕복 400드람 · 택시로 하흐파트와 묶으면 6,000드람 안팎</small></span><span class="cnum">1,552<small>400 AMD</small></span></div>
+    <div class="ctr d3 am"><span class="cdate">9/26</span><span class="cdesc">알라베르디 → 하흐파트 왕복<small>마르슈르트카 · 주말 3편(9·13·17시)뿐</small></span><span class="cnum">1,552<small>400 AMD</small></span></div>
+    <div class="ctr d3 am"><span class="cdate">9/27</span><span class="cdesc">알라베르디 → 바나조르<small>마르슈르트카 · 1시간 · 09:00·10:30·11:00·13:00 네 편</small></span><span class="cnum">1,940<small>500 AMD</small></span></div>
+    <div class="ctr d3 am"><span class="cdate">9/27</span><span class="cdesc">바나조르 → 귬리<small>마르슈르트카 · 스피타크 경유 1시간 40분 · 1,000~1,500드람</small></span><span class="cnum">5,820<small>1,500 AMD</small></span></div>
+    <div class="ctr d3 am"><span class="cdate">9/28</span><span class="cdesc">귬리 → 예레반<small>마르슈르트카 · 2시간 · 수시 출발 · 급행 전동열차도 비슷한 값</small></span><span class="cnum">7,760<small>2,000 AMD</small></span></div>
+    <div class="ctr d3 am"><span class="cdate">9/29</span><span class="cdesc">예레반 → 코르 비랍 · 노라방크 · 타테브 (왕복)<small>1일 그룹투어 (미니버스) · Hyur Service 63.72달러 · 입장료·케이블카 포함, 점심 별도 · 08:30~22:30</small></span><span class="cnum">97,000<small>25,000 AMD</small></span></div>
+    <div class="ctr d3 am"><span class="cdate">9/27</span><span class="cdesc">킬리키아 터미널 → 시내<small>버스 · 또는 얀덱스 택시</small></span><span class="cnum">388<small>100 AMD</small></span></div>
+    <div class="ctr d3 am"><span class="cdate">9/30</span><span class="cdesc">가르니 → 게하르트 왕복<small>택시 · 9km, 대중교통 없음 · 1인 단독이라 전액 부담</small></span><span class="cnum">11,640<small>3,000 AMD</small></span></div>
+    <div class="ctr d3 am"><span class="cdate">10/1</span><span class="cdesc">예레반 → 에치미아진 왕복<small>마르슈르트카 · 킬리키아 터미널</small></span><span class="cnum">2,328<small>600 AMD</small></span></div>
+    <div class="ctr d3 gr"><span class="cdate">10/3</span><span class="cdesc">예레반 → 즈바르트노츠 공항<small>택시 · 01:30경 출발, 심야 할증 감안</small></span><span class="cnum">15,520<small>4,000 AMD</small></span></div>
+    <div class="ctr d3 gr"><span class="cdate">10/3</span><span class="cdesc">아테네 공항 → 신타그마역<small>메트로 3호선 · 공항선 정액 10유로, 40분</small></span><span class="cnum">16,400<small>10 EUR</small></span></div>
+    <div class="ctr d3 gr"><span class="cdate">10/3</span><span class="cdesc">아테네 시내 이동<small>메트로·트램 4~5회 · 1회 1.20유로. 대부분 도보권이라 보조 수단</small></span><span class="cnum">9,840<small>6 EUR</small></span></div>
+    <div class="ctr d3 ae"><span class="cdate">10/4</span><span class="cdesc">아테네 → 공항 (04:10 출발)<small>X95 공항버스 · 신타그마 발 24시간 운행 · 야간 60분 간격이라 03:55까지 정류장 도착 · 승차권은 전날 지하철역에서 미리 구입 · 택시는 심야 정액 55유로</small></span><span class="cnum">10,168<small>6.2 EUR</small></span></div>
+    <div class="ctr d3 ae"><span class="cdate">10/4</span><span class="cdesc">자이드 국제공항 → TRYP 호텔<small>택시 · 칼리파 bin 자이드 St · 30~40분 · 미터 약 85~100디르함</small></span><span class="cnum">34,830<small>90 AED</small></span></div>
+    <div class="ctr d3 ae"><span class="cdate">10/4</span><span class="cdesc">TRYP 호텔 → 루브르 아부다비<small>택시 · 사디야트 섬 · 약 14km, 20~25분</small></span><span class="cnum">17,415<small>45 AED</small></span></div>
+    <div class="ctr d3 ae"><span class="cdate">10/4</span><span class="cdesc">루브르 → 셰이크 자이드 모스크<small>택시 · 섬 반대편 횡단 약 28km, 30~35분 · 94번 버스면 2디르함이나 60~75분</small></span><span class="cnum">29,025<small>75 AED</small></span></div>
+    <div class="ctr d3 ae"><span class="cdate">10/4</span><span class="cdesc">모스크 → TRYP 호텔<small>택시 · 약 14km, 18~20분</small></span><span class="cnum">17,415<small>45 AED</small></span></div>
+    <div class="ctr d3"><span class="cdate">10/5</span><span class="cdesc">TRYP 호텔 → 공항 (05:30)<small>A2 공항버스 · 버스 4디르함 + 하필라트 카드 10디르함 · 칼리파 bin 자이드 St 승차 · 40~45분</small></span><span class="cnum">5,418<small>14 AED</small></span></div>
+    <div class="ctr d3 am"><span class="cdate">9/30</span><span class="cdesc">예레반 → 가르니 왕복<small>266·284번 버스 · 가이 정류장 출발 · 30분 간격 · 왕복 500드람</small></span><span class="cnum">1,940<small>500 AMD</small></span></div>
+    <div class="ctr d3 ge"><span class="cdate">9/24</span><span class="cdesc">스테판츠민다 → 주타 왕복<small>4WD 택시 (대기 포함) · 대중교통 없음 · 25km 비포장 · 1인 단독이면 전액. 동행 구하면 40라리</small></span><span class="cnum">43,280<small>80 GEL</small></span></div>
+    <div class="ctr d3 ge"><span class="cdate">9/25</span><span class="cdesc">트빌리시 → 시그나기 왕복<small>마르슈르트카 · 삼고리 터미널 출발 · 편도 2~2.5시간 · 보드베는 요청하면 하차 · 돌아오는 막차 18~19시</small></span><span class="cnum">13,525<small>25 GEL</small></span></div>
+    <div class="ctr d3 am"><span class="cdate">9/29</span><span class="cdesc">투어 사무실 → 숙소 (심야)<small>택시 또는 도보 · 22:30 이후 날반댠 96번지 하차 · 도보 10분이면 0원</small></span><span class="cnum">3,880<small>1,000 AMD</small></span></div>
+    <div class="ctr d3 cfoot"><span>합계</span><span></span><span class="cnum">423,397</span></div>
+  </div>
+  <p class="section-label">입장료</p>
+  <div class="ctab">
+    <div class="ctr d3 cn"><span class="cdate">9/19</span><span class="cdesc">예원 (豫园)<small>09:00~16:30 폐장(매표 마감 더 이름) · 9월은 성수기 요금 40위안</small></span><span class="cnum">8,440<small>40 CNY</small></span></div>
+    <div class="ctr d3 ge"><span class="cdate">9/21</span><span class="cdesc">아바노투바니 유황온천 (공용탕)<small>개인탕은 50~100라리</small></span><span class="cnum">2,705<small>5 GEL</small></span></div>
+    <div class="ctr d3 ge"><span class="cdate">9/21</span><span class="cdesc">나리칼라 케이블카 편도×2<small>메트로머니로 결제</small></span><span class="cnum">1,082<small>2 GEL</small></span></div>
+    <div class="ctr d3 ge"><span class="cdate">9/22</span><span class="cdesc">스베티츠호벨리 대성당<small>무료</small></span><span class="cnum"><span class="cfree">무료</span></span></div>
+    <div class="ctr d3 ge"><span class="cdate">9/22</span><span class="cdesc">즈바리 수도원<small>무료</small></span><span class="cnum"><span class="cfree">무료</span></span></div>
+    <div class="ctr d3 ge"><span class="cdate">9/24</span><span class="cdesc">게르게티 삼위일체 교회<small>무료</small></span><span class="cnum"><span class="cfree">무료</span></span></div>
+    <div class="ctr d3 am"><span class="cdate">9/26</span><span class="cdesc">사나힌 수도원<small>무료</small></span><span class="cnum"><span class="cfree">무료</span></span></div>
+    <div class="ctr d3 ge"><span class="cdate">9/25</span><span class="cdesc">시그나기 와이너리 시음 (선택)<small>크베브리 오렌지와인. 생략 가능 · 보드베·시그나기 성벽은 무료</small></span><span class="cnum">8,115<small>15 GEL</small></span></div>
+    <div class="ctr d3 am"><span class="cdate">9/26</span><span class="cdesc">하흐파트 수도원<small>무료</small></span><span class="cnum"><span class="cfree">무료</span></span></div>
+    <div class="ctr d3 am"><span class="cdate">9/30</span><span class="cdesc">가르니 신전<small>돌의 교향곡은 무료</small></span><span class="cnum">6,984<small>1,800 AMD</small></span></div>
+    <div class="ctr d3 am"><span class="cdate">9/30</span><span class="cdesc">게하르트 수도원<small>무료</small></span><span class="cnum"><span class="cfree">무료</span></span></div>
+    <div class="ctr d3 am"><span class="cdate">10/1</span><span class="cdesc">에치미아진 보물관<small>대성당 자체는 무료</small></span><span class="cnum">5,820<small>1,500 AMD</small></span></div>
+    <div class="ctr d3 am"><span class="cdate">9/29</span><span class="cdesc">코르 비랍<small>무료 · 투어 포함</small></span><span class="cnum"><span class="cfree">무료</span></span></div>
+    <div class="ctr d3 gr"><span class="cdate">10/3</span><span class="cdesc">아크로폴리스<small>hhticket.gr 공식 정가 30유로(연중 동일) · 타임드 엔트리 필수 · 60일 전 오픈, 성수기 5~7일 전 매진</small></span><span class="cnum">49,200<small>30 EUR</small></span></div>
+    <div class="ctr d3 gr"><span class="cdate">10/3</span><span class="cdesc">고대 아고라 · 헤파이스토스 신전<small>통합권 폐지로 별도 구매 필요 — 현장 확인</small></span><span class="cnum">19,680<small>12 EUR</small></span></div>
+    <div class="ctr d3 gr"><span class="cdate">10/3</span><span class="cdesc">아크로폴리스 박물관<small>실제 확인가 (별도 티켓)</small></span><span class="cnum">32,800<small>20 EUR</small></span></div>
+    <div class="ctr d3 ae"><span class="cdate">10/4</span><span class="cdesc">루브르 아부다비<small>10/4 일요일 10:00~20:30, 최종 입장 20:00 · 월요일 휴관 · 돔은 자정까지</small></span><span class="cnum">24,381<small>63 AED</small></span></div>
+    <div class="ctr d3 ae"><span class="cdate">10/4</span><span class="cdesc">셰이크 자이드 그랜드 모스크<small>무료</small></span><span class="cnum"><span class="cfree">무료</span></span></div>
+    <div class="ctr d3 am"><span class="cdate">9/27</span><span class="cdesc">지토그흐치안 도시생활박물관 (귬리)<small>화~금 10:00~17:00 · 일요일 개관 여부 현지 확인</small></span><span class="cnum">3,880<small>1,000 AMD</small></span></div>
+    <div class="ctr d3 am"><span class="cdate">10/2</span><span class="cdesc">마테나다란 고문서관<small>화~토 10:00~17:50 · 금요일 개관</small></span><span class="cnum">7,760<small>2,000 AMD</small></span></div>
+    <div class="ctr d3 am"><span class="cdate">10/2</span><span class="cdesc">카페시안 미술관<small>기부제 · 금~일 20:00까지</small></span><span class="cnum"><span class="cfree">무료</span></span></div>
+    <div class="ctr d3 am"><span class="cdate">10/1</span><span class="cdesc">성 흐립시메 교회<small>무료 · 유네스코</small></span><span class="cnum"><span class="cfree">무료</span></span></div>
+    <div class="ctr d3 am"><span class="cdate">10/1</span><span class="cdesc">즈바르트노츠 유적<small>7세기 원형 성당 터</small></span><span class="cnum">5,820<small>1,500 AMD</small></span></div>
+    <div class="ctr d3 am"><span class="cdate">10/1</span><span class="cdesc">대학살 추모관 박물관<small>무료 · 17:00 마감 · 월요일 휴관</small></span><span class="cnum"><span class="cfree">무료</span></span></div>
+    <div class="ctr d3 am"><span class="cdate">9/29</span><span class="cdesc">노라방크<small>무료 · 투어 포함</small></span><span class="cnum"><span class="cfree">무료</span></span></div>
+    <div class="ctr d3 am"><span class="cdate">9/29</span><span class="cdesc">윙스 오브 타테브 케이블카<small>투어 요금에 포함 (개별 구매 시 8,000드람) · 월요일 휴무</small></span><span class="cnum"><span class="cfree">무료</span></span></div>
+    <div class="ctr d3 am"><span class="cdate">9/29</span><span class="cdesc">타테브 수도원<small>무료</small></span><span class="cnum"><span class="cfree">무료</span></span></div>
+    <div class="ctr d3 cfoot"><span>합계</span><span></span><span class="cnum">176,667</span></div>
   </div>
   <p class="section-label">적용 환율</p>
   <div class="rates">
