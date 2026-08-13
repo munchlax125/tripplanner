@@ -127,13 +127,29 @@ transport:
   pub: ○
   note: 주말 3편(9·13·17시)뿐
 - date: 9/27
-  seg: 알라베르디 → 예레반
+  seg: 알라베르디 → 바나조르
   mode: 마르슈르트카
   kind: 시외
-  amt: 1900
+  amt: 500
   cur: AMD
   pub: ○
-  note: 첫차 07:30 · 스피타크·아파란 경유 약 4시간 · 직행 없으면 바나조르 환승
+  note: 1시간 · 09:00·10:30·11:00·13:00 네 편
+- date: 9/27
+  seg: 바나조르 → 귬리
+  mode: 마르슈르트카
+  kind: 시외
+  amt: 1500
+  cur: AMD
+  pub: ○
+  note: 스피타크 경유 1시간 40분 · 1,000~1,500드람
+- date: 9/28
+  seg: 귬리 → 예레반
+  mode: 마르슈르트카
+  kind: 시외
+  amt: 2000
+  cur: AMD
+  pub: ○
+  note: 2시간 · 수시 출발 · 급행 전동열차도 비슷한 값
 - date: 10/2
   seg: 예레반 → 세반 왕복
   mode: 마르슈르트카
@@ -158,7 +174,7 @@ transport:
   cur: AMD
   pub: ○
   note: 또는 얀덱스 택시
-- date: 9/28
+- date: 9/30
   seg: 가르니 → 게하르트 왕복
   mode: 택시
   kind: 시내
@@ -166,7 +182,7 @@ transport:
   cur: AMD
   pub: ✕
   note: 9km, 대중교통 없음 · 1인 단독이라 전액 부담
-- date: 9/29
+- date: 10/1
   seg: 예레반 → 에치미아진 왕복
   mode: 마르슈르트카
   kind: 시내
@@ -182,46 +198,6 @@ transport:
   cur: AMD
   pub: △
   note: 하루 몇 편뿐
-- date: 9/30
-  seg: 예레반 → 아레니 갈림길 → 고리스
-  mode: 마르슈르트카
-  kind: 시외
-  amt: 3000
-  cur: AMD
-  pub: ○
-  note: 노라방크 입구에서 하차 후 지나가는 차 재탑승
-- date: 9/30
-  seg: 아레니 갈림길 → 노라방크 왕복
-  mode: 택시
-  kind: 시내
-  amt: 4000
-  cur: AMD
-  pub: ✕
-  note: 8km, 대중교통 없음 · 1인 단독이라 전액 부담
-- date: 10/1
-  seg: 고리스 → 할리조르 승강장 왕복
-  mode: 택시
-  kind: 시내
-  amt: 6000
-  cur: AMD
-  pub: ✕
-  note: 타테브 케이블카 승강장 · 1인 단독이라 전액 부담
-- date: 10/1
-  seg: 고리스 → 예레반
-  mode: 마르슈르트카
-  kind: 시외
-  amt: 3000
-  cur: AMD
-  pub: ○
-  note: 607번 · 고리스 출발 07·09·15·16시 네 편뿐 · 15:00 편 이용 · 4~5시간
-- date: 10/2
-  seg: 예레반 시내 (베르니사쥬 등)
-  mode: 택시 2회
-  kind: 시내
-  amt: 1500
-  cur: AMD
-  pub: △
-  note: 숙소 유지, 짐 이동 없음
 - date: 10/3
   seg: 예레반 → 즈바르트노츠 공항
   mode: 택시
@@ -294,7 +270,7 @@ transport:
   cur: AED
   pub: ○
   note: 버스 4디르함 + 하필라트 카드 10디르함 · 칼리파 bin 자이드 St 승차 · 40~45분
-- date: 9/28
+- date: 9/30
   seg: 예레반 → 가르니 왕복
   mode: 266·284번 버스
   kind: 시외
@@ -371,38 +347,23 @@ tickets:
   amt: 0
   cur: AMD
   note: 무료
-- date: 9/28
+- date: 9/30
   place: 가르니 신전
   amt: 1800
   cur: AMD
   note: 돌의 교향곡은 무료
-- date: 9/28
+- date: 9/30
   place: 게하르트 수도원
   amt: 0
   cur: AMD
   note: 무료
-- date: 9/29
+- date: 10/1
   place: 에치미아진 보물관
   amt: 1500
   cur: AMD
   note: 대성당 자체는 무료
 - date: 9/29
   place: 코르 비랍
-  amt: 0
-  cur: AMD
-  note: 무료
-- date: 9/30
-  place: 노라방크
-  amt: 0
-  cur: AMD
-  note: 무료
-- date: 10/1
-  place: 윙스 오브 타테브 케이블카 왕복
-  amt: 8000
-  cur: AMD
-  note: 월요일 휴무
-- date: 10/1
-  place: 타테브 수도원
   amt: 0
   cur: AMD
   note: 무료
@@ -431,6 +392,36 @@ tickets:
   amt: 0
   cur: AED
   note: 무료
+- date: 9/27
+  place: 지토그흐치안 도시생활박물관 (귬리)
+  amt: 1000
+  cur: AMD
+  note: 화~금 10:00~17:00 · 일요일 개관 여부 현지 확인
+- date: 9/29
+  place: 마테나다란 고문서관
+  amt: 2000
+  cur: AMD
+  note: 화~토 10:00~17:50 · 일·월 휴관
+- date: 9/29
+  place: 카페시안 미술관
+  amt: 0
+  cur: AMD
+  note: 기부제 · 월요일 휴관
+- date: 10/1
+  place: 성 흐립시메 교회
+  amt: 0
+  cur: AMD
+  note: 무료 · 유네스코
+- date: 10/1
+  place: 즈바르트노츠 유적
+  amt: 1500
+  cur: AMD
+  note: 7세기 원형 성당 터
+- date: 10/1
+  place: 대학살 추모관 박물관
+  amt: 0
+  cur: AMD
+  note: 무료 · 17:00 마감 · 월요일 휴관
 ticket_note: 조지아·아르메니아 수도원은 대부분 무료입니다. 지출은 타테브 케이블카·아크로폴리스·루브르에 몰려 있습니다.
 days:
 - date: 9/19
@@ -483,31 +474,31 @@ days:
   cafe: 5000
 - date: 9/27
   dow: 일
-  desc: 예레반 — 베르니사쥬·캐스케이드
+  desc: 귬리 — 쿠마이리 구시가
   food: 27000
   stay: 20000
   cafe: 5000
 - date: 9/28
   dow: 월
-  desc: 예레반 — 가르니·게하르트
+  desc: 예레반 — 귬리에서 이동 · 시내
   food: 30000
   stay: 20000
   cafe: 6000
 - date: 9/29
   dow: 화
-  desc: 예레반 — 에치미아진·코르 비랍
+  desc: 예레반 — 코르 비랍·마테나다란
   food: 30000
   stay: 20000
   cafe: 6000
 - date: 9/30
   dow: 수
-  desc: 고리스 — 노라방크
+  desc: 예레반 — 가르니·게하르트
   food: 30000
-  stay: 25000
+  stay: 20000
   cafe: 5000
 - date: 10/1
   dow: 목
-  desc: 예레반 복귀 — 타테브
+  desc: 예레반 — 에치미아진·즈바르트노츠
   food: 30000
   stay: 20000
   cafe: 5000
