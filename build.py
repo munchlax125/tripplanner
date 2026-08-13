@@ -48,23 +48,39 @@ def _rgb(h):
 
 
 def color_css():
-    """나라·지역 키마다 필요한 CSS를 만들어 head.html 의 __COLORCSS__ 자리에 넣습니다."""
-    def rules(k, col, alpha):
-        r, g, b = _rgb(col)
-        return ['.bar-fill.%s,.swatch.%s,.day.%s .day-rail::before,.day.%s.stay .node{background:%s;}'
-                % (k, k, k, k, col),
-                '.ccard.%s{border-left-color:%s;}' % (k, col),
-                '.ctr.%s .cdate,.tl.%s .tl-d{border-left-color:%s;}' % (k, k, col),
-                '.day.%s .node{border-color:%s;}' % (k, col),
-                '.day.%s .bus{color:%s;background:rgba(%d,%d,%d,%s);}' % (k, col, r, g, b, alpha)]
-    lt, dk = [], []
-    for k, v in RAW_COLORS.items():
-        if k == 'ov':
-            continue
-        lt += rules(k, light_of(v), '.10')
-        dk += rules(k, dark_of(v), '.14')
-    return ('  ' + '\n  '.join(lt) +
-            '\n  @media (prefers-color-scheme:dark){\n    ' + '\n    '.join(dk) + '\n  }')
+    """나라·지역 색을 토큰으로 만들어 head.html 의 __COLORCSS__ 자리에 넣습니다.
+
+    라이트/다크를 '토큰'에서만 갈라 놓습니다. 그래야 OS 설정(무표시)과
+    사용자가 명시한 data-theme 세 상태가 모두 같은 규칙으로 해결됩니다.
+    """
+    keys = [k for k in RAW_COLORS if k != 'ov']
+
+    def tokens(pick, alpha):
+        out = []
+        for k in keys:
+            col = pick(RAW_COLORS[k])
+            r, g, b = _rgb(col)
+            out.append('--c-%s:%s; --c-%s-rgb:%d %d %d; --c-%s-a:%s;'
+                       % (k, col, k, r, g, b, k, alpha))
+        return out
+
+    lt = tokens(light_of, '.10')
+    dk = tokens(dark_of, '.14')
+    rules = []
+    for k in keys:
+        rules += [
+            '.bar-fill.%s,.swatch.%s,.day.%s .day-rail::before,.day.%s.stay .node'
+            '{background:var(--c-%s);}' % (k, k, k, k, k),
+            '.ccard.%s{border-left-color:var(--c-%s);}' % (k, k),
+            '.ctr.%s .cdate,.tl.%s .tl-d{border-left-color:var(--c-%s);}' % (k, k, k),
+            '.day.%s .node{border-color:var(--c-%s);}' % (k, k),
+            '.day.%s .bus{color:var(--c-%s);'
+            'background:rgb(var(--c-%s-rgb)/var(--c-%s-a));}' % (k, k, k, k)]
+    return ('  :root{\n    ' + '\n    '.join(lt) + '\n  }\n'
+            '  @media (prefers-color-scheme:dark){\n    :root:not([data-theme="light"]){\n      '
+            + '\n      '.join(dk) + '\n    }\n  }\n'
+            '  :root[data-theme="dark"]{\n    ' + '\n    '.join(dk) + '\n  }\n'
+            '  ' + '\n  '.join(rules))
 OVERVIEW_MAP = doc.get('overview_map')               # 없으면 개요 지도를 넣지 않습니다
 
 # 문단 제목. labels 로 덮어쓰거나 빈 문자열을 주면 그 구획이 사라집니다.

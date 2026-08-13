@@ -36,12 +36,20 @@
       "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
     --font-mono:"JetBrains Mono","IBM Plex Sans KR",ui-monospace,SFMono-Regular,
       Menlo,"Malgun Gothic",monospace;
+    --good:142 72% 29%;
+    --map-water:31 111 165;
+    --map-road:94 80 68;
+    --map-bord:36 30 34;
+    --map-a-sea:.13; --map-a-water:.17; --map-a-riv:.34; --map-a-coast:.45;
+    --map-a-r1:.34; --map-a-r2:.26; --map-a-r3:.21; --map-a-r4:.17; --map-a-r5:.15;
+    --map-a-bord:.38;
     --shadow-sm:0 1px 2px 0 rgb(0 0 0 / .05);
     --shadow:0 1px 3px 0 rgb(0 0 0 / .1), 0 1px 2px -1px rgb(0 0 0 / .1);
     color-scheme:light dark;
   }
+  /* OS 가 다크이고, 사용자가 라이트를 명시하지 않았을 때 */
   @media (prefers-color-scheme:dark){
-    :root{
+    :root:not([data-theme="light"]){
       --background:240 10% 3.9%;
       --foreground:0 0% 98%;
       --card:240 10% 5.9%;
@@ -58,9 +66,44 @@
       --destructive-foreground:0 0% 98%;
       --border:240 3.7% 18%;
       --ring:240 4.9% 40%;
+      --good:141 76% 58%;
       --shadow-sm:0 1px 2px 0 rgb(0 0 0 / .4);
       --shadow:0 1px 3px 0 rgb(0 0 0 / .5), 0 1px 2px -1px rgb(0 0 0 / .5);
+      --map-water:126 193 232;
+      --map-road:226 216 206;
+      --map-bord:239 233 228;
+      --map-a-sea:.11; --map-a-water:.13; --map-a-riv:.30; --map-a-coast:.34;
+      --map-a-r1:.28; --map-a-r2:.21; --map-a-r3:.16; --map-a-r4:.13; --map-a-r5:.11;
+      --map-a-bord:.34;
     }
+  }
+  /* 사용자가 다크를 명시했을 때 — OS 설정을 이깁니다 */
+  :root[data-theme="dark"]{
+      --background:240 10% 3.9%;
+      --foreground:0 0% 98%;
+      --card:240 10% 5.9%;
+      --card-foreground:0 0% 98%;
+      --primary:0 0% 98%;
+      --primary-foreground:240 5.9% 10%;
+      --secondary:240 3.7% 15.9%;
+      --secondary-foreground:0 0% 98%;
+      --muted:240 3.7% 15.9%;
+      --muted-foreground:240 5% 64.9%;
+      --accent:240 3.7% 15.9%;
+      --accent-foreground:0 0% 98%;
+      --destructive:0 62.8% 50%;
+      --destructive-foreground:0 0% 98%;
+      --border:240 3.7% 18%;
+      --ring:240 4.9% 40%;
+      --good:141 76% 58%;
+      --shadow-sm:0 1px 2px 0 rgb(0 0 0 / .4);
+      --shadow:0 1px 3px 0 rgb(0 0 0 / .5), 0 1px 2px -1px rgb(0 0 0 / .5);
+      --map-water:126 193 232;
+      --map-road:226 216 206;
+      --map-bord:239 233 228;
+      --map-a-sea:.11; --map-a-water:.13; --map-a-riv:.30; --map-a-coast:.34;
+      --map-a-r1:.28; --map-a-r2:.21; --map-a-r3:.16; --map-a-r4:.13; --map-a-r5:.11;
+      --map-a-bord:.34;
   }
   /* 반지름 단계 — shadcn 의 rounded-lg / -md / -sm */
   :root{
@@ -119,58 +162,54 @@
   .swatch.air{background:hsl(var(--muted-foreground));}
 
   /* 나라·지역별 색 — colors 에서 자동 생성됩니다 */
-  .bar-fill.ge,.swatch.ge,.day.ge .day-rail::before,.day.ge.stay .node{background:#42606E;}
-  .ccard.ge{border-left-color:#42606E;}
-  .ctr.ge .cdate,.tl.ge .tl-d{border-left-color:#42606E;}
-  .day.ge .node{border-color:#42606E;}
-  .day.ge .bus{color:#42606E;background:rgba(66,96,110,.10);}
-  .bar-fill.am,.swatch.am,.day.am .day-rail::before,.day.am.stay .node{background:#C87518;}
-  .ccard.am{border-left-color:#C87518;}
-  .ctr.am .cdate,.tl.am .tl-d{border-left-color:#C87518;}
-  .day.am .node{border-color:#C87518;}
-  .day.am .bus{color:#C87518;background:rgba(200,117,24,.10);}
-  .bar-fill.gr,.swatch.gr,.day.gr .day-rail::before,.day.gr.stay .node{background:#1F6FA5;}
-  .ccard.gr{border-left-color:#1F6FA5;}
-  .ctr.gr .cdate,.tl.gr .tl-d{border-left-color:#1F6FA5;}
-  .day.gr .node{border-color:#1F6FA5;}
-  .day.gr .bus{color:#1F6FA5;background:rgba(31,111,165,.10);}
-  .bar-fill.ae,.swatch.ae,.day.ae .day-rail::before,.day.ae.stay .node{background:#A97142;}
-  .ccard.ae{border-left-color:#A97142;}
-  .ctr.ae .cdate,.tl.ae .tl-d{border-left-color:#A97142;}
-  .day.ae .node{border-color:#A97142;}
-  .day.ae .bus{color:#A97142;background:rgba(169,113,66,.10);}
-  .bar-fill.cn,.swatch.cn,.day.cn .day-rail::before,.day.cn.stay .node{background:#9E3B34;}
-  .ccard.cn{border-left-color:#9E3B34;}
-  .ctr.cn .cdate,.tl.cn .tl-d{border-left-color:#9E3B34;}
-  .day.cn .node{border-color:#9E3B34;}
-  .day.cn .bus{color:#9E3B34;background:rgba(158,59,52,.10);}
-  @media (prefers-color-scheme:dark){
-    .bar-fill.ge,.swatch.ge,.day.ge .day-rail::before,.day.ge.stay .node{background:#8FB4C4;}
-    .ccard.ge{border-left-color:#8FB4C4;}
-    .ctr.ge .cdate,.tl.ge .tl-d{border-left-color:#8FB4C4;}
-    .day.ge .node{border-color:#8FB4C4;}
-    .day.ge .bus{color:#8FB4C4;background:rgba(143,180,196,.14);}
-    .bar-fill.am,.swatch.am,.day.am .day-rail::before,.day.am.stay .node{background:#E5A153;}
-    .ccard.am{border-left-color:#E5A153;}
-    .ctr.am .cdate,.tl.am .tl-d{border-left-color:#E5A153;}
-    .day.am .node{border-color:#E5A153;}
-    .day.am .bus{color:#E5A153;background:rgba(229,161,83,.14);}
-    .bar-fill.gr,.swatch.gr,.day.gr .day-rail::before,.day.gr.stay .node{background:#7EC1E8;}
-    .ccard.gr{border-left-color:#7EC1E8;}
-    .ctr.gr .cdate,.tl.gr .tl-d{border-left-color:#7EC1E8;}
-    .day.gr .node{border-color:#7EC1E8;}
-    .day.gr .bus{color:#7EC1E8;background:rgba(126,193,232,.14);}
-    .bar-fill.ae,.swatch.ae,.day.ae .day-rail::before,.day.ae.stay .node{background:#D9A66C;}
-    .ccard.ae{border-left-color:#D9A66C;}
-    .ctr.ae .cdate,.tl.ae .tl-d{border-left-color:#D9A66C;}
-    .day.ae .node{border-color:#D9A66C;}
-    .day.ae .bus{color:#D9A66C;background:rgba(217,166,108,.14);}
-    .bar-fill.cn,.swatch.cn,.day.cn .day-rail::before,.day.cn.stay .node{background:#DE8B82;}
-    .ccard.cn{border-left-color:#DE8B82;}
-    .ctr.cn .cdate,.tl.cn .tl-d{border-left-color:#DE8B82;}
-    .day.cn .node{border-color:#DE8B82;}
-    .day.cn .bus{color:#DE8B82;background:rgba(222,139,130,.14);}
+  :root{
+    --c-ge:#42606E; --c-ge-rgb:66 96 110; --c-ge-a:.10;
+    --c-am:#C87518; --c-am-rgb:200 117 24; --c-am-a:.10;
+    --c-gr:#1F6FA5; --c-gr-rgb:31 111 165; --c-gr-a:.10;
+    --c-ae:#A97142; --c-ae-rgb:169 113 66; --c-ae-a:.10;
+    --c-cn:#9E3B34; --c-cn-rgb:158 59 52; --c-cn-a:.10;
   }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --c-ge:#8FB4C4; --c-ge-rgb:143 180 196; --c-ge-a:.14;
+      --c-am:#E5A153; --c-am-rgb:229 161 83; --c-am-a:.14;
+      --c-gr:#7EC1E8; --c-gr-rgb:126 193 232; --c-gr-a:.14;
+      --c-ae:#D9A66C; --c-ae-rgb:217 166 108; --c-ae-a:.14;
+      --c-cn:#DE8B82; --c-cn-rgb:222 139 130; --c-cn-a:.14;
+    }
+  }
+  :root[data-theme="dark"]{
+    --c-ge:#8FB4C4; --c-ge-rgb:143 180 196; --c-ge-a:.14;
+    --c-am:#E5A153; --c-am-rgb:229 161 83; --c-am-a:.14;
+    --c-gr:#7EC1E8; --c-gr-rgb:126 193 232; --c-gr-a:.14;
+    --c-ae:#D9A66C; --c-ae-rgb:217 166 108; --c-ae-a:.14;
+    --c-cn:#DE8B82; --c-cn-rgb:222 139 130; --c-cn-a:.14;
+  }
+  .bar-fill.ge,.swatch.ge,.day.ge .day-rail::before,.day.ge.stay .node{background:var(--c-ge);}
+  .ccard.ge{border-left-color:var(--c-ge);}
+  .ctr.ge .cdate,.tl.ge .tl-d{border-left-color:var(--c-ge);}
+  .day.ge .node{border-color:var(--c-ge);}
+  .day.ge .bus{color:var(--c-ge);background:rgb(var(--c-ge-rgb)/var(--c-ge-a));}
+  .bar-fill.am,.swatch.am,.day.am .day-rail::before,.day.am.stay .node{background:var(--c-am);}
+  .ccard.am{border-left-color:var(--c-am);}
+  .ctr.am .cdate,.tl.am .tl-d{border-left-color:var(--c-am);}
+  .day.am .node{border-color:var(--c-am);}
+  .day.am .bus{color:var(--c-am);background:rgb(var(--c-am-rgb)/var(--c-am-a));}
+  .bar-fill.gr,.swatch.gr,.day.gr .day-rail::before,.day.gr.stay .node{background:var(--c-gr);}
+  .ccard.gr{border-left-color:var(--c-gr);}
+  .ctr.gr .cdate,.tl.gr .tl-d{border-left-color:var(--c-gr);}
+  .day.gr .node{border-color:var(--c-gr);}
+  .day.gr .bus{color:var(--c-gr);background:rgb(var(--c-gr-rgb)/var(--c-gr-a));}
+  .bar-fill.ae,.swatch.ae,.day.ae .day-rail::before,.day.ae.stay .node{background:var(--c-ae);}
+  .ccard.ae{border-left-color:var(--c-ae);}
+  .ctr.ae .cdate,.tl.ae .tl-d{border-left-color:var(--c-ae);}
+  .day.ae .node{border-color:var(--c-ae);}
+  .day.ae .bus{color:var(--c-ae);background:rgb(var(--c-ae-rgb)/var(--c-ae-a));}
+  .bar-fill.cn,.swatch.cn,.day.cn .day-rail::before,.day.cn.stay .node{background:var(--c-cn);}
+  .ccard.cn{border-left-color:var(--c-cn);}
+  .ctr.cn .cdate,.tl.cn .tl-d{border-left-color:var(--c-cn);}
+  .day.cn .node{border-color:var(--c-cn);}
+  .day.cn .bus{color:var(--c-cn);background:rgb(var(--c-cn-rgb)/var(--c-cn-a));}
 
   /* ── Tabs — 나라별 보기 (라디오 + :checked, 자바스크립트 없음) ── */
 @media screen{
@@ -264,9 +303,8 @@
   .kpi-v{font-family:var(--font-mono);font-size:19px;font-weight:500;
     letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:hsl(var(--card-foreground));}
   .kpi-s{font-size:11.5px;color:hsl(var(--muted-foreground));min-height:1em;}
-  .kpi.good .kpi-v{color:#15803D;}
+  .kpi.good .kpi-v{color:hsl(var(--good));}
   .kpi.bad .kpi-v{color:hsl(var(--destructive));}
-  @media (prefers-color-scheme:dark){.kpi.good .kpi-v{color:#4ADE80;}}
 
   /* 일자별 표 */
   .ctab{border:1px solid hsl(var(--border));border-radius:var(--radius-lg);
@@ -422,7 +460,7 @@
     stroke:hsl(var(--card));stroke-width:2.8px;stroke-linejoin:round;}
   .maplbl.town{font-size:8.5px;fill:hsl(var(--muted-foreground));}
   .maplbl.stop{font-size:10px;font-weight:600;fill:hsl(var(--foreground));}
-  .maplbl.lake{font-size:9px;fill:#1F6FA5;opacity:.8;text-anchor:middle;}
+  .maplbl.lake{font-size:9px;fill:rgb(var(--map-water));opacity:.8;text-anchor:middle;}
   .maptown{fill:hsl(var(--muted-foreground));opacity:.55;}
   .mapn{font-family:var(--font-mono);font-size:10.5px;
     font-weight:600;fill:#fff;text-anchor:middle;}
@@ -468,28 +506,16 @@
   .bm>path{stroke-linecap:round;stroke-linejoin:round;}
   .bm-sea,.bm-water{stroke:none;}
   .bm-riv,.bm-coast,.bm-r1,.bm-r2,.bm-r3,.bm-r4,.bm-r5,.bm-bord{fill:none;}
-  .bm-sea{fill:rgba(31,111,165,.13);}
-  .bm-water{fill:rgba(31,111,165,.17);}
-  .bm-riv{stroke:rgba(31,111,165,.34);stroke-width:.8;}
-  .bm-coast{stroke:rgba(31,111,165,.45);stroke-width:.7;}
-  .bm-r1{stroke:rgba(94,80,68,.34);stroke-width:1.5;}   /* 고속·간선 */
-  .bm-r2{stroke:rgba(94,80,68,.26);stroke-width:1.05;}  /* 1급 국도 */
-  .bm-r3{stroke:rgba(94,80,68,.21);stroke-width:.75;}   /* 2·3급 도로 */
-  .bm-r4{stroke:rgba(94,80,68,.17);stroke-width:.55;}   /* 시가지 도로 */
-  .bm-r5{stroke:rgba(94,80,68,.15);stroke-width:.4;stroke-dasharray:1.8 1.8;} /* 보행로·산길 */
-  .bm-bord{stroke:rgba(36,30,34,.38);stroke-width:1;stroke-dasharray:5 3;}
-  @media (prefers-color-scheme:dark){
-    .bm-sea{fill:rgba(126,193,232,.11);}
-    .bm-water{fill:rgba(126,193,232,.13);}
-    .bm-riv{stroke:rgba(126,193,232,.30);}
-    .bm-coast{stroke:rgba(126,193,232,.34);}
-    .bm-r1{stroke:rgba(226,216,206,.28);}
-    .bm-r2{stroke:rgba(226,216,206,.21);}
-    .bm-r3{stroke:rgba(226,216,206,.16);}
-    .bm-r4{stroke:rgba(226,216,206,.13);}
-    .bm-r5{stroke:rgba(226,216,206,.11);}
-    .bm-bord{stroke:rgba(239,233,228,.34);}
-  }
+  .bm-sea{fill:rgb(var(--map-water)/var(--map-a-sea));}
+  .bm-water{fill:rgb(var(--map-water)/var(--map-a-water));}
+  .bm-riv{stroke:rgb(var(--map-water)/var(--map-a-riv));stroke-width:.8;}
+  .bm-coast{stroke:rgb(var(--map-water)/var(--map-a-coast));stroke-width:.7;}
+  .bm-r1{stroke:rgb(var(--map-road)/var(--map-a-r1));stroke-width:1.5;}   /* 고속·간선 */
+  .bm-r2{stroke:rgb(var(--map-road)/var(--map-a-r2));stroke-width:1.05;}  /* 1급 국도 */
+  .bm-r3{stroke:rgb(var(--map-road)/var(--map-a-r3));stroke-width:.75;}   /* 2·3급 도로 */
+  .bm-r4{stroke:rgb(var(--map-road)/var(--map-a-r4));stroke-width:.55;}   /* 시가지 도로 */
+  .bm-r5{stroke:rgb(var(--map-road)/var(--map-a-r5));stroke-width:.4;stroke-dasharray:1.8 1.8;}
+  .bm-bord{stroke:rgb(var(--map-bord)/var(--map-a-bord));stroke-width:1;stroke-dasharray:5 3;}
 
   /* ── 모바일 ───────────────────────────────────────────── */
   @media (max-width:600px){

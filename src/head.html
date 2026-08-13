@@ -36,12 +36,20 @@
       "Apple SD Gothic Neo","Malgun Gothic",sans-serif;
     --font-mono:"JetBrains Mono","IBM Plex Sans KR",ui-monospace,SFMono-Regular,
       Menlo,"Malgun Gothic",monospace;
+    --good:142 72% 29%;
+    --map-water:31 111 165;
+    --map-road:94 80 68;
+    --map-bord:36 30 34;
+    --map-a-sea:.13; --map-a-water:.17; --map-a-riv:.34; --map-a-coast:.45;
+    --map-a-r1:.34; --map-a-r2:.26; --map-a-r3:.21; --map-a-r4:.17; --map-a-r5:.15;
+    --map-a-bord:.38;
     --shadow-sm:0 1px 2px 0 rgb(0 0 0 / .05);
     --shadow:0 1px 3px 0 rgb(0 0 0 / .1), 0 1px 2px -1px rgb(0 0 0 / .1);
     color-scheme:light dark;
   }
+  /* OS 가 다크이고, 사용자가 라이트를 명시하지 않았을 때 */
   @media (prefers-color-scheme:dark){
-    :root{
+    :root:not([data-theme="light"]){
       --background:240 10% 3.9%;
       --foreground:0 0% 98%;
       --card:240 10% 5.9%;
@@ -58,9 +66,44 @@
       --destructive-foreground:0 0% 98%;
       --border:240 3.7% 18%;
       --ring:240 4.9% 40%;
+      --good:141 76% 58%;
       --shadow-sm:0 1px 2px 0 rgb(0 0 0 / .4);
       --shadow:0 1px 3px 0 rgb(0 0 0 / .5), 0 1px 2px -1px rgb(0 0 0 / .5);
+      --map-water:126 193 232;
+      --map-road:226 216 206;
+      --map-bord:239 233 228;
+      --map-a-sea:.11; --map-a-water:.13; --map-a-riv:.30; --map-a-coast:.34;
+      --map-a-r1:.28; --map-a-r2:.21; --map-a-r3:.16; --map-a-r4:.13; --map-a-r5:.11;
+      --map-a-bord:.34;
     }
+  }
+  /* 사용자가 다크를 명시했을 때 — OS 설정을 이깁니다 */
+  :root[data-theme="dark"]{
+      --background:240 10% 3.9%;
+      --foreground:0 0% 98%;
+      --card:240 10% 5.9%;
+      --card-foreground:0 0% 98%;
+      --primary:0 0% 98%;
+      --primary-foreground:240 5.9% 10%;
+      --secondary:240 3.7% 15.9%;
+      --secondary-foreground:0 0% 98%;
+      --muted:240 3.7% 15.9%;
+      --muted-foreground:240 5% 64.9%;
+      --accent:240 3.7% 15.9%;
+      --accent-foreground:0 0% 98%;
+      --destructive:0 62.8% 50%;
+      --destructive-foreground:0 0% 98%;
+      --border:240 3.7% 18%;
+      --ring:240 4.9% 40%;
+      --good:141 76% 58%;
+      --shadow-sm:0 1px 2px 0 rgb(0 0 0 / .4);
+      --shadow:0 1px 3px 0 rgb(0 0 0 / .5), 0 1px 2px -1px rgb(0 0 0 / .5);
+      --map-water:126 193 232;
+      --map-road:226 216 206;
+      --map-bord:239 233 228;
+      --map-a-sea:.11; --map-a-water:.13; --map-a-riv:.30; --map-a-coast:.34;
+      --map-a-r1:.28; --map-a-r2:.21; --map-a-r3:.16; --map-a-r4:.13; --map-a-r5:.11;
+      --map-a-bord:.34;
   }
   /* 반지름 단계 — shadcn 의 rounded-lg / -md / -sm */
   :root{
@@ -174,9 +217,8 @@ __VIEWCSS__
   .kpi-v{font-family:var(--font-mono);font-size:19px;font-weight:500;
     letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:hsl(var(--card-foreground));}
   .kpi-s{font-size:11.5px;color:hsl(var(--muted-foreground));min-height:1em;}
-  .kpi.good .kpi-v{color:#15803D;}
+  .kpi.good .kpi-v{color:hsl(var(--good));}
   .kpi.bad .kpi-v{color:hsl(var(--destructive));}
-  @media (prefers-color-scheme:dark){.kpi.good .kpi-v{color:#4ADE80;}}
 
   /* 일자별 표 */
   .ctab{border:1px solid hsl(var(--border));border-radius:var(--radius-lg);
@@ -332,7 +374,7 @@ __VIEWCSS__
     stroke:hsl(var(--card));stroke-width:2.8px;stroke-linejoin:round;}
   .maplbl.town{font-size:8.5px;fill:hsl(var(--muted-foreground));}
   .maplbl.stop{font-size:10px;font-weight:600;fill:hsl(var(--foreground));}
-  .maplbl.lake{font-size:9px;fill:#1F6FA5;opacity:.8;text-anchor:middle;}
+  .maplbl.lake{font-size:9px;fill:rgb(var(--map-water));opacity:.8;text-anchor:middle;}
   .maptown{fill:hsl(var(--muted-foreground));opacity:.55;}
   .mapn{font-family:var(--font-mono);font-size:10.5px;
     font-weight:600;fill:#fff;text-anchor:middle;}
@@ -378,28 +420,16 @@ __VIEWCSS__
   .bm>path{stroke-linecap:round;stroke-linejoin:round;}
   .bm-sea,.bm-water{stroke:none;}
   .bm-riv,.bm-coast,.bm-r1,.bm-r2,.bm-r3,.bm-r4,.bm-r5,.bm-bord{fill:none;}
-  .bm-sea{fill:rgba(31,111,165,.13);}
-  .bm-water{fill:rgba(31,111,165,.17);}
-  .bm-riv{stroke:rgba(31,111,165,.34);stroke-width:.8;}
-  .bm-coast{stroke:rgba(31,111,165,.45);stroke-width:.7;}
-  .bm-r1{stroke:rgba(94,80,68,.34);stroke-width:1.5;}   /* 고속·간선 */
-  .bm-r2{stroke:rgba(94,80,68,.26);stroke-width:1.05;}  /* 1급 국도 */
-  .bm-r3{stroke:rgba(94,80,68,.21);stroke-width:.75;}   /* 2·3급 도로 */
-  .bm-r4{stroke:rgba(94,80,68,.17);stroke-width:.55;}   /* 시가지 도로 */
-  .bm-r5{stroke:rgba(94,80,68,.15);stroke-width:.4;stroke-dasharray:1.8 1.8;} /* 보행로·산길 */
-  .bm-bord{stroke:rgba(36,30,34,.38);stroke-width:1;stroke-dasharray:5 3;}
-  @media (prefers-color-scheme:dark){
-    .bm-sea{fill:rgba(126,193,232,.11);}
-    .bm-water{fill:rgba(126,193,232,.13);}
-    .bm-riv{stroke:rgba(126,193,232,.30);}
-    .bm-coast{stroke:rgba(126,193,232,.34);}
-    .bm-r1{stroke:rgba(226,216,206,.28);}
-    .bm-r2{stroke:rgba(226,216,206,.21);}
-    .bm-r3{stroke:rgba(226,216,206,.16);}
-    .bm-r4{stroke:rgba(226,216,206,.13);}
-    .bm-r5{stroke:rgba(226,216,206,.11);}
-    .bm-bord{stroke:rgba(239,233,228,.34);}
-  }
+  .bm-sea{fill:rgb(var(--map-water)/var(--map-a-sea));}
+  .bm-water{fill:rgb(var(--map-water)/var(--map-a-water));}
+  .bm-riv{stroke:rgb(var(--map-water)/var(--map-a-riv));stroke-width:.8;}
+  .bm-coast{stroke:rgb(var(--map-water)/var(--map-a-coast));stroke-width:.7;}
+  .bm-r1{stroke:rgb(var(--map-road)/var(--map-a-r1));stroke-width:1.5;}   /* 고속·간선 */
+  .bm-r2{stroke:rgb(var(--map-road)/var(--map-a-r2));stroke-width:1.05;}  /* 1급 국도 */
+  .bm-r3{stroke:rgb(var(--map-road)/var(--map-a-r3));stroke-width:.75;}   /* 2·3급 도로 */
+  .bm-r4{stroke:rgb(var(--map-road)/var(--map-a-r4));stroke-width:.55;}   /* 시가지 도로 */
+  .bm-r5{stroke:rgb(var(--map-road)/var(--map-a-r5));stroke-width:.4;stroke-dasharray:1.8 1.8;}
+  .bm-bord{stroke:rgb(var(--map-bord)/var(--map-a-bord));stroke-width:1;stroke-dasharray:5 3;}
 
   /* ── 모바일 ───────────────────────────────────────────── */
   @media (max-width:600px){
