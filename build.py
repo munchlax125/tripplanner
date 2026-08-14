@@ -449,16 +449,20 @@ def move_section():
 
 
 def move_css():
+    """카드는 늘 보이고, 고른 것만 아래에 펼칩니다.
+
+    숨김은 미디어 쿼리 밖에 둡니다 — 안에 두면 미디어를 다르게 해석하는 환경에서
+    세 패널이 한꺼번에 나와 옆으로 삐져나갑니다.
+    """
     keys = [g['key'] for g in MOVES]
     if not keys:
         return '  .mvbox{display:none;}'
-    out = ['@media screen{',
-           '  .msw{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;}',
-           '  .mvcards,.mvpanel{display:none;}',
-           '  #move-none:checked~.mvbox .mvcards{display:grid;}']
+    out = ['  .msw{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;}',
+           '  .mvpanel{display:none;}']
     for k in keys:
-        out.append('  #move-%s:checked~.mvbox .mvpanel.%s{display:block;}' % (k, k))
-    out.append('}')
+        out += ['  #move-%s:checked~.mvbox .mvpanel.%s{display:block;}' % (k, k),
+                '  #move-%s:checked~.mvbox .mvcard[for="move-%s"]'
+                '{border-color:hsl(var(--foreground));box-shadow:var(--shadow);}' % (k, k)]
     return '\n'.join(out)
 
 

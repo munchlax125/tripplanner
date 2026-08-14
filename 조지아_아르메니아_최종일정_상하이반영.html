@@ -121,6 +121,7 @@
     -webkit-font-smoothing:antialiased;font-feature-settings:"cv02","cv03","cv04","cv11";
   }
   .wrap{max-width:820px;margin:0 auto;padding:56px 24px 96px;min-height:100vh;}
+  html,body{overflow-x:hidden;}   /* 무슨 일이 있어도 가로 스크롤은 만들지 않습니다 */
   ::selection{background:hsl(var(--foreground));color:hsl(var(--background));}
 
   /* ── 머리말 ───────────────────────────────────────────── */
@@ -144,7 +145,7 @@
   .sum-total{font-family:var(--font-mono);font-size:12px;
     color:hsl(var(--muted-foreground));}
   /* Progress */
-  .bar-row{display:grid;grid-template-columns:88px 1fr 30px;align-items:center;
+  .bar-row{display:grid;grid-template-columns:88px minmax(0,1fr) 30px;align-items:center;
     gap:12px;margin-bottom:8px;}
   .bar-name{font-size:13px;color:hsl(var(--muted-foreground));}
   .bar-track{height:8px;background:hsl(var(--secondary));border-radius:9999px;overflow:hidden;}
@@ -288,16 +289,18 @@
   .cc-city{font-size:12px;color:hsl(var(--muted-foreground));margin-top:6px;line-height:1.5;}
 
   /* ── 이동 수단 — 아이콘 카드 → 목록 → 뒤로 (라디오만 사용) ── */
-@media screen{
   .msw{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;}
-  .mvcards,.mvpanel{display:none;}
-  #move-none:checked~.mvbox .mvcards{display:grid;}
+  .mvpanel{display:none;}
   #move-air:checked~.mvbox .mvpanel.air{display:block;}
+  #move-air:checked~.mvbox .mvcard[for="move-air"]{border-color:hsl(var(--foreground));box-shadow:var(--shadow);}
   #move-bus:checked~.mvbox .mvpanel.bus{display:block;}
+  #move-bus:checked~.mvbox .mvcard[for="move-bus"]{border-color:hsl(var(--foreground));box-shadow:var(--shadow);}
   #move-rail:checked~.mvbox .mvpanel.rail{display:block;}
-}
+  #move-rail:checked~.mvbox .mvcard[for="move-rail"]{border-color:hsl(var(--foreground));box-shadow:var(--shadow);}
   .ic{width:22px;height:22px;flex:none;}
-  .mvcards{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;}
+  .mvbox{display:block;}
+  .mvcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:12px;margin-bottom:12px;}
   .mvcard{display:flex;flex-direction:column;align-items:flex-start;gap:8px;
     padding:18px;cursor:pointer;background:hsl(var(--card));
     color:hsl(var(--card-foreground));border:1px solid hsl(var(--border));
@@ -313,6 +316,7 @@
 
   .mvpanel{border:1px solid hsl(var(--border));border-radius:var(--radius-lg);
     overflow:hidden;box-shadow:var(--shadow-sm);background:hsl(var(--card));}
+  .mvb,.cdesc,.tl-p,.note-val{overflow-wrap:anywhere;}
   .mvhead{display:flex;align-items:center;gap:10px;padding:12px 16px;
     background:hsl(var(--muted));border-bottom:1px solid hsl(var(--border));}
   .mvhead .ic{width:18px;height:18px;color:hsl(var(--muted-foreground));}
@@ -327,7 +331,7 @@
     transition:background-color .15s,border-color .15s;}
   .mvback:hover{background:hsl(var(--accent));border-color:hsl(var(--ring));}
   .mvarrow{font-size:14px;line-height:1;}
-  .mvr{display:grid;grid-template-columns:78px 1fr 88px;gap:12px;align-items:baseline;
+  .mvr{display:grid;grid-template-columns:78px minmax(0,1fr) 88px;gap:12px;align-items:baseline;
     padding:11px 16px;border-top:1px solid hsl(var(--border));}
   .mvr:first-of-type{border-top:0;}
   .mvnote{background:hsl(var(--muted));}
@@ -343,7 +347,7 @@
   /* ── 하루씩 훑어보기 — 개요에서 16일을 한 화면에 ─────── */
   .tline{border:1px solid hsl(var(--border));border-radius:var(--radius-lg);
     overflow:hidden;box-shadow:var(--shadow-sm);background:hsl(var(--card));}
-  .tl{display:grid;grid-template-columns:74px 1fr;gap:12px;align-items:baseline;
+  .tl{display:grid;grid-template-columns:74px minmax(0,1fr);gap:12px;align-items:baseline;
     padding:9px 16px;border-top:1px solid hsl(var(--border));cursor:pointer;
     color:inherit;text-decoration:none;transition:background-color .12s;}
   .tl:first-child{border-top:0;}
@@ -377,7 +381,7 @@
   /* 일자별 표 */
   .ctab{border:1px solid hsl(var(--border));border-radius:var(--radius-lg);
     overflow:hidden;box-shadow:var(--shadow-sm);background:hsl(var(--card));}
-  .ctr{display:grid;grid-template-columns:64px 1fr 92px 92px;gap:12px;
+  .ctr{display:grid;grid-template-columns:64px minmax(0,1fr) 92px 92px;gap:12px;
     padding:11px 16px;border-top:1px solid hsl(var(--border));align-items:baseline;}
   .ctr:first-child{border-top:0;}
   .chead,.cfoot{background:hsl(var(--muted));font-size:12px;font-weight:600;
@@ -396,7 +400,7 @@
     font-variant-numeric:tabular-nums;color:hsl(var(--card-foreground));}
   .cnum small{display:block;font-size:11px;color:hsl(var(--muted-foreground));margin-top:2px;}
   .cacc{color:hsl(var(--muted-foreground));}
-  .ctr.d3{grid-template-columns:56px 1fr 104px;}   /* 구간별 교통비·입장료 */
+  .ctr.d3{grid-template-columns:56px minmax(0,1fr) 104px;}   /* 구간별 교통비·입장료 */
   .cfree{font-family:var(--font-sans);font-size:11.5px;color:hsl(var(--muted-foreground));}
 
   /* 환율 */
@@ -423,7 +427,7 @@
     color:hsl(var(--muted-foreground));margin:44px 0 14px;}
 
   /* ── 항공편 — Card 안의 표 ────────────────────────────── */
-  .flight{display:grid;grid-template-columns:78px 1fr;gap:16px;padding:13px 18px;
+  .flight{display:grid;grid-template-columns:78px minmax(0,1fr);gap:16px;padding:13px 18px;
     background:hsl(var(--card));border:1px solid hsl(var(--border));
     border-bottom-width:0;font-size:14px;}
   .flight:first-of-type{border-top-left-radius:var(--radius-lg);border-top-right-radius:var(--radius-lg);}
@@ -435,7 +439,7 @@
   .flight-body b{font-weight:600;color:hsl(var(--card-foreground));}
 
   /* ── 날짜 블록 ────────────────────────────────────────── */
-  .day{display:grid;grid-template-columns:74px 26px 1fr;}
+  .day{display:grid;grid-template-columns:74px 26px minmax(0,1fr);}
   .day-date{font-family:var(--font-mono);font-size:12.5px;
     font-weight:500;color:hsl(var(--foreground));padding:26px 12px 0 0;text-align:right;line-height:1.4;}
   .day-date em{display:block;font-style:normal;font-size:11px;font-weight:400;
@@ -461,7 +465,7 @@
 
   /* ── 시간표 ───────────────────────────────────────────── */
   .sched{list-style:none;margin:0;padding:0;}
-  .sched li{display:grid;grid-template-columns:52px 1fr;gap:12px;
+  .sched li{display:grid;grid-template-columns:52px minmax(0,1fr);gap:12px;
     padding:7px 0;font-size:13.5px;border-top:1px solid hsl(var(--border));}
   .sched li:first-child{border-top:0;}
   .sched .t{font-family:var(--font-mono);font-size:12px;
@@ -491,7 +495,7 @@
   .flag+.flag{margin-top:8px;}
 
   /* ── 국경·이동 구분선 ─────────────────────────────────── */
-  .border{display:grid;grid-template-columns:74px 26px 1fr;margin:2px 0;}
+  .border{display:grid;grid-template-columns:74px 26px minmax(0,1fr);margin:2px 0;}
   .border-rail{position:relative;}
   .border-rail::before{content:"";position:absolute;left:4px;top:50%;width:14px;height:2px;
     background:hsl(var(--border));}
@@ -505,7 +509,7 @@
   .notes{margin-top:56px;}
   .notes h2{font-size:20px;font-weight:600;margin:0 0 18px;letter-spacing:-.02em;
     color:hsl(var(--foreground));}
-  .note{display:grid;grid-template-columns:120px 1fr;gap:18px;padding:14px 18px;
+  .note{display:grid;grid-template-columns:120px minmax(0,1fr);gap:18px;padding:14px 18px;
     background:hsl(var(--card));border:1px solid hsl(var(--border));border-bottom-width:0;}
   .note:first-of-type{border-top-left-radius:var(--radius-lg);border-top-right-radius:var(--radius-lg);}
   .note:last-of-type{border-bottom-width:1px;box-shadow:var(--shadow-sm);
@@ -588,34 +592,34 @@
   /* ── 모바일 ───────────────────────────────────────────── */
   @media (max-width:600px){
     .wrap{padding:36px 16px 72px;}
-    .day,.border{grid-template-columns:52px 22px 1fr;}
+    .day,.border{grid-template-columns:52px 22px minmax(0,1fr);}
     .day-date{font-size:11.5px;padding-right:8px;}
     .node{left:3px;} .day-rail::before{left:8px;}
     .day-body{padding:16px 15px 18px;}
     .summary{padding:18px 16px 16px;}
-    .sched li{grid-template-columns:46px 1fr;gap:10px;}
-    .note{grid-template-columns:1fr;gap:4px;padding:13px 15px;}
-    .bar-row{grid-template-columns:74px 1fr 26px;}
-    .flight{grid-template-columns:62px 1fr;gap:12px;padding:12px 15px;}
+    .sched li{grid-template-columns:46px minmax(0,1fr);gap:10px;}
+    .note{grid-template-columns:minmax(0,1fr);gap:4px;padding:13px 15px;}
+    .bar-row{grid-template-columns:74px minmax(0,1fr) 26px;}
+    .flight{grid-template-columns:62px minmax(0,1fr);gap:12px;padding:12px 15px;}
     /* 일자별 표: 좁으면 날짜·내용 한 줄, 금액 아래 줄 */
-    .ctr{grid-template-columns:58px 1fr;gap:4px 10px;padding:11px 14px;}
+    .ctr{grid-template-columns:58px minmax(0,1fr);gap:4px 10px;padding:11px 14px;}
     .ctr .cnum{grid-column:2;text-align:left;}
     .ctr .cacc::before{content:"누계 ";color:hsl(var(--muted-foreground));}
     .ctr .cnum::before{content:"하루 ";color:hsl(var(--muted-foreground));}
     .chead span:nth-child(3),.chead span:nth-child(4){display:none;}
     .cfoot span:nth-child(4){display:none;}
     .cfoot span:nth-child(3){text-align:left;}
-    .ctr.d3{grid-template-columns:52px 1fr;}
+    .ctr.d3{grid-template-columns:52px minmax(0,1fr);}
     .ctr.d3 .cnum{grid-column:2;text-align:left;}
     .ctr.d3 .cnum::before{content:none;}
     .ctr.d3 .cnum small{display:inline;margin-left:6px;}
-    .kpis{grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;}
+    .kpis{grid-template-columns:repeat(auto-fit,minmax(140px,minmax(0,1fr)));gap:10px;}
     .kpi{padding:14px 15px;} .kpi-v{font-size:17px;}
-    .tl{grid-template-columns:62px 1fr;gap:10px;padding:9px 14px;}
-    .mvcards{grid-template-columns:1fr 1fr 1fr;gap:8px;}
+    .tl{grid-template-columns:62px minmax(0,1fr);gap:10px;padding:9px 14px;}
+    .mvcards{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
     .mvcard{padding:14px 10px;align-items:center;text-align:center;gap:6px;}
     .mvcard b{font-size:13px;}
-    .mvr{grid-template-columns:60px 1fr;gap:4px 10px;padding:11px 14px;}
+    .mvr{grid-template-columns:60px minmax(0,1fr);gap:4px 10px;padding:11px 14px;}
     .mvr .mva{grid-column:2;text-align:left;}
   }
 
@@ -632,8 +636,8 @@
     .wrap{padding:0;max-width:100%;}
     .day,.note,.flight,.daymap,.summary,.border,.ccard{break-inside:avoid;}
     /* 탭 CSS 는 @media screen 안에만 있으므로 인쇄하면 모든 나라가 그대로 나옵니다 */
-    .tabs,.ccards,.vsw,.msw,.mvcards,.mvback{display:none;}
-    .mvpanel{display:block;margin-bottom:10px;}   /* 인쇄하면 세 가지가 다 나옵니다 */
+    .tabs,.ccards,.vsw,.msw,.mvcards,.mvback{display:none!important;}
+    .mvpanel{display:block!important;margin-bottom:10px;}   /* 인쇄하면 세 가지가 다 나옵니다 */
     .rgn-head{break-after:avoid;}
     .mapctl{display:none;}
     .gmap{border-bottom:none;}
