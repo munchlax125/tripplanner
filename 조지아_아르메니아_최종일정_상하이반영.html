@@ -243,6 +243,17 @@
   #view-ae:checked~.stage>.days>div:nth-of-type(19) .day-rail::before{top:30px;}
   #view-ae:checked~.stage>.days>div:nth-of-type(19) .day-rail::before{bottom:auto;height:32px;}
   #view-ae:checked~.stage>.days>div:nth-of-type(19) .day-rail::before{top:30px;height:0;}
+  #view-home:checked~.stage:has(>.days>:target)>.home{display:none;}
+  #view-home:checked~.stage:has(>.days>.cn:target)>.days{display:block;}
+  #view-home:checked~.stage:has(>.days>.cn:target)>.days>:not(.cn):not(.keep){display:none;}
+  #view-home:checked~.stage:has(>.days>.ge:target)>.days{display:block;}
+  #view-home:checked~.stage:has(>.days>.ge:target)>.days>:not(.ge):not(.keep){display:none;}
+  #view-home:checked~.stage:has(>.days>.am:target)>.days{display:block;}
+  #view-home:checked~.stage:has(>.days>.am:target)>.days>:not(.am):not(.keep){display:none;}
+  #view-home:checked~.stage:has(>.days>.gr:target)>.days{display:block;}
+  #view-home:checked~.stage:has(>.days>.gr:target)>.days>:not(.gr):not(.keep){display:none;}
+  #view-home:checked~.stage:has(>.days>.ae:target)>.days{display:block;}
+  #view-home:checked~.stage:has(>.days>.ae:target)>.days>:not(.ae):not(.keep){display:none;}
   #view-home:checked~.tabs .tab[for="view-home"],
   #view-cn:checked~.tabs .tab[for="view-cn"],
   #view-ge:checked~.tabs .tab[for="view-ge"],
@@ -281,9 +292,13 @@
     overflow:hidden;box-shadow:var(--shadow-sm);background:hsl(var(--card));}
   .tl{display:grid;grid-template-columns:74px 1fr;gap:12px;align-items:baseline;
     padding:9px 16px;border-top:1px solid hsl(var(--border));cursor:pointer;
-    transition:background-color .12s;}
+    color:inherit;text-decoration:none;transition:background-color .12s;}
   .tl:first-child{border-top:0;}
   .tl:hover{background:hsl(var(--muted));}
+  .tl:focus-visible{outline:2px solid hsl(var(--ring));outline-offset:-2px;}
+  /* 눌러서 온 날짜는 화면 위에 붙지 않게 여백을 두고, 잠깐 테두리로 표시합니다 */
+  .day{scroll-margin-top:18px;}
+  .day:target .day-body{box-shadow:0 0 0 2px hsl(var(--ring)),var(--shadow);}
   .tl-d{font-family:var(--font-mono);font-size:12px;font-weight:500;
     color:hsl(var(--foreground));border-left:3px solid transparent;
     padding-left:9px;margin-left:-9px;}
@@ -659,22 +674,22 @@
   </div>
   <p class="section-label">하루씩 훑어보기</p>
   <div class="tline">
-    <label class="tl cn" for="view-cn"><span class="tl-d">9.19<em>토</em></span><span class="tl-p">상하이 훙차오 12:55 도착</span></label>
-    <label class="tl ge" for="view-ge"><span class="tl-d">9.20<em>일</em></span><span class="tl-p">트빌리시 도착</span></label>
-    <label class="tl ge" for="view-ge"><span class="tl-d">9.21<em>월</em></span><span class="tl-p">트빌리시 구시가</span></label>
-    <label class="tl ge" for="view-ge"><span class="tl-d">9.22<em>화</em></span><span class="tl-p">므츠헤타 반나절</span></label>
-    <label class="tl ge" for="view-ge"><span class="tl-d">9.23<em>수</em></span><span class="tl-p">군사도로 → 카즈베기 첫차로 최대한 일찍</span></label>
-    <label class="tl ge" for="view-ge"><span class="tl-d">9.24<em>목</em></span><span class="tl-p">주타 데이 트레킹 → 트빌리시 쉬운 코스</span></label>
-    <label class="tl ge" for="view-ge"><span class="tl-d">9.25<em>금</em></span><span class="tl-p">시그나기 · 보드베 카헤티 와인 지역</span></label>
-    <label class="tl am" for="view-am"><span class="tl-d">9.26<em>토</em></span><span class="tl-p">국경 → 알라베르디 수도원 두 곳</span></label>
-    <label class="tl am" for="view-am"><span class="tl-d">9.27<em>일</em></span><span class="tl-p">알라베르디 → 귬리 바나조르 환승</span></label>
-    <label class="tl am" for="view-am"><span class="tl-d">9.28<em>월</em></span><span class="tl-p">귬리 → 예레반 월요일 = 박물관 휴관</span></label>
-    <label class="tl am" for="view-am"><span class="tl-d">9.29<em>화</em></span><span class="tl-p">타테브 예레반발 1일 투어 · 14~15시간</span></label>
-    <label class="tl am" for="view-am"><span class="tl-d">9.30<em>수</em></span><span class="tl-p">가르니 · 게하르트 종일</span></label>
-    <label class="tl am" for="view-am"><span class="tl-d">10.1<em>목</em></span><span class="tl-p">에치미아진 · 즈바르트노츠</span></label>
-    <label class="tl am" for="view-am"><span class="tl-d">10.2<em>금</em></span><span class="tl-p">예레반 도심 도보 숙소 유지</span></label>
-    <label class="tl gr" for="view-gr"><span class="tl-d">10.3<em>토</em></span><span class="tl-p">아테네 06:20 도착, 하루 전체</span></label>
-    <label class="tl ae" for="view-ae"><span class="tl-d">10.4<em>일</em></span><span class="tl-p">아부다비 낮 40도+</span></label>
+    <a class="tl cn" href="#d-9-19"><span class="tl-d">9.19<em>토</em></span><span class="tl-p">상하이 훙차오 12:55 도착</span></a>
+    <a class="tl ge" href="#d-9-20"><span class="tl-d">9.20<em>일</em></span><span class="tl-p">트빌리시 도착</span></a>
+    <a class="tl ge" href="#d-9-21"><span class="tl-d">9.21<em>월</em></span><span class="tl-p">트빌리시 구시가</span></a>
+    <a class="tl ge" href="#d-9-22"><span class="tl-d">9.22<em>화</em></span><span class="tl-p">므츠헤타 반나절</span></a>
+    <a class="tl ge" href="#d-9-23"><span class="tl-d">9.23<em>수</em></span><span class="tl-p">군사도로 → 카즈베기 첫차로 최대한 일찍</span></a>
+    <a class="tl ge" href="#d-9-24"><span class="tl-d">9.24<em>목</em></span><span class="tl-p">주타 데이 트레킹 → 트빌리시 쉬운 코스</span></a>
+    <a class="tl ge" href="#d-9-25"><span class="tl-d">9.25<em>금</em></span><span class="tl-p">시그나기 · 보드베 카헤티 와인 지역</span></a>
+    <a class="tl am" href="#d-9-26"><span class="tl-d">9.26<em>토</em></span><span class="tl-p">국경 → 알라베르디 수도원 두 곳</span></a>
+    <a class="tl am" href="#d-9-27"><span class="tl-d">9.27<em>일</em></span><span class="tl-p">알라베르디 → 귬리 바나조르 환승</span></a>
+    <a class="tl am" href="#d-9-28"><span class="tl-d">9.28<em>월</em></span><span class="tl-p">귬리 → 예레반 월요일 = 박물관 휴관</span></a>
+    <a class="tl am" href="#d-9-29"><span class="tl-d">9.29<em>화</em></span><span class="tl-p">타테브 예레반발 1일 투어 · 14~15시간</span></a>
+    <a class="tl am" href="#d-9-30"><span class="tl-d">9.30<em>수</em></span><span class="tl-p">가르니 · 게하르트 종일</span></a>
+    <a class="tl am" href="#d-10-1"><span class="tl-d">10.1<em>목</em></span><span class="tl-p">에치미아진 · 즈바르트노츠</span></a>
+    <a class="tl am" href="#d-10-2"><span class="tl-d">10.2<em>금</em></span><span class="tl-p">예레반 도심 도보 숙소 유지</span></a>
+    <a class="tl gr" href="#d-10-3"><span class="tl-d">10.3<em>토</em></span><span class="tl-p">아테네 06:20 도착, 하루 전체</span></a>
+    <a class="tl ae" href="#d-10-4"><span class="tl-d">10.4<em>일</em></span><span class="tl-p">아부다비 낮 40도+</span></a>
   </div>
   </div>
 
@@ -682,7 +697,7 @@
   <p class="section-label keep">본 일정</p>
 
   <p class="rgn-head cn"><i class="swatch cn"></i><b>중국</b><span>9.19 · 1일 · 1박</span></p>
-  <div class="day cn stay">
+  <div class="day cn stay" id="d-9-19">
     <div class="day-date">9.19<em>토</em></div><div class="day-rail"><i class="node"></i></div>
     <div class="day-body">
       <h3 class="day-place">상하이 <span class="tag">훙차오 12:55 도착</span></h3>
@@ -722,7 +737,7 @@
     </div>
   </div>
 
-  <div class="day ge stay">
+  <div class="day ge stay" id="d-9-20">
     <div class="day-date">9.20<em>일</em></div><div class="day-rail"><i class="node"></i></div>
     <div class="day-body">
       <h3 class="day-place">트빌리시 도착</h3>
@@ -738,7 +753,7 @@
     </div>
   </div>
 
-  <div class="day ge stay">
+  <div class="day ge stay" id="d-9-21">
     <div class="day-date">9.21<em>월</em></div><div class="day-rail"><i class="node"></i></div>
     <div class="day-body">
       <h3 class="day-place">트빌리시 구시가</h3>
@@ -756,7 +771,7 @@
     </div>
   </div>
 
-  <div class="day ge stay">
+  <div class="day ge stay" id="d-9-22">
     <div class="day-date">9.22<em>화</em></div><div class="day-rail"><i class="node"></i></div>
     <div class="day-body">
       <h3 class="day-place">므츠헤타 반나절</h3>
@@ -776,7 +791,7 @@
     </div>
   </div>
 
-  <div class="day ge stay">
+  <div class="day ge stay" id="d-9-23">
     <div class="day-date">9.23<em>수</em></div><div class="day-rail"><i class="node"></i></div>
     <div class="day-body">
       <h3 class="day-place">군사도로 → 카즈베기 <span class="tag">첫차로 최대한 일찍</span></h3>
@@ -808,7 +823,7 @@
     </div>
   </div>
 
-  <div class="day ge stay">
+  <div class="day ge stay" id="d-9-24">
     <div class="day-date">9.24<em>목</em></div><div class="day-rail"><i class="node"></i></div>
     <div class="day-body">
       <h3 class="day-place">주타 데이 트레킹 → 트빌리시 <span class="tag">쉬운 코스</span></h3>
@@ -832,7 +847,7 @@
     </div>
   </div>
 
-  <div class="day ge stay">
+  <div class="day ge stay" id="d-9-25">
     <div class="day-date">9.25<em>금</em></div><div class="day-rail"><i class="node"></i></div>
     <div class="day-body">
       <h3 class="day-place">시그나기 · 보드베 <span class="tag">카헤티 와인 지역</span></h3>
@@ -858,7 +873,7 @@
   </div>
 
   <p class="rgn-head am"><i class="swatch am"></i><b>아르메니아</b><span>9.26 – 10.2 · 7일 · 7박</span></p>
-  <div class="day am stay">
+  <div class="day am stay" id="d-9-26">
     <div class="day-date">9.26<em>토</em></div><div class="day-rail"><i class="node"></i></div>
     <div class="day-body">
       <h3 class="day-place">국경 → 알라베르디 <span class="tag">수도원 두 곳</span></h3>
@@ -882,7 +897,7 @@
     </div>
   </div>
 
-  <div class="day am stay">
+  <div class="day am stay" id="d-9-27">
     <div class="day-date">9.27<em>일</em></div><div class="day-rail"><i class="node"></i></div>
     <div class="day-body">
       <h3 class="day-place">알라베르디 → 귬리 <span class="tag">바나조르 환승</span></h3>
@@ -907,7 +922,7 @@
     </div>
   </div>
 
-  <div class="day am stay">
+  <div class="day am stay" id="d-9-28">
     <div class="day-date">9.28<em>월</em></div><div class="day-rail"><i class="node"></i></div>
     <div class="day-body">
       <h3 class="day-place">귬리 → 예레반 <span class="tag hot">월요일 = 박물관 휴관</span></h3>
@@ -932,7 +947,7 @@
     </div>
   </div>
 
-  <div class="day am stay">
+  <div class="day am stay" id="d-9-29">
     <div class="day-date">9.29<em>화</em></div><div class="day-rail"><i class="node"></i></div>
     <div class="day-body">
       <h3 class="day-place">타테브 <span class="tag hot">예레반발 1일 투어 · 14~15시간</span></h3>
@@ -956,7 +971,7 @@
     </div>
   </div>
 
-  <div class="day am stay">
+  <div class="day am stay" id="d-9-30">
     <div class="day-date">9.30<em>수</em></div><div class="day-rail"><i class="node"></i></div>
     <div class="day-body">
       <h3 class="day-place">가르니 · 게하르트 <span class="tag">종일</span></h3>
@@ -977,7 +992,7 @@
     </div>
   </div>
 
-  <div class="day am stay">
+  <div class="day am stay" id="d-10-1">
     <div class="day-date">10.1<em>목</em></div><div class="day-rail"><i class="node"></i></div>
     <div class="day-body">
       <h3 class="day-place">에치미아진 · 즈바르트노츠</h3>
@@ -997,7 +1012,7 @@
     </div>
   </div>
 
-  <div class="day am stay">
+  <div class="day am stay" id="d-10-2">
     <div class="day-date">10.2<em>금</em></div><div class="day-rail"><i class="node"></i></div>
     <div class="day-body">
       <h3 class="day-place">예레반 도심 도보 <span class="tag">숙소 유지</span></h3>
@@ -1029,7 +1044,7 @@
     </div>
   </div>
 
-  <div class="day gr stay">
+  <div class="day gr stay" id="d-10-3">
     <div class="day-date">10.3<em>토</em></div><div class="day-rail"><i class="node"></i></div>
     <div class="day-body">
       <h3 class="day-place">아테네 <span class="tag">06:20 도착, 하루 전체</span></h3>
@@ -1071,7 +1086,7 @@
     </div>
   </div>
 
-  <div class="day ae stay last">
+  <div class="day ae stay last" id="d-10-4">
     <div class="day-date">10.4<em>일</em></div><div class="day-rail"><i class="node"></i></div>
     <div class="day-body">
       <h3 class="day-place">아부다비 <span class="tag hot">낮 40도+</span></h3>

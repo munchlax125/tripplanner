@@ -296,6 +296,11 @@ def cckey(blk):
     return p[1] if len(p) > 1 else 'ov'
 
 
+def day_id(blk):
+    """날짜 앵커 id — '9.24' -> 'd-9-24'. 개요에서 눌러 그 날짜로 바로 갑니다."""
+    return 'd-' + re.sub(r'[^0-9A-Za-z]+', '-', str(blk.get('date', ''))).strip('-')
+
+
 REGIONS = []                      # 날짜 블록에 실제로 쓰인 키를 문서 순서대로
 for _b in doc['blocks']:
     if _b['type'] == 'day' and cckey(_b) not in REGIONS:
@@ -356,6 +361,13 @@ def view_css():
             if first_d[k] == last_d[k]:      # 하루짜리 나라는 점 하나만
                 out.append('  #view-%s:checked~.stage>.days>div:nth-of-type(%d) .day-rail::before'
                            '{top:30px;height:0;}' % (k, first_d[k]))
+    # 개요에서 날짜 줄을 누르면 그 날짜로 이동합니다. 해시가 걸린 동안만 본 일정을
+    # 그 나라로 펼치고, 탭을 한 번 누르면 #view-home 이 풀려 이 규칙이 통째로 꺼집니다.
+    out.append('  #view-home:checked~.stage:has(>.days>:target)>.home{display:none;}')
+    for k in REGIONS:
+        out += ['  #view-home:checked~.stage:has(>.days>.%s:target)>.days{display:block;}' % k,
+                '  #view-home:checked~.stage:has(>.days>.%s:target)>.days'
+                '>:not(.%s):not(.keep){display:none;}' % (k, k)]
     act = ',\n'.join('  #view-%s:checked~.tabs .tab[for="view-%s"]' % (v, v) for v in VIEWS)
     out += [act + '{background:hsl(var(--background));color:hsl(var(--foreground));'
                   'box-shadow:var(--shadow-sm);}',
@@ -606,10 +618,9 @@ if _days:
     section('outline')
     B.append('  <div class="tline">')
     for b in _days:
-        k = cckey(b)
-        B.append('    <label class="tl %s" for="view-%s"><span class="tl-d">%s<em>%s</em></span>'
-                 '<span class="tl-p">%s</span></label>'
-                 % (k, k if k in REGIONS else 'all', b.get('date', ''), b.get('dow', ''),
+        B.append('    <a class="tl %s" href="#%s"><span class="tl-d">%s<em>%s</em></span>'
+                 '<span class="tl-p">%s</span></a>'
+                 % (cckey(b), day_id(b), b.get('date', ''), b.get('dow', ''),
                     re.sub(r'<[^>]+>', '', b.get('place', '')).strip()))
     B.append('  </div>')
 B.append('  </div>\n\n  <div class="days">')
@@ -634,7 +645,7 @@ for blk in doc['blocks']:
     if cc not in COLOR:
         sys.exit("%s: cls '%s' 의 색 키 '%s' 가 colors 에 없습니다."
                  % (blk.get('date', '?'), blk['cls'], cc))
-    B.append('  <div class="%s">' % blk['cls'])
+    B.append('  <div class="%s" id="%s">' % (blk['cls'], day_id(blk)))
     B.append('    <div class="day-date">%s<em>%s</em></div><div class="day-rail"><i class="node"></i></div>'
              % (blk.get('date', ''), blk.get('dow', '')))
     B.append('    <div class="day-body">')
