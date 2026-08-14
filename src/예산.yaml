@@ -44,6 +44,7 @@ transport:
 - date: 9/19
   seg: 훙차오 공항 T1 → 난징둥루
   mode: 지하철 10호선
+  by: rail
   kind: 시내
   amt: 5
   cur: CNY
@@ -52,6 +53,7 @@ transport:
 - date: 9/19
   seg: 상하이 시내 이동 (예원·와이탄)
   mode: 지하철 10호선 · 도보
+  by: rail
   kind: 시내
   amt: 8
   cur: CNY
@@ -60,6 +62,7 @@ transport:
 - date: 9/20
   seg: 시내 → 푸동 국제공항
   mode: 지하철 2호선
+  by: rail
   kind: 시내
   amt: 8
   cur: CNY
@@ -68,6 +71,7 @@ transport:
 - date: 9/20
   seg: 공항 → 트빌리시 시내
   mode: 버스 37번
+  by: bus
   kind: 시내
   amt: 1
   cur: GEL
@@ -76,6 +80,7 @@ transport:
 - date: 9/21
   seg: 트빌리시 시내
   mode: 지하철·버스 (메트로머니)
+  by: rail
   kind: 시내
   amt: 4
   cur: GEL
@@ -84,6 +89,7 @@ transport:
 - date: 9/22
   seg: 디두베 → 므츠헤타 왕복
   mode: 마르슈르트카
+  by: bus
   kind: 시외
   amt: 3
   cur: GEL
@@ -92,6 +98,7 @@ transport:
 - date: 9/22
   seg: 므츠헤타 → 즈바리 수도원 왕복
   mode: 택시 (대기 포함)
+  by: taxi
   kind: 시내
   amt: 25
   cur: GEL
@@ -100,6 +107,7 @@ transport:
 - date: 9/23
   seg: 디두베 → 스테판츠민다
   mode: 마르슈르트카
+  by: bus
   kind: 시외
   amt: 15
   cur: GEL
@@ -108,6 +116,7 @@ transport:
 - date: 9/23
   seg: 스테판츠민다 → 게르게티 교회
   mode: 4WD (편도) · 하산은 도보
+  by: taxi
   kind: 시내
   amt: 25
   cur: GEL
@@ -116,6 +125,7 @@ transport:
 - date: 9/24
   seg: 스테판츠민다 → 트빌리시
   mode: 마르슈르트카
+  by: bus
   kind: 시외
   amt: 15
   cur: GEL
@@ -124,6 +134,7 @@ transport:
 - date: 9/24
   seg: 트빌리시 시내 (디두베 → 숙소)
   mode: 지하철·버스
+  by: rail
   kind: 시내
   amt: 2
   cur: GEL
@@ -132,6 +143,7 @@ transport:
 - date: 9/26
   seg: 오르타찰라 → 알라베르디
   mode: 합승택시 (예레반행)
+  by: taxi
   kind: 시외
   amt: 40
   cur: GEL
@@ -140,6 +152,7 @@ transport:
 - date: 9/26
   seg: 알라베르디 → 사나힌 왕복
   mode: 3번 버스
+  by: bus
   kind: 시내
   amt: 400
   cur: AMD
@@ -148,6 +161,7 @@ transport:
 - date: 9/26
   seg: 알라베르디 → 하흐파트 왕복
   mode: 마르슈르트카
+  by: bus
   kind: 시외
   amt: 400
   cur: AMD
@@ -156,6 +170,7 @@ transport:
 - date: 9/27
   seg: 알라베르디 → 바나조르
   mode: 마르슈르트카
+  by: bus
   kind: 시외
   amt: 500
   cur: AMD
@@ -164,6 +179,7 @@ transport:
 - date: 9/27
   seg: 바나조르 → 귬리
   mode: 마르슈르트카
+  by: bus
   kind: 시외
   amt: 1500
   cur: AMD
@@ -172,6 +188,7 @@ transport:
 - date: 9/28
   seg: 귬리 → 예레반
   mode: 마르슈르트카
+  by: bus
   kind: 시외
   amt: 2000
   cur: AMD
@@ -180,6 +197,7 @@ transport:
 - date: 9/29
   seg: 예레반 → 코르 비랍 · 노라방크 · 타테브 (왕복)
   mode: 1일 그룹투어 (미니버스)
+  by: bus
   kind: 시외
   amt: 25000
   cur: AMD
@@ -188,6 +206,7 @@ transport:
 - date: 9/27
   seg: 킬리키아 터미널 → 시내
   mode: 버스
+  by: bus
   kind: 시내
   amt: 100
   cur: AMD
@@ -196,6 +215,7 @@ transport:
 - date: 9/30
   seg: 가르니 → 게하르트 왕복
   mode: 택시
+  by: taxi
   kind: 시내
   amt: 3000
   cur: AMD
@@ -204,6 +224,7 @@ transport:
 - date: 10/1
   seg: 예레반 → 에치미아진 왕복
   mode: 마르슈르트카
+  by: bus
   kind: 시내
   amt: 600
   cur: AMD
@@ -212,6 +233,7 @@ transport:
 - date: 10/3
   seg: 예레반 → 즈바르트노츠 공항
   mode: 택시
+  by: taxi
   kind: 시내
   amt: 4000
   cur: AMD
@@ -220,6 +242,7 @@ transport:
 - date: 10/3
   seg: 아테네 공항 → 신타그마역
   mode: 메트로 3호선
+  by: rail
   kind: 시내
   amt: 10
   cur: EUR
@@ -228,6 +251,7 @@ transport:
 - date: 10/3
   seg: 아테네 시내 이동
   mode: 메트로·트램 4~5회
+  by: rail
   kind: 시내
   amt: 6
   cur: EUR
@@ -236,6 +260,7 @@ transport:
 - date: 10/4
   seg: 아테네 → 공항 (04:10 출발)
   mode: X95 공항버스
+  by: bus
   kind: 시내
   amt: 6.2
   cur: EUR
@@ -244,6 +269,7 @@ transport:
 - date: 10/4
   seg: 자이드 국제공항 → TRYP 호텔
   mode: 택시
+  by: taxi
   kind: 시내
   amt: 90
   cur: AED
@@ -252,6 +278,7 @@ transport:
 - date: 10/4
   seg: TRYP 호텔 → 루브르 아부다비
   mode: 택시
+  by: taxi
   kind: 시내
   amt: 45
   cur: AED
@@ -260,6 +287,7 @@ transport:
 - date: 10/4
   seg: 루브르 → 셰이크 자이드 모스크
   mode: 택시
+  by: taxi
   kind: 시내
   amt: 75
   cur: AED
@@ -268,6 +296,7 @@ transport:
 - date: 10/4
   seg: 모스크 → TRYP 호텔
   mode: 택시
+  by: taxi
   kind: 시내
   amt: 45
   cur: AED
@@ -276,6 +305,7 @@ transport:
 - date: 10/5
   seg: TRYP 호텔 → 공항 (05:30)
   mode: A2 공항버스
+  by: bus
   kind: 시내
   amt: 14
   cur: AED
@@ -284,6 +314,7 @@ transport:
 - date: 9/30
   seg: 예레반 → 가르니 왕복
   mode: 266·284번 버스
+  by: bus
   kind: 시외
   amt: 500
   cur: AMD
@@ -292,6 +323,7 @@ transport:
 - date: 9/24
   seg: 스테판츠민다 → 주타 왕복
   mode: 4WD 택시 (대기 포함)
+  by: taxi
   kind: 시내
   amt: 80
   cur: GEL
@@ -300,6 +332,7 @@ transport:
 - date: 9/25
   seg: 트빌리시 → 시그나기 왕복
   mode: 마르슈르트카
+  by: bus
   kind: 시외
   amt: 25
   cur: GEL
@@ -308,6 +341,7 @@ transport:
 - date: 9/29
   seg: 투어 사무실 → 숙소 (심야)
   mode: 택시 또는 도보
+  by: taxi
   kind: 시내
   amt: 1000
   cur: AMD

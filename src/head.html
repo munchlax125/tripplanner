@@ -190,6 +190,52 @@ __VIEWCSS__
     color:hsl(var(--muted-foreground));}
   .cc-city{font-size:12px;color:hsl(var(--muted-foreground));margin-top:6px;line-height:1.5;}
 
+  /* ── 이동 수단 — 아이콘 카드 → 목록 → 뒤로 (라디오만 사용) ── */
+__MOVECSS__
+  .ic{width:22px;height:22px;flex:none;}
+  .mvcards{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;}
+  .mvcard{display:flex;flex-direction:column;align-items:flex-start;gap:8px;
+    padding:18px;cursor:pointer;background:hsl(var(--card));
+    color:hsl(var(--card-foreground));border:1px solid hsl(var(--border));
+    border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);
+    transition:box-shadow .15s,transform .15s,border-color .15s;}
+  .mvcard:hover{box-shadow:var(--shadow);transform:translateY(-1px);
+    border-color:hsl(var(--ring));}
+  .mvcard .ic{width:26px;height:26px;color:hsl(var(--muted-foreground));}
+  .mvcard:hover .ic{color:hsl(var(--foreground));}
+  .mvcard b{font-size:15px;font-weight:600;letter-spacing:-.015em;}
+  .mvcard span{font-family:var(--font-mono);font-size:11.5px;
+    color:hsl(var(--muted-foreground));}
+
+  .mvpanel{border:1px solid hsl(var(--border));border-radius:var(--radius-lg);
+    overflow:hidden;box-shadow:var(--shadow-sm);background:hsl(var(--card));}
+  .mvhead{display:flex;align-items:center;gap:10px;padding:12px 16px;
+    background:hsl(var(--muted));border-bottom:1px solid hsl(var(--border));}
+  .mvhead .ic{width:18px;height:18px;color:hsl(var(--muted-foreground));}
+  .mvhead b{font-size:14px;font-weight:600;}
+  .mvn{margin-left:auto;font-family:var(--font-mono);font-size:11.5px;
+    color:hsl(var(--muted-foreground));}
+  .mvback{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 11px;
+    margin-right:2px;font-size:12.5px;font-weight:500;cursor:pointer;
+    color:hsl(var(--foreground));background:hsl(var(--background));
+    border:1px solid hsl(var(--border));border-radius:var(--radius-md);
+    -webkit-user-select:none;user-select:none;
+    transition:background-color .15s,border-color .15s;}
+  .mvback:hover{background:hsl(var(--accent));border-color:hsl(var(--ring));}
+  .mvarrow{font-size:14px;line-height:1;}
+  .mvr{display:grid;grid-template-columns:78px 1fr 88px;gap:12px;align-items:baseline;
+    padding:11px 16px;border-top:1px solid hsl(var(--border));}
+  .mvr:first-of-type{border-top:0;}
+  .mvnote{background:hsl(var(--muted));}
+  .mvnote .mvb{font-size:12.5px;color:hsl(var(--muted-foreground));}
+  .mvd{font-family:var(--font-mono);font-size:12px;color:hsl(var(--muted-foreground));}
+  .mvb{font-size:13.5px;color:hsl(var(--card-foreground));line-height:1.55;}
+  .mvb b{font-weight:600;}
+  .mvb small{display:block;font-size:12px;color:hsl(var(--muted-foreground));
+    margin-top:2px;line-height:1.55;}
+  .mva{font-family:var(--font-mono);font-size:12.5px;text-align:right;
+    font-variant-numeric:tabular-nums;color:hsl(var(--card-foreground));}
+
   /* ── 하루씩 훑어보기 — 개요에서 16일을 한 화면에 ─────── */
   .tline{border:1px solid hsl(var(--border));border-radius:var(--radius-lg);
     overflow:hidden;box-shadow:var(--shadow-sm);background:hsl(var(--card));}
@@ -462,6 +508,11 @@ __VIEWCSS__
     .kpis{grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;}
     .kpi{padding:14px 15px;} .kpi-v{font-size:17px;}
     .tl{grid-template-columns:62px 1fr;gap:10px;padding:9px 14px;}
+    .mvcards{grid-template-columns:1fr 1fr 1fr;gap:8px;}
+    .mvcard{padding:14px 10px;align-items:center;text-align:center;gap:6px;}
+    .mvcard b{font-size:13px;}
+    .mvr{grid-template-columns:60px 1fr;gap:4px 10px;padding:11px 14px;}
+    .mvr .mva{grid-column:2;text-align:left;}
   }
 
   /* ── 인쇄 ─────────────────────────────────────────────── */
@@ -477,7 +528,8 @@ __VIEWCSS__
     .wrap{padding:0;max-width:100%;}
     .day,.note,.flight,.daymap,.summary,.border,.ccard{break-inside:avoid;}
     /* 탭 CSS 는 @media screen 안에만 있으므로 인쇄하면 모든 나라가 그대로 나옵니다 */
-    .tabs,.ccards,.vsw{display:none;}
+    .tabs,.ccards,.vsw,.msw,.mvcards,.mvback{display:none;}
+    .mvpanel{display:block;margin-bottom:10px;}   /* 인쇄하면 세 가지가 다 나옵니다 */
     .rgn-head{break-after:avoid;}
     .mapctl{display:none;}
     .gmap{border-bottom:none;}

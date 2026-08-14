@@ -111,6 +111,20 @@ labels:
 
 라디오 버튼과 `:checked`만 씁니다 — **자바스크립트가 없어도 동작하고, 인쇄하면 모든 나라가 그대로 나옵니다.**
 
+**이동 수단은 아이콘 카드로 묶입니다.** `move_groups`를 두면 항공편 자리에 카드가 깔리고,
+누르면 그 목록이 펼쳐집니다(뒤로 버튼 포함). `move_groups`가 없으면 예전처럼 `flights`만 나열합니다.
+
+```yaml
+move_groups:
+- {key: air,  label: 항공편, icon: plane, source: flights,   unit: 편}
+- {key: bus,  label: 버스,   icon: bus,   source: transport, unit: 구간}
+- {key: rail, label: 기차,   icon: train, source: transport, unit: 구간}
+```
+
+`source: flights`는 `일정.yaml`의 `flights`를, `source: transport`는 **`예산.yaml`의 `transport` 중
+`by`가 `key`와 같은 줄**을 가져옵니다. 그래서 요금이 예산과 자동으로 맞습니다.
+`icon`은 `plane`·`bus`·`train` 중에서 고르고, `flights`에 `note: true`인 줄은 개수에서 빠집니다.
+
 **예상경비 탭도 자동입니다.** `src/예산.yaml`이 있으면 `build.py`가 그것도 읽어
 요약(총예산·항공권·현지 지출·남는 돈), 항목별·나라별 막대, 일자별 표, 환율을 만들어 붙입니다.
 엑셀과 **같은 식으로 계산하므로 값이 어긋나지 않습니다.** 다른 파일을 쓰려면 `일정.yaml`에

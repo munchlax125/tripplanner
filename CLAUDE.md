@@ -28,6 +28,7 @@
 | 탭 제목 | `일정.yaml: doc_title` → `head.html`의 `__TITLE__` |
 | 지역별 색 | `일정.yaml: colors` → CSS를 `build.py`가 생성해 `__COLORCSS__`에 넣음 |
 | 나라별 보기 탭 | 날짜 블록 `cls`의 색 키에서 자동 → CSS를 `build.py`가 생성해 `__VIEWCSS__`에 넣음 |
+| 이동 수단 카드 | `일정.yaml: move_groups` (없으면 예전 `flights` 나열로 되돌아감) · 아이콘은 `build.py`의 `ICONS` |
 | 예상경비 탭 | `일정.yaml: budget_source` (기본 `src/예산.yaml`, 파일이 없으면 탭이 빠짐) |
 | 문단 제목 | `일정.yaml: labels` (`view_home`·`view_all`·`regions` 포함) |
 | 개요 지도 id | `일정.yaml: overview_map` |
@@ -109,6 +110,10 @@ yaml.safe_dump(d, open(P,'w',encoding='utf-8'),
 **나라별 보기는 라디오 + `:checked` 로만 돕니다.** `.vsw` 입력들이 `.tabs`·`.stage` 보다 **앞에** 있어야
 `~` 선택자가 걸립니다. 숨김 규칙은 전부 `@media screen` 안에 있어 **인쇄하면 모든 나라가 나옵니다** — 이 구조를 깨지 마세요.
 `.days`의 **직계 자식**만 필터링되므로 날짜·국경 블록을 다른 요소로 한 번 더 감싸면 안 됩니다.
+
+**이동 수단 그룹의 출처는 두 곳입니다.** `source: flights`는 `일정.yaml`, `source: transport`는
+`예산.yaml`의 `transport[].by`. 교통 행을 새로 넣으면 **`by`도 같이 넣으세요** — 없으면 어느 카드에도 안 잡힙니다.
+아이콘은 외부 라이브러리 없이 `ICONS`의 단순 도형입니다. 새 아이콘도 여기에 도형으로 넣으세요.
 
 **다크 대응은 세 상태입니다.** 뷰어가 명시하면 루트에 `data-theme="dark|light"`가 찍히고,
 기본값(시스템)은 아무 표시도 없어 `prefers-color-scheme`만 남습니다. 그래서 색은 반드시 **토큰에서만** 갈라야 합니다 —

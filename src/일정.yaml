@@ -147,7 +147,24 @@ flights:
 - date: 10.5 월
   body: <b>아부다비 08:35 → 인천 22:15</b>
 - date: 주의
+  note: true
   body: 도착은 <b>훙차오</b>, 출발은 <b>푸동</b>. 서로 다른 공항입니다 (약 60km)
+move_groups:
+- key: air
+  label: 항공편
+  icon: plane
+  source: flights
+  unit: 편
+- key: bus
+  label: 버스
+  icon: bus
+  source: transport
+  unit: 구간
+- key: rail
+  label: 기차
+  icon: train
+  source: transport
+  unit: 구간
 blocks:
 - type: day
   cls: day cn stay
