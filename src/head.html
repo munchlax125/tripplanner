@@ -194,46 +194,38 @@ __VIEWCSS__
   /* ── 이동 수단 — 아이콘 카드 → 목록 → 뒤로 (라디오만 사용) ── */
 __MOVECSS__
   .ic{width:22px;height:22px;flex:none;}
-  .mvbox{display:block;}
-  .mvcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-    gap:12px;margin-bottom:12px;}
-  .mvcard{display:flex;flex-direction:column;align-items:flex-start;gap:8px;
-    padding:18px;cursor:pointer;background:hsl(var(--card));
-    color:hsl(var(--card-foreground));border:1px solid hsl(var(--border));
-    border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);
-    transition:box-shadow .15s,transform .15s,border-color .15s;}
-  .mvcard:hover{box-shadow:var(--shadow);transform:translateY(-1px);
-    border-color:hsl(var(--ring));}
-  .mvcard .ic{width:26px;height:26px;color:hsl(var(--muted-foreground));}
-  .mvcard:hover .ic{color:hsl(var(--foreground));}
+  .mvbox{display:flex;flex-direction:column;gap:10px;}
+  /* 여닫기는 details 요소가 합니다 — CSS 로 숨기지 않으므로 새어 나올 수 없습니다 */
+  .mvitem{background:hsl(var(--card));color:hsl(var(--card-foreground));
+    border:1px solid hsl(var(--border));border-radius:var(--radius-lg);
+    box-shadow:var(--shadow-sm);overflow:hidden;}
+  .mvitem[open]{border-color:hsl(var(--foreground));box-shadow:var(--shadow);}
+  .mvcard{display:flex;align-items:center;gap:12px;padding:15px 18px;cursor:pointer;
+    list-style:none;-webkit-user-select:none;user-select:none;
+    transition:background-color .15s;}
+  .mvcard::-webkit-details-marker{display:none;}
+  .mvcard::marker{content:"";}
+  .mvcard:hover{background:hsl(var(--muted));}
+  .mvcard:focus-visible{outline:2px solid hsl(var(--ring));outline-offset:-2px;}
+  .mvcard .ic{width:24px;height:24px;color:hsl(var(--muted-foreground));}
+  .mvitem[open] .mvcard .ic{color:hsl(var(--foreground));}
   .mvcard b{font-size:15px;font-weight:600;letter-spacing:-.015em;}
-  .mvcard span{font-family:var(--font-mono);font-size:11.5px;
-    color:hsl(var(--muted-foreground));}
-
-  .mvpanel{border:1px solid hsl(var(--border));border-radius:var(--radius-lg);
-    overflow:hidden;box-shadow:var(--shadow-sm);background:hsl(var(--card));}
-  .mvb,.cdesc,.tl-p,.note-val{overflow-wrap:anywhere;}
-  .mvhead{display:flex;align-items:center;gap:10px;padding:12px 16px;
-    background:hsl(var(--muted));border-bottom:1px solid hsl(var(--border));}
-  .mvhead .ic{width:18px;height:18px;color:hsl(var(--muted-foreground));}
-  .mvhead b{font-size:14px;font-weight:600;}
-  .mvn{margin-left:auto;font-family:var(--font-mono);font-size:11.5px;
-    color:hsl(var(--muted-foreground));}
-  .mvback{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 11px;
-    margin-right:2px;font-size:12.5px;font-weight:500;cursor:pointer;
-    color:hsl(var(--foreground));background:hsl(var(--background));
-    border:1px solid hsl(var(--border));border-radius:var(--radius-md);
-    -webkit-user-select:none;user-select:none;
-    transition:background-color .15s,border-color .15s;}
-  .mvback:hover{background:hsl(var(--accent));border-color:hsl(var(--ring));}
-  .mvarrow{font-size:14px;line-height:1;}
-  .mvr{display:grid;grid-template-columns:78px minmax(0,1fr) 88px;gap:12px;align-items:baseline;
-    padding:11px 16px;border-top:1px solid hsl(var(--border));}
-  .mvr:first-of-type{border-top:0;}
+  .mvn{font-family:var(--font-mono);font-size:11.5px;color:hsl(var(--muted-foreground));}
+  /* 오른쪽 끝 꺾쇠 — 열리면 위를 봅니다 */
+  .mvchev{margin-left:auto;width:9px;height:9px;flex:none;
+    border-right:1.8px solid hsl(var(--muted-foreground));
+    border-bottom:1.8px solid hsl(var(--muted-foreground));
+    transform:rotate(45deg) translate(-2px,-2px);transition:transform .18s;}
+  .mvitem[open] .mvchev{transform:rotate(-135deg) translate(-2px,-2px);}
+  .mvlist{border-top:1px solid hsl(var(--border));}
+  .mvr{display:grid;grid-template-columns:78px minmax(0,1fr) 88px;gap:12px;
+    align-items:baseline;padding:11px 18px;border-top:1px solid hsl(var(--border));}
+  .mvr:first-child{border-top:0;}
   .mvnote{background:hsl(var(--muted));}
   .mvnote .mvb{font-size:12.5px;color:hsl(var(--muted-foreground));}
   .mvd{font-family:var(--font-mono);font-size:12px;color:hsl(var(--muted-foreground));}
-  .mvb{font-size:13.5px;color:hsl(var(--card-foreground));line-height:1.55;}
+  .mvb{font-size:13.5px;color:hsl(var(--card-foreground));line-height:1.55;
+    overflow-wrap:anywhere;}
   .mvb b{font-weight:600;}
   .mvb small{display:block;font-size:12px;color:hsl(var(--muted-foreground));
     margin-top:2px;line-height:1.55;}
@@ -512,10 +504,9 @@ __MOVECSS__
     .kpis{grid-template-columns:repeat(auto-fit,minmax(140px,minmax(0,1fr)));gap:10px;}
     .kpi{padding:14px 15px;} .kpi-v{font-size:17px;}
     .tl{grid-template-columns:62px minmax(0,1fr);gap:10px;padding:9px 14px;}
-    .mvcards{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
-    .mvcard{padding:14px 10px;align-items:center;text-align:center;gap:6px;}
+    .mvcard{padding:13px 14px;gap:10px;}
     .mvcard b{font-size:13px;}
-    .mvr{grid-template-columns:60px minmax(0,1fr);gap:4px 10px;padding:11px 14px;}
+    .mvr{grid-template-columns:56px minmax(0,1fr);gap:4px 10px;padding:11px 14px;}
     .mvr .mva{grid-column:2;text-align:left;}
   }
 
@@ -532,8 +523,8 @@ __MOVECSS__
     .wrap{padding:0;max-width:100%;}
     .day,.note,.flight,.daymap,.summary,.border,.ccard{break-inside:avoid;}
     /* 탭 CSS 는 @media screen 안에만 있으므로 인쇄하면 모든 나라가 그대로 나옵니다 */
-    .tabs,.ccards,.vsw,.msw,.mvcards,.mvback{display:none!important;}
-    .mvpanel{display:block!important;margin-bottom:10px;}   /* 인쇄하면 세 가지가 다 나옵니다 */
+    .tabs,.ccards,.vsw,.mvchev{display:none!important;}
+    .mvitem{break-inside:avoid;}
     .rgn-head{break-after:avoid;}
     .mapctl{display:none;}
     .gmap{border-bottom:none;}

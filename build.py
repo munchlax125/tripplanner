@@ -422,48 +422,29 @@ def move_section():
     data = [(g, r) for g, r in data if r]
     if not data:
         return []
+    # <details> 로 만듭니다 — 여닫기를 브라우저가 처리하므로 CSS 규칙 하나가
+    # 어긋나도 목록이 새어 나오지 않습니다. name 을 같이 주면 하나만 열립니다.
     n_of = lambda rows: sum(1 for r in rows if not r[3])
-    O = ['  <input class="msw" type="radio" name="move" id="move-none" checked>']
-    for g, _ in data:
-        O.append('  <input class="msw" type="radio" name="move" id="move-%s">' % g['key'])
-    O.append('  <div class="mvbox">\n    <div class="mvcards">')
+    O = ['  <div class="mvbox">']
     for g, rows in data:
-        O.append('      <label class="mvcard" for="move-%s">%s<b>%s</b><span>%d%s</span></label>'
-                 % (g['key'], icon(g.get('icon', '')), g['label'],
-                    n_of(rows), g.get('unit', '')))
-    O.append('    </div>')
-    for g, rows in data:
-        O.append('    <div class="mvpanel %s">' % g['key'])
-        O.append('      <div class="mvhead"><label class="mvback" for="move-none">'
-                 '<span class="mvarrow">←</span>%s</label>%s<b>%s</b>'
-                 '<span class="mvn">%d%s</span></div>'
-                 % (LABELS['move_back'], icon(g.get('icon', '')), g['label'],
-                    n_of(rows), g.get('unit', '')))
+        O.append('    <details class="mvitem" name="move">')
+        O.append('      <summary class="mvcard">%s<b>%s</b><span class="mvn">%d%s</span>'
+                 '<span class="mvchev" aria-hidden="true"></span></summary>'
+                 % (icon(g.get('icon', '')), g['label'], n_of(rows), g.get('unit', '')))
+        O.append('      <div class="mvlist">')
         for date, body, amt, is_note in rows:
-            O.append('      <div class="mvr%s"><span class="mvd">%s</span>'
+            O.append('        <div class="mvr%s"><span class="mvd">%s</span>'
                      '<span class="mvb">%s</span><span class="mva">%s</span></div>'
                      % (' mvnote' if is_note else '', date, body, amt))
-        O.append('    </div>')
+        O.append('      </div>')
+        O.append('    </details>')
     O.append('  </div>')
     return O
 
 
 def move_css():
-    """카드는 늘 보이고, 고른 것만 아래에 펼칩니다.
-
-    숨김은 미디어 쿼리 밖에 둡니다 — 안에 두면 미디어를 다르게 해석하는 환경에서
-    세 패널이 한꺼번에 나와 옆으로 삐져나갑니다.
-    """
-    keys = [g['key'] for g in MOVES]
-    if not keys:
-        return '  .mvbox{display:none;}'
-    out = ['  .msw{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;}',
-           '  .mvpanel{display:none;}']
-    for k in keys:
-        out += ['  #move-%s:checked~.mvbox .mvpanel.%s{display:block;}' % (k, k),
-                '  #move-%s:checked~.mvbox .mvcard[for="move-%s"]'
-                '{border-color:hsl(var(--foreground));box-shadow:var(--shadow);}' % (k, k)]
-    return '\n'.join(out)
+    """<details> 로 여닫으므로 나라 키에 딸린 CSS 가 필요 없습니다."""
+    return '' if MOVES else '  .mvbox{display:none;}'
 
 
 # ───────────────────────── 예상경비 ─────────────────────────
