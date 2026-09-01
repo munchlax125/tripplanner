@@ -87,7 +87,7 @@ OVERVIEW_MAP = doc.get('overview_map')               # 없으면 개요 지도�
 LABELS = {'nights': '숙박 배분', 'overview': '루트 개요', 'flights': '항공편',
           'days': '본 일정', 'notes': '미리 확인할 것', 'regions': '나라별로 보기',
           'view_home': '개요', 'view_all': '전체 일정', 'view_cost': '예상경비',
-          'outline': '하루씩 훑어보기',
+          'outline': '하루씩 훑어보기', 'moves': '이동 수단', 'move_back': '뒤로',
           'cost_kind': '무엇에 쓰나', 'cost_region': '어디에 쓰나',
           'cost_cash': '통화별로 얼마나 필요한가', 'cost_daily': '일자별',
           'cost_move': '구간별 교통비', 'cost_tick': '입장료', 'cost_rate': '적용 환율'}
@@ -296,6 +296,11 @@ def cckey(blk):
     return p[1] if len(p) > 1 else 'ov'
 
 
+def day_id(blk):
+    """날짜 앵커 id — '9.24' -> 'd-9-24'. 개요에서 눌러 그 날짜로 바로 갑니다."""
+    return 'd-' + re.sub(r'[^0-9A-Za-z]+', '-', str(blk.get('date', ''))).strip('-')
+
+
 REGIONS = []                      # 날짜 블록에 실제로 쓰인 키를 문서 순서대로
 for _b in doc['blocks']:
     if _b['type'] == 'day' and cckey(_b) not in REGIONS:
@@ -356,11 +361,90 @@ def view_css():
             if first_d[k] == last_d[k]:      # 하루짜리 나라는 점 하나만
                 out.append('  #view-%s:checked~.stage>.days>div:nth-of-type(%d) .day-rail::before'
                            '{top:30px;height:0;}' % (k, first_d[k]))
+    # 개요에서 날짜 줄을 누르면 그 날짜로 이동합니다. 해시가 걸린 동안만 본 일정을
+    # 그 나라로 펼치고, 탭을 한 번 누르면 #view-home 이 풀려 이 규칙이 통째로 꺼집니다.
+    out.append('  #view-home:checked~.stage:has(>.days>:target)>.home{display:none;}')
+    for k in REGIONS:
+        out += ['  #view-home:checked~.stage:has(>.days>.%s:target)>.days{display:block;}' % k,
+                '  #view-home:checked~.stage:has(>.days>.%s:target)>.days'
+                '>:not(.%s):not(.keep){display:none;}' % (k, k)]
     act = ',\n'.join('  #view-%s:checked~.tabs .tab[for="view-%s"]' % (v, v) for v in VIEWS)
     out += [act + '{background:hsl(var(--background));color:hsl(var(--foreground));'
                   'box-shadow:var(--shadow-sm);}',
             '}']
     return '\n'.join(out)
+
+
+# ───────────────────────── 이동 수단 ─────────────────────────
+# 아이콘은 단순 도형으로만 그립니다 — 외부 아이콘 폰트·라이브러리를 쓰지 않습니다.
+ICONS = {
+    'plane': '<path d="M21.5 2.5 2.5 11l8 2.5 2.5 8z"/><path d="M21.5 2.5 10.5 13.5"/>',
+    'bus': '<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M3 10h18M12 4v6"/>'
+           '<circle cx="7.5" cy="19.4" r="1.6"/><circle cx="16.5" cy="19.4" r="1.6"/>',
+    'train': '<rect x="5" y="3" width="14" height="13" rx="3"/><path d="M5 10h14"/>'
+             '<circle cx="9" cy="13" r="1"/><circle cx="15" cy="13" r="1"/>'
+             '<path d="m8.5 16-2.5 4M15.5 16l2.5 4M3.5 20h17"/>',
+}
+MOVES = doc.get('move_groups') or []
+
+
+def icon(name):
+    return ('<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+            'stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" '
+            'aria-hidden="true">%s</svg>' % ICONS.get(name, ''))
+
+
+def move_rows(g):
+    """그룹 하나가 보여줄 줄들 — (날짜, 본문, 금액, 참고인가).
+
+    flights 는 일정.yaml, 나머지는 예산.yaml 의 transport 에서 by 로 골라 옵니다.
+    note: true 인 줄은 개수에서 빼고 흐리게 깔아 둡니다.
+    """
+    if g.get('source') == 'flights':
+        return [(f.get('date', ''), f.get('body', ''), '', bool(f.get('note')))
+                for f in (doc.get('flights') or [])]
+    if not BUD:
+        return []
+    R, out = BUD['rates'], []
+    for t in BUD.get('transport') or []:
+        if t.get('by') != g['key']:
+            continue
+        sub = ' · '.join(x for x in [t.get('mode', ''), t.get('note', '')] if x)
+        out.append((t['date'], '<b>%s</b><small>%s</small>' % (t.get('seg', ''), sub),
+                    money(round(t['amt'] * R[t['cur']])), False))
+    return out
+
+
+def move_section():
+    if not MOVES:
+        return []
+    data = [(g, move_rows(g)) for g in MOVES]
+    data = [(g, r) for g, r in data if r]
+    if not data:
+        return []
+    # <details> 로 만듭니다 — 여닫기를 브라우저가 처리하므로 CSS 규칙 하나가
+    # 어긋나도 목록이 새어 나오지 않습니다. name 을 같이 주면 하나만 열립니다.
+    n_of = lambda rows: sum(1 for r in rows if not r[3])
+    O = ['  <div class="mvbox">']
+    for g, rows in data:
+        O.append('    <details class="mvitem" name="move">')
+        O.append('      <summary class="mvcard">%s<b>%s</b><span class="mvn">%d%s</span>'
+                 '<span class="mvchev" aria-hidden="true"></span></summary>'
+                 % (icon(g.get('icon', '')), g['label'], n_of(rows), g.get('unit', '')))
+        O.append('      <div class="mvlist">')
+        for date, body, amt, is_note in rows:
+            O.append('        <div class="mvr%s"><span class="mvd">%s</span>'
+                     '<span class="mvb">%s</span><span class="mva">%s</span></div>'
+                     % (' mvnote' if is_note else '', date, body, amt))
+        O.append('      </div>')
+        O.append('    </details>')
+    O.append('  </div>')
+    return O
+
+
+def move_css():
+    """<details> 로 여닫으므로 나라 키에 딸린 CSS 가 필요 없습니다."""
+    return '' if MOVES else '  .mvbox{display:none;}'
 
 
 # ───────────────────────── 예상경비 ─────────────────────────
@@ -533,7 +617,8 @@ tab = doc.get('doc_title') or re.sub(r'<[^>]+>', '', str(doc.get('title', '여�
 B = []
 B.append(HEAD.replace('__TITLE__', tab)
              .replace('__COLORCSS__', color_css())
-             .replace('__VIEWCSS__', view_css()))
+             .replace('__VIEWCSS__', view_css())
+             .replace('__MOVECSS__', move_css()))
 B.append('<div class="wrap">\n')
 for key, tpl in (('eyebrow', '  <p class="eyebrow">%s</p>'),
                  ('title', '  <h1 class="title">%s</h1>'),
@@ -579,7 +664,12 @@ if OVERVIEW_MAP:
     section('overview')
     B.append('      ' + render_daymap(OVERVIEW_MAP, 'ov', doc.get('overview_cap', '')) + '\n')
 
-if doc.get('flights'):
+_mv = move_section()
+if _mv:
+    section('moves')
+    B += _mv
+    B.append('')
+elif doc.get('flights'):
     section('flights')
     for f in doc['flights']:
         B.append('  <div class="flight">\n    <div class="flight-date">%s</div>'
@@ -606,10 +696,9 @@ if _days:
     section('outline')
     B.append('  <div class="tline">')
     for b in _days:
-        k = cckey(b)
-        B.append('    <label class="tl %s" for="view-%s"><span class="tl-d">%s<em>%s</em></span>'
-                 '<span class="tl-p">%s</span></label>'
-                 % (k, k if k in REGIONS else 'all', b.get('date', ''), b.get('dow', ''),
+        B.append('    <a class="tl %s" href="#%s"><span class="tl-d">%s<em>%s</em></span>'
+                 '<span class="tl-p">%s</span></a>'
+                 % (cckey(b), day_id(b), b.get('date', ''), b.get('dow', ''),
                     re.sub(r'<[^>]+>', '', b.get('place', '')).strip()))
     B.append('  </div>')
 B.append('  </div>\n\n  <div class="days">')
@@ -634,7 +723,7 @@ for blk in doc['blocks']:
     if cc not in COLOR:
         sys.exit("%s: cls '%s' 의 색 키 '%s' 가 colors 에 없습니다."
                  % (blk.get('date', '?'), blk['cls'], cc))
-    B.append('  <div class="%s">' % blk['cls'])
+    B.append('  <div class="%s" id="%s">' % (blk['cls'], day_id(blk)))
     B.append('    <div class="day-date">%s<em>%s</em></div><div class="day-rail"><i class="node"></i></div>'
              % (blk.get('date', ''), blk.get('dow', '')))
     B.append('    <div class="day-body">')
