@@ -1,4 +1,5 @@
 output: 여행예산_상하이반영.xlsx
+itinerary_source: src/일정.yaml
 rate_rows:
   GEL: 4
   AMD: 5
@@ -10,9 +11,11 @@ sheet_titles:
   교통상세: 구간별 교통 — 대중교통 우선
   입장료: 입장료 — 수도원은 대부분 무료
   일자별예산: 일자별 예산 (1인 기준, 원)
+  일정: 일정 — 날짜별 코스
 sheet_intros:
   교통상세: ‘대중교통’ 열이 ○ 이면 마르슈르트카·버스·지하철로 갈 수 있는 구간, △ 는 부분적, ✕ 는 택시가 사실상 필수인 구간입니다. 택시 요금은 환율 시트의 인원(현재 1명)으로 나눈 1인 부담액입니다.
   일자별예산: 1인 단독 여행 기준. 택시·기사 비용은 나눌 사람이 없어 전액 부담으로 계산했습니다. 9/19 상하이 1박은 항공권과 별개인 실제 지출이라 일정에 포함했습니다.
+  일정: 일정 YAML 에서 그대로 생성한 시트입니다. HTML 문서와 같은 소스라 숫자·시각이 갈라지지 않습니다. 「이동」이 비어 있으면 걸어서 가는 구간이고, 「주의」 행은 그 날이 무너질 수 있는 지점입니다. 4행에 필터가 걸려 있으니 날짜나 이동수단으로 걸러 보세요.
 rate_labels:
   GEL: 조지아 라리 (GEL) → 원
   AMD: 아르메니아 드람 (AMD) → 원
@@ -73,126 +76,6 @@ transport:
   cur: GEL
   pub: ○
   note: 24시간 운행
-- date: 9/21
-  seg: 트빌리시 시내
-  mode: 지하철·버스 (메트로머니)
-  kind: 시내
-  amt: 4
-  cur: GEL
-  pub: ○
-  note: 1회 1라리, 90분 내 환승 무료
-- date: 9/22
-  seg: 디두베 → 므츠헤타 왕복
-  mode: 마르슈르트카
-  kind: 시외
-  amt: 3
-  cur: GEL
-  pub: ○
-  note: 20분 간격, 30분 소요
-- date: 9/22
-  seg: 므츠헤타 → 즈바리 수도원 왕복
-  mode: 택시 (대기 포함)
-  kind: 시내
-  amt: 25
-  cur: GEL
-  pub: ✕
-  note: 대중교통 없음 · 1인 단독이라 전액 부담
-- date: 9/23
-  seg: 디두베 → 스테판츠민다
-  mode: 마르슈르트카
-  kind: 시외
-  amt: 15
-  cur: GEL
-  pub: ○
-  note: 3.5~4시간 · 06:40 터미널 도착해 첫 편 탑승 권장
-- date: 9/23
-  seg: 스테판츠민다 → 게르게티 교회
-  mode: 4WD (편도) · 하산은 도보
-  kind: 시내
-  amt: 25
-  cur: GEL
-  pub: ○
-  note: 카즈베기 1박이라 도착일 오후에 확정 이용. 하산은 도보. 흐리면 B안(1박 연장)
-- date: 9/24
-  seg: 스테판츠민다 → 트빌리시
-  mode: 마르슈르트카
-  kind: 시외
-  amt: 15
-  cur: GEL
-  pub: ○
-  note: 주타 복귀 후 14:00 편 · 약 3~3.5시간
-- date: 9/24
-  seg: 트빌리시 시내 (디두베 → 오르타찰라)
-  mode: 지하철·버스
-  kind: 시내
-  amt: 2
-  cur: GEL
-  pub: ○
-  note: 지하철 + 도보
-- date: 9/27
-  seg: 오르타찰라 → 알라베르디
-  mode: 합승택시 (예레반행)
-  kind: 시외
-  amt: 40
-  cur: GEL
-  pub: ○
-  note: 오전 정시편(08:20) 이용 — 대기 불확실성 해소
-- date: 9/27
-  seg: 알라베르디 → 사나힌 왕복
-  mode: 3번 버스
-  kind: 시내
-  amt: 400
-  cur: AMD
-  pub: ○
-  note: 왕복 400드람 · 택시로 하흐파트와 묶으면 6,000드람 안팎
-- date: 9/27
-  seg: 알라베르디 → 하흐파트 왕복
-  mode: 마르슈르트카
-  kind: 시외
-  amt: 400
-  cur: AMD
-  pub: ○
-  note: 주말 3편(9·13·17시)뿐
-- date: 9/28
-  seg: 알라베르디 → 바나조르
-  mode: 마르슈르트카
-  kind: 시외
-  amt: 500
-  cur: AMD
-  pub: ○
-  note: 1시간 · 09:00·10:30·11:00·13:00 네 편
-- date: 9/29
-  seg: 예레반 → 코르 비랍 · 노라방크 · 타테브 (왕복)
-  mode: 1일 그룹투어 (미니버스)
-  kind: 시외
-  amt: 25000
-  cur: AMD
-  pub: ✕
-  note: Hyur Service 63.72달러 · 입장료·케이블카 포함, 점심 별도 · 08:30~22:30
-- date: 9/28
-  seg: 킬리키아 터미널 → 시내
-  mode: 버스
-  kind: 시내
-  amt: 100
-  cur: AMD
-  pub: ○
-  note: 또는 얀덱스 택시
-- date: 9/30
-  seg: 가르니 → 게하르트 왕복
-  mode: 택시
-  kind: 시내
-  amt: 3000
-  cur: AMD
-  pub: ✕
-  note: 9km, 대중교통 없음 · 1인 단독이라 전액 부담
-- date: 10/1
-  seg: 예레반 → 에치미아진 왕복
-  mode: 마르슈르트카
-  kind: 시내
-  amt: 600
-  cur: AMD
-  pub: ○
-  note: 킬리키아 터미널
 - date: 10/3
   seg: 예레반 → 즈바르트노츠 공항
   mode: 택시
@@ -265,23 +148,207 @@ transport:
   cur: AED
   pub: ○
   note: 버스 4디르함 + 하필라트 카드 10디르함 · 칼리파 bin 자이드 St 승차 · 40~45분
-- date: 9/30
-  seg: 예레반 → 가르니 왕복
-  mode: 266·284번 버스
-  kind: 시외
-  amt: 500
-  cur: AMD
+- date: 9/21
+  seg: 트빌리시 시내
+  mode: 지하철·버스 (메트로머니)
+  kind: 시내
+  amt: 4
+  cur: GEL
   pub: ○
-  note: 가이 정류장 출발 · 30분 간격 · 왕복 500드람
+  note: 1회 1라리, 90분 내 환승 무료
+- date: 9/21
+  seg: 리케 공원 → 나리칼라 케이블카
+  mode: 케이블카 (편도)
+  kind: 시내
+  amt: 2.5
+  cur: GEL
+  pub: ○
+  note: 내려올 때는 능선을 걸어서 하산 — 편도만 탑니다
+- date: 9/22
+  seg: 디두베 → 므츠헤타 왕복
+  mode: 마르슈르트카
+  kind: 시외
+  amt: 3
+  cur: GEL
+  pub: ○
+  note: 20분 간격, 30분 소요
+- date: 9/22
+  seg: 므츠헤타 → 즈바리 수도원 왕복
+  mode: 택시 (대기 포함)
+  kind: 시내
+  amt: 25
+  cur: GEL
+  pub: ✕
+  note: 대중교통 없음 · 1인 단독이라 전액 부담
+- date: 9/22
+  seg: 트빌리시 시내 (국립박물관·벼룩시장)
+  mode: 지하철·도보
+  kind: 시내
+  amt: 2
+  cur: GEL
+  pub: ○
+  note: 오후 시내 이동
+- date: 9/23
+  seg: 시내 → 디두베 터미널
+  mode: 지하철
+  kind: 시내
+  amt: 1
+  cur: GEL
+  pub: ○
+  note: 06:40 도착 목표
+- date: 9/23
+  seg: 디두베 → 스테판츠민다
+  mode: 마르슈르트카
+  kind: 시외
+  amt: 15
+  cur: GEL
+  pub: ○
+  note: 3.5~4시간 · 첫 편(07:00) 탑승 권장
+- date: 9/23
+  seg: 스테판츠민다 → 게르게티 교회
+  mode: 4WD (편도) · 하산은 도보
+  kind: 시내
+  amt: 25
+  cur: GEL
+  pub: ○
+  note: 도착일 오후 1차 시도. 오르막 400m를 대신 올라줍니다
 - date: 9/24
   seg: 스테판츠민다 → 주타 왕복
   mode: 4WD 택시 (대기 포함)
-  kind: 시내
+  kind: 시외
   amt: 80
   cur: GEL
   pub: ✕
   note: 대중교통 없음 · 25km 비포장 · 1인 단독이면 전액. 동행 구하면 40라리
+- date: 9/25
+  seg: 스테판츠민다 → 트빌리시
+  mode: 마르슈르트카
+  kind: 시외
+  amt: 15
+  cur: GEL
+  pub: ○
+  note: 13:30 편 · 3~3.5시간
+- date: 9/25
+  seg: 디두베 → 시내
+  mode: 지하철
+  kind: 시내
+  amt: 1
+  cur: GEL
+  pub: ○
+  note: 체크인
+- date: 9/26
+  seg: 트빌리시 → 시그나기 왕복
+  mode: 마르슈르트카
+  kind: 시외
+  amt: 25
+  cur: GEL
+  pub: ○
+  note: 삼고리 터미널 출발 · 편도 2~2.5시간 · 보드베는 요청하면 하차 · 돌아오는 막차 18~19시
+- date: 9/26
+  seg: 트빌리시 시내 (삼고리 왕복)
+  mode: 지하철
+  kind: 시내
+  amt: 2
+  cur: GEL
+  pub: ○
+  note: 삼고리역
+- date: 9/27
+  seg: 시내 → 오르타찰라 터미널
+  mode: 지하철·도보
+  kind: 시내
+  amt: 1
+  cur: GEL
+  pub: ○
+  note: 07:30 출발
+- date: 9/27
+  seg: 오르타찰라 → 알라베르디
+  mode: 합승택시 (예레반행)
+  kind: 시외
+  amt: 40
+  cur: GEL
+  pub: ○
+  note: 오전 정시편(08:20) 이용 — 대기 불확실성 해소
+- date: 9/27
+  seg: 알라베르디 → 하흐파트 왕복
+  mode: 마르슈르트카
+  kind: 시외
+  amt: 400
+  cur: AMD
+  pub: ○
+  note: 주말 3편(9·13·17시)뿐 — 13시 편 기준
+- date: 9/27
+  seg: 알라베르디 → 사나힌 왕복
+  mode: 3번 버스
+  kind: 시내
+  amt: 400
+  cur: AMD
+  pub: ○
+  note: 왕복 400드람 · 택시로 하흐파트와 묶으면 6,000드람 안팎
+- date: 9/28
+  seg: 알라베르디 → 바나조르
+  mode: 마르슈르트카
+  kind: 시외
+  amt: 500
+  cur: AMD
+  pub: ○
+  note: 1시간 · 09:00·10:30·11:00·13:00 네 편
+- date: 9/28
+  seg: 바나조르 → 딜리잔
+  mode: 마르슈르트카
+  kind: 시외
+  amt: 800
+  cur: AMD
+  pub: ○
+  note: 40~50분 · 요금·편수는 현지 확인 필요한 추정치. 안 되면 택시 6,000~8,000드람
+- date: 9/28
+  seg: 딜리잔 → 하가르친 수도원 왕복
+  mode: 택시 (대기 포함)
+  kind: 시내
+  amt: 6000
+  cur: AMD
+  pub: ✕
+  note: 숲길 안쪽 8km · 대중교통 없음 · 1인 단독이면 전액
 - date: 9/29
+  seg: 딜리잔 → 세반
+  mode: 마르슈르트카
+  kind: 시외
+  amt: 1000
+  cur: AMD
+  pub: ○
+  note: 1시간 · 딜리잔 터널 경유
+- date: 9/29
+  seg: 세반 → 세바나방크 왕복
+  mode: 택시 또는 도보
+  kind: 시내
+  amt: 1000
+  cur: AMD
+  pub: △
+  note: 3km · 걸으면 왕복 80분, 0원
+- date: 9/29
+  seg: 세반 → 예레반
+  mode: 마르슈르트카
+  kind: 시외
+  amt: 1000
+  cur: AMD
+  pub: ○
+  note: 1시간 · 수시 출발
+- date: 9/29
+  seg: 터미널 → 예레반 시내
+  mode: 버스
+  kind: 시내
+  amt: 200
+  cur: AMD
+  pub: ○
+  note: 또는 얀덱스 택시
+- date: 9/30
+  seg: 예레반 → 코르 비랍 · 노라방크 · 타테브 (왕복)
+  mode: 1일 그룹투어 (미니버스)
+  kind: 시외
+  amt: 25000
+  cur: AMD
+  pub: ✕
+  note: Hyur Service 63.72달러 · 입장료·케이블카 포함, 점심 별도 · 08:30~22:30
+- date: 9/30
   seg: 투어 사무실 → 숙소 (심야)
   mode: 택시 또는 도보
   kind: 시내
@@ -289,118 +356,40 @@ transport:
   cur: AMD
   pub: △
   note: 22:30 이후 날반댠 96번지 하차 · 도보 10분이면 0원
-- date: 9/24
-  seg: 오르타찰라 → 주그디디 (야간버스)
-  mode: OmniBus
+- date: 10/1
+  seg: 예레반 → 가르니 왕복
+  mode: 266·284번 버스
   kind: 시외
-  amt: 30
-  cur: GEL
-  pub: ○
-  note: 자정 발 · 약 5시간 20분 · 운행 불확실 — tkt.ge 사전 확인 필수
-- date: 9/25
-  seg: 주그디디 → 메스티아
-  mode: 마르슈르트카
-  kind: 시외
-  amt: 40
-  cur: GEL
-  pub: ○
-  note: 15:00 발 · 3~4시간 · 확정 편 하루 한 번뿐
-- date: 9/26
-  seg: 메스티아 → 찰라디 트레일헤드 왕복
-  mode: 택시 (대기 포함)
-  kind: 시내
-  amt: 50
-  cur: GEL
-  pub: ✕
-  note: 10km · 대중교통 없음 · 1인 단독이면 전액
-- date: 9/26
-  seg: 메스티아 → 주그디디
-  mode: 마르슈르트카 또는 셰어택시
-  kind: 시외
-  amt: 40
-  cur: GEL
-  pub: △
-  note: 공식 확정편은 08:00뿐 — 오후 편은 성수기 비공식. 숙소에 사전 확보 권장
-- date: 9/26
-  seg: 오르타찰라 → 트빌리시 (야간버스)
-  mode: OmniBus
-  kind: 시외
-  amt: 30
-  cur: GEL
-  pub: ○
-  note: 주그디디 자정 발 · 약 5시간 20분 · 운행 불확실 — tkt.ge 사전 확인 필수
-- date: 9/28
-  seg: 바나조르 → 예레반
-  mode: 마르슈르트카
-  kind: 시외
-  amt: 2000
+  amt: 500
   cur: AMD
   pub: ○
-  note: 약 2시간 · 수시 출발 · 귬리 경유 시세에 준한 추정치, 현지 확인 필요
+  note: 가이 정류장 출발 · 30분 간격 · 왕복 500드람
+- date: 10/1
+  seg: 가르니 → 게하르트 왕복
+  mode: 택시
+  kind: 시내
+  amt: 3000
+  cur: AMD
+  pub: ✕
+  note: 9km, 대중교통 없음 · 1인 단독이라 전액 부담
+- date: 10/2
+  seg: 예레반 시내 (추모관·시장)
+  mode: 버스·택시
+  kind: 시내
+  amt: 1000
+  cur: AMD
+  pub: ○
+  note: 대학살 추모관은 시내에서 3km 서쪽
 transport_notes:
 - 아부다비 10/4는 루브르(사디야트, 북쪽)와 모스크(알 마크타, 남쪽)가 정반대 방향이라 전 구간 택시로 잡았습니다. 루브르→모스크만 94번 버스로 바꾸면 75→2디르함이지만 60~75분이 걸립니다.
-- OmniBus 트빌리시↔주그디디 심야편(9/24·9/26, 각 30라리)은 운행 여부가 자료마다 엇갈립니다. 도로공사로 심야 구간이 막혀 있었다는 보고가 있어 tkt.ge에서 사전 확인이 필요하고, 안 되면 주간열차(08:15 발)나 저녁 마르슈르트카로 대체해야 합니다.
+- 9/28 바나조르→딜리잔 요금(800드람)은 노선 거리에 준한 추정치입니다. 시간표를 확정된 형태로 찾지 못했으니 알라베르디 숙소나 바나조르 터미널에서 확인하세요. 최악의 경우 택시로 넘어가도 6,000~8,000드람이라 하루가 무너지지는 않습니다.
+- 이번 일정에는 야간버스가 없습니다. 지상 13박이 전부 숙박이라 교통비는 늘고 숙박비도 함께 늘었지만, 운행 취소로 일정이 연쇄로 무너질 구간이 사라졌습니다.
 tickets:
 - date: 9/19
   place: 예원 (豫园)
   amt: 40
   cur: CNY
   note: 09:00~16:30 폐장(매표 마감 더 이름) · 9월은 성수기 요금 40위안
-- date: 9/21
-  place: 아바노투바니 유황온천 (공용탕)
-  amt: 5
-  cur: GEL
-  note: 개인탕은 50~100라리
-- date: 9/21
-  place: 나리칼라 케이블카 편도×2
-  amt: 2
-  cur: GEL
-  note: 메트로머니로 결제
-- date: 9/22
-  place: 스베티츠호벨리 대성당
-  amt: 0
-  cur: GEL
-  note: 무료
-- date: 9/22
-  place: 즈바리 수도원
-  amt: 0
-  cur: GEL
-  note: 무료
-- date: 9/24
-  place: 게르게티 삼위일체 교회
-  amt: 0
-  cur: GEL
-  note: 무료
-- date: 9/26
-  place: 사나힌 수도원
-  amt: 0
-  cur: AMD
-  note: 무료
-- date: 9/26
-  place: 하흐파트 수도원
-  amt: 0
-  cur: AMD
-  note: 무료
-- date: 9/30
-  place: 가르니 신전
-  amt: 1800
-  cur: AMD
-  note: 돌의 교향곡은 무료
-- date: 9/30
-  place: 게하르트 수도원
-  amt: 0
-  cur: AMD
-  note: 무료
-- date: 10/1
-  place: 에치미아진 보물관
-  amt: 1500
-  cur: AMD
-  note: 대성당 자체는 무료
-- date: 9/29
-  place: 코르 비랍
-  amt: 0
-  cur: AMD
-  note: 무료 · 투어 포함
 - date: 10/3
   place: 아크로폴리스
   amt: 30
@@ -426,6 +415,101 @@ tickets:
   amt: 0
   cur: AED
   note: 무료
+- date: 9/21
+  place: 아바노투바니 유황온천 (공용탕)
+  amt: 5
+  cur: GEL
+  note: 개인탕은 40~70라리
+- date: 9/21
+  place: 나리칼라 요새
+  amt: 0
+  cur: GEL
+  note: 무료 · 상시 개방
+- date: 9/22
+  place: 스베티츠호벨리 대성당
+  amt: 0
+  cur: GEL
+  note: 무료
+- date: 9/22
+  place: 즈바리 수도원
+  amt: 0
+  cur: GEL
+  note: 무료
+- date: 9/22
+  place: 조지아 국립박물관
+  amt: 15
+  cur: GEL
+  note: 화~일 10:00~18:00 · 월요일 휴관
+- date: 9/23
+  place: 게르게티 삼위일체 교회
+  amt: 0
+  cur: GEL
+  note: 무료
+- date: 9/26
+  place: 보드베 수도원
+  amt: 0
+  cur: GEL
+  note: 무료
+- date: 9/26
+  place: 시그나기 성벽
+  amt: 0
+  cur: GEL
+  note: 무료
+- date: 9/26
+  place: 시그나기 와이너리 시음 (선택)
+  amt: 15
+  cur: GEL
+  note: 10~25라리 · 안 해도 되는 지출
+- date: 9/27
+  place: 하흐파트 수도원
+  amt: 0
+  cur: AMD
+  note: 무료 · 유네스코
+- date: 9/27
+  place: 사나힌 수도원
+  amt: 0
+  cur: AMD
+  note: 무료 · 유네스코
+- date: 9/28
+  place: 하가르친 수도원
+  amt: 0
+  cur: AMD
+  note: 무료
+- date: 9/29
+  place: 세바나방크
+  amt: 0
+  cur: AMD
+  note: 무료 · 계단 200여 개
+- date: 9/30
+  place: 코르 비랍
+  amt: 0
+  cur: AMD
+  note: 무료 · 투어 포함
+- date: 9/30
+  place: 노라방크
+  amt: 0
+  cur: AMD
+  note: 무료 · 투어 포함
+- date: 9/30
+  place: 윙스 오브 타테브 케이블카
+  amt: 0
+  cur: AMD
+  note: 투어 요금에 포함 (개별 구매 시 8,000드람) · 월요일 휴무
+- date: 9/30
+  place: 타테브 수도원
+  amt: 0
+  cur: AMD
+  note: 무료
+- date: 10/1
+  place: 가르니 신전
+  amt: 1800
+  cur: AMD
+  note: 돌의 교향곡은 무료
+- date: 10/1
+  place: 게하르트 수도원
+  amt: 0
+  cur: AMD
+  note: 무료 · 유네스코
 - date: 10/2
   place: 마테나다란 고문서관
   amt: 2000
@@ -436,46 +520,11 @@ tickets:
   amt: 0
   cur: AMD
   note: 기부제 · 금~일 20:00까지
-- date: 10/1
-  place: 성 흐립시메 교회
-  amt: 0
-  cur: AMD
-  note: 무료 · 유네스코
-- date: 10/1
-  place: 즈바르트노츠 유적
-  amt: 1500
-  cur: AMD
-  note: 7세기 원형 성당 터
-- date: 10/1
+- date: 10/2
   place: 대학살 추모관 박물관
   amt: 0
   cur: AMD
   note: 무료 · 17:00 마감 · 월요일 휴관
-- date: 9/29
-  place: 노라방크
-  amt: 0
-  cur: AMD
-  note: 무료 · 투어 포함
-- date: 9/29
-  place: 윙스 오브 타테브 케이블카
-  amt: 0
-  cur: AMD
-  note: 투어 요금에 포함 (개별 구매 시 8,000드람) · 월요일 휴무
-- date: 9/29
-  place: 타테브 수도원
-  amt: 0
-  cur: AMD
-  note: 무료
-- date: 9/25
-  place: 다디아니 궁전 박물관
-  amt: 15
-  cur: GEL
-  note: 화~일 10:00~18:00, 월요일 휴관 · 자료마다 12~15라리로 다름
-- date: 9/25
-  place: 다디아니 식물원
-  amt: 5
-  cur: GEL
-  note: 매일 10:00~18:00
 ticket_note: 조지아·아르메니아 수도원은 대부분 무료입니다. 지출은 타테브 케이블카·아크로폴리스·루브르에 몰려 있습니다.
 days:
 - date: 9/19
@@ -492,73 +541,73 @@ days:
   cafe: 0
 - date: 9/21
   dow: 월
-  desc: 트빌리시 — 구시가·유황온천
+  desc: 트빌리시 — 구시가·나리칼라·유황온천 (월요일 휴관 회피)
   food: 25000
   stay: 15689
   cafe: 6000
 - date: 9/22
   dow: 화
-  desc: 트빌리시 — 므츠헤타 반나절
+  desc: 트빌리시 — 므츠헤타 반나절 · 오후 국립박물관
   food: 25000
   stay: 15689
   cafe: 6000
 - date: 9/23
   dow: 수
-  desc: 카즈베기 — 군사도로 · 게르게티 (1박)
+  desc: 카즈베기 — 군사도로 · 게르게티 1차 (2박 중 첫날)
   food: 25000
   stay: 28000
   cafe: 5000
 - date: 9/24
   dow: 목
-  desc: 주타 데이 트레킹(쉬운 코스) → 트빌리시 복귀 → 야간버스로 주그디디행
+  desc: 카즈베기 — 주타 트레킹 · 게르게티 예비 시도
   food: 25000
-  stay: 0
+  stay: 28000
   cafe: 5000
 - date: 9/25
   dow: 금
-  desc: 주그디디 도착 → 다디아니 궁전·식물원 → 메스티아 이동·체크인
+  desc: 카즈베기 오전 예비 → 트빌리시 복귀
   food: 25000
-  stay: 25000
+  stay: 15689
   cafe: 5000
 - date: 9/26
   dow: 토
-  desc: 메스티아 찰라디 빙하 트레킹 → 주그디디 → 야간버스로 트빌리시행
+  desc: 시그나기 · 보드베 당일 왕복 (카헤티)
   food: 25000
-  stay: 0
+  stay: 15689
   cafe: 5000
 - date: 9/27
   dow: 일
-  desc: 야간버스로 트빌리시 도착 → 국경 → 알라베르디(하흐파트·사나힌)
+  desc: 국경 → 알라베르디 (하흐파트·사나힌)
   food: 25000
   stay: 25000
   cafe: 5000
 - date: 9/28
   dow: 월
-  desc: 알라베르디 → 바나조르 환승 → 예레반 도착 · 시내(GUM·블루모스크·캐스케이드)
-  food: 30000
-  stay: 20000
-  cafe: 6000
+  desc: 알라베르디 → 딜리잔 (하가르친·샤람베얀 거리)
+  food: 25000
+  stay: 22000
+  cafe: 5000
 - date: 9/29
   dow: 화
-  desc: 예레반 — 타테브 1일 투어
-  food: 35000
+  desc: 세반 호수(세바나방크) → 예레반 도착 · 4박 시작
+  food: 28000
   stay: 20000
   cafe: 6000
 - date: 9/30
   dow: 수
-  desc: 예레반 — 가르니·게하르트
-  food: 30000
+  desc: 예레반 — 타테브 1일 투어
+  food: 35000
   stay: 20000
-  cafe: 5000
+  cafe: 6000
 - date: 10/1
   dow: 목
-  desc: 예레반 — 에치미아진·즈바르트노츠
+  desc: 예레반 — 가르니·게하르트
   food: 30000
   stay: 20000
   cafe: 5000
 - date: 10/2
   dow: 금
-  desc: 예레반 — 마테나다란·도심 도보
+  desc: 예레반 — 마테나다란·추모관·도심 (새벽 비행 전날)
   food: 27000
   stay: 20000
   cafe: 6000
@@ -582,9 +631,9 @@ days:
   cafe: 0
 budget_notes:
 - ※ 여행자보험·유심(중국은 로밍 권장 / 조지아·아르메니아·그리스·UAE 각각)·기념품·와인 구매 등은 별도 고려하세요.
-- ※ 확정 숙소 — 상하이 Hi Cozy International Youth Hostel 137위안/1박(황푸구, 난징둥루역 도보권), 트빌리시 Cosy Koala Hostel 58라리 — 9/20~22 3박만 연속으로 예약하면 됩니다. 9/24·9/26 밤은 야간버스, 9/27은 몇 시간만 머물다 알라베르디로 넘어가는 날이라 트빌리시 추가 숙박은 필요 없습니다.
-- ※ 미예약 숙소(카즈베기·메스티아·알라베르디·예레반)는 도미토리 기준 추정치입니다. 개인실을 잡으면 1인 여행이라 이 금액의 두 배 가까이 올라갑니다.
-- ※ 아테네 숙소는 30유로/1박 확정 — 신타그마 근처. 원래 잡아둔 90,000원에서 40,800원 줄었습니다. 08:00 짐 보관이 가능한 곳이어야 합니다(아크로폴리스 큰 가방 반입 불가).
+- ※ 확정 숙소 — 상하이 Hi Cozy International Youth Hostel 137위안/1박(황푸구, 난징둥루역 도보권), 트빌리시 Cosy Koala Hostel 58라리. 트빌리시는 9/20~22 3박과 9/25~26 2박으로 나뉩니다 — 같은 곳을 두 번 잡으면 카즈베기 다녀오는 동안 짐을 맡길 수 있습니다.
+- ※ 미예약 숙소(카즈베기 2박·알라베르디·딜리잔·예레반 4박)는 도미토리 기준 추정치입니다. 개인실을 잡으면 1인 여행이라 이 금액의 두 배 가까이 올라갑니다.
+- ※ 아테네 숙소는 30유로/1박 확정 — 신타그마 근처. 08:00 짐 보관이 가능한 곳이어야 합니다(아크로폴리스 큰 가방 반입 불가).
 - ※ 아부다비 숙소는 TRYP by Wyndham Abu Dhabi City Center(칼리파 bin 자이드 St) — 항공권 스톱오버에 포함되어 숙박비 0원. A2 공항버스가 이 도로에 정차합니다.
-- ※ 9/24 주타는 대중교통이 없어 4WD 택시 왕복 80라리(1인 전액)입니다. 카즈베기 게스트하우스에서 동행을 구하면 40라리로 줄어듭니다.
-- ※ 9/26 메스티아→트레일헤드 택시 왕복 50라리는 조지아 구간에서 주타 다음으로 큰 단일 지출입니다. 동행을 구하면 반값이 됩니다.
+- ※ 9/24 주타는 대중교통이 없어 4WD 택시 왕복 80라리(1인 전액)로, 지상 구간 단일 최대 지출입니다. 카즈베기 게스트하우스에서 동행을 구하면 40라리로 줄어듭니다.
+- ※ 카즈베기를 2박으로 늘리면서 숙박이 하루 늘었습니다(약 2만 8천원). 게르게티를 못 보고 내려올 위험을 그 값에 산 셈입니다.

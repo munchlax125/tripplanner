@@ -29,6 +29,7 @@
 | 지역별 색 | `일정.yaml: colors` → CSS를 `build.py`가 생성해 `__COLORCSS__`에 넣음 |
 | 나라별 보기 탭 | 날짜 블록 `cls`의 색 키에서 자동 → CSS를 `build.py`가 생성해 `__VIEWCSS__`에 넣음 |
 | 예상경비 탭 | `일정.yaml: budget_source` (기본 `src/예산.yaml`, 파일이 없으면 탭이 빠짐) |
+| 엑셀 일정 시트 | `예산.yaml: itinerary_source` (키가 없거나 파일이 없으면 시트가 빠짐) |
 | 문단 제목 | `일정.yaml: labels` (`view_home`·`view_all`·`regions` 포함) |
 | 개요 지도 id | `일정.yaml: overview_map` |
 | 통화·시트 제목·설명 | `예산.yaml: rates / rate_rows / rate_labels / rate_notes / sheet_titles / sheet_intros` |
@@ -40,7 +41,7 @@
 
 ```bash
 python build.py          # 일 N · 국경 N · 지도 N · 노트 N
-python build_xlsx.py     # 교통 N행 · 입장료 N행 · 일자 N행
+python build_xlsx.py     # 교통 N행 · 입장료 N행 · 일자 N행 · 일정 N일 · N행
 ```
 
 고친 뒤에는 산출물을 열어 확인하세요(파일명은 `output` 값).
@@ -90,6 +91,11 @@ yaml.safe_dump(d, open(P,'w',encoding='utf-8'),
 **바탕그림은 축소만 됩니다.** 지점이 캔버스를 벗어나면 바탕그림과 지점에 같은 변환을 걸어 함께 줄이는데, 바탕그림 SVG는 원래 범위에서 잘려 있어 **여백만 생깁니다.** 새 지역은 `tools/make_basemap.py`로 만드세요.
 
 **지도 폭을 크게 잡으면 지점이 뭉칩니다.** 지점이 전부 캔버스 안이면 자동 맞춤이 걸리지 않아 축소도 확대도 안 합니다. 20km 동선을 100km 지도에 얹으면 가운데 한 덩어리가 됩니다.
+
+**엑셀 `일정` 시트만 매번 지우고 새로 만듭니다.** 템플릿에 없는 시트라 물려받을 서식이 없고,
+그래서 `resize()`·`clear()`가 필요 없습니다 — 날이 줄어도 옛 행이 남지 않습니다.
+서식은 `build_xlsx.py` 안에서 직접 만드니 색을 바꾸려면 그 블록을 고치세요.
+본문이 HTML 조각이라 `plain()`으로 태그를 벗겨 넣습니다.
 
 **템플릿 xlsx는 행이 줄면 옛 값이 남습니다.** 통화·항공편·주석·일자 행이 이전 여행보다 적으면 아래쪽에 남은 셀이 그대로 보입니다. `resize()`와 `clear()`로 지우고 있으니, 시트에 새 영역을 추가하면 같이 처리하세요.
 

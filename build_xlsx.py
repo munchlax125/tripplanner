@@ -4,10 +4,17 @@ src/예산.yaml  ->  <output>.xlsx   (파일명은 예산.yaml 의 output 키 ·
 
 수식·서식은 그대로 두고 데이터 행만 다시 씁니다.
     python build_xlsx.py
+
+'일정' 시트는 예외로 매번 지우고 새로 만듭니다 — 템플릿에 없는 시트라
+서식을 물려받을 데가 없고, 그래서 행이 줄어도 옛 값이 남지 않습니다.
+소스는 예산.yaml 의 itinerary_source 가 가리키는 일정 YAML 이고,
+키가 없거나 파일이 없으면 시트를 만들지 않습니다.
 """
-import io, sys, os
+import io, sys, os, re, html
 from copy import copy
 import yaml, openpyxl
+from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
+from openpyxl.utils import get_column_letter
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -148,6 +155,95 @@ clear(ws, LAST + 10, LAST + 30, 1)
 for i, n in enumerate(D.get('budget_notes') or []):
     ws.cell(LAST + 10 + i, 1).value = n
 
+# ── 일정 ──────────────────────────────────────────────────────────────
+# 코스와 비용을 한 파일에서 보려고 붙인 시트입니다. 일정 YAML 이 유일한 소스라
+# HTML 과 엑셀이 갈라질 수 없습니다.
+ITIN = D.get('itinerary_source')
+n_day = n_row = 0
+if ITIN and os.path.exists(ITIN):
+    doc = yaml.safe_load(open(ITIN, encoding='utf-8'))
+
+    def plain(s):
+        """본문은 HTML 조각이라 태그를 걷어내고 엑셀 셀에 넣습니다."""
+        if s is None:
+            return ''
+        return re.sub(r'\s+', ' ', html.unescape(re.sub(r'<[^>]+>', '', str(s)))).strip()
+
+    def headline(s):
+        """제목의 <span class="tag"> 는 덧붙는 꼬리표라 구분자를 넣고 벗깁니다."""
+        return plain(re.sub(r'<span class="tag[^"]*">', ' — ', str(s or '')))
+
+    if '일정' in wb.sheetnames:
+        del wb['일정']
+    ws = wb.create_sheet('일정', 0)
+
+    HEAD = ['날짜', '요일', '구간', '시각', '이동', '내용', '비고']
+    WIDTH = [8, 5, 30, 7, 15, 54, 62]
+    C_TITLE = Font(bold=True, size=14)
+    C_HEAD = Font(bold=True, color='FFFFFF')
+    FILL_HEAD = PatternFill('solid', fgColor='42606E')
+    FILL_DAY = PatternFill('solid', fgColor='EDF1F3')
+    FILL_MOVE = PatternFill('solid', fgColor='FAF0E6')
+    THIN = Side(style='thin', color='D8DEE2')
+    BOX = Border(left=THIN, right=THIN, top=THIN, bottom=THIN)
+    WRAP = Alignment(vertical='top', wrap_text=True)
+    TOP = Alignment(vertical='top')
+
+    ws.cell(1, 1).value = TITLES.get('일정', '일정')
+    ws.cell(1, 1).font = C_TITLE
+    ws.cell(2, 1).value = INTROS.get('일정', '')
+    ws.cell(2, 1).alignment = TOP
+    for i, (h, w) in enumerate(zip(HEAD, WIDTH), start=1):
+        c = ws.cell(4, i)
+        c.value, c.font, c.fill, c.border = h, C_HEAD, FILL_HEAD, BOX
+        ws.column_dimensions[get_column_letter(i)].width = w
+
+    r = 5
+
+    def put(vals, fill=None, bold=False):
+        global r
+        for i, v in enumerate(vals, start=1):
+            c = ws.cell(r, i)
+            c.value = v
+            c.alignment = WRAP
+            c.border = BOX
+            if fill:
+                c.fill = fill
+            if bold:
+                c.font = Font(bold=True)
+        r += 1
+
+    for blk in doc.get('blocks') or []:
+        if blk.get('type') == 'border':
+            # 항공·국경 이동은 날짜 칸 없이 한 줄로 끼워 넣습니다
+            put(['', '', '✈ 이동', '', '', plain(blk.get('title')),
+                 plain(blk.get('note'))], fill=FILL_MOVE, bold=True)
+            n_row += 1
+            continue
+        if blk.get('type') != 'day':
+            continue
+        n_day += 1
+        date, dow = blk['date'].replace('.', '/'), blk.get('dow', '')
+        put([date, dow, headline(blk.get('place')), '', '',
+             plain(blk.get('sub')), ''], fill=FILL_DAY, bold=True)
+        n_row += 1
+        # 날짜·요일은 모든 행에 넣습니다 — 4행 필터로 하루만 뽑을 때 중간 행이 빠지면 안 됩니다
+        for grp in blk.get('sched') or []:
+            for row in grp.get('rows') or []:
+                note = ' · '.join(plain(s) for s in (row.get('small') or []))
+                tag = (row.get('tag') or {}).get('text')
+                if tag:
+                    note = ('[%s] ' % plain(tag)) + note if note else '[%s]' % plain(tag)
+                put([date, dow, '', plain(row.get('t')), plain(row.get('bus')),
+                     plain(row.get('text')), note])
+                n_row += 1
+        for f in blk.get('flags') or []:
+            put([date, dow, '', '', '주의', plain(f), ''])
+            n_row += 1
+
+    ws.freeze_panes = 'A5'
+    ws.auto_filter.ref = 'A4:G%d' % (r - 1)
+
 try:
     wb.save(XLSX)
     print('생성 완료: %s' % XLSX)
@@ -157,3 +253,7 @@ except PermissionError:
 
 print('  교통 %d행 · 입장료 %d행 · 일자 %d행'
       % (len(D['transport']), len(D['tickets']), len(D['days'])))
+if n_day:
+    print('  일정 %d일 · %d행' % (n_day, n_row))
+elif ITIN:
+    print('  일정 시트 없음 — %s 를 찾지 못했습니다' % ITIN)
