@@ -13,10 +13,13 @@ import io, os, re, sys
 import yaml
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
-os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+os.chdir(REPO)
+sys.path.insert(0, REPO)
+import outpath
 
 doc = yaml.safe_load(open('src/일정.yaml', encoding='utf-8'))
-SRC = doc.get('output')
+SRC = outpath.resolve(doc, make=False)
 if not SRC or not os.path.exists(SRC):
     sys.exit('먼저 python build.py 로 %s 를 만드세요.' % (SRC or '<output>'))
 

@@ -11,6 +11,7 @@
 - 예산 수정 → `src/예산.yaml` → `python build_xlsx.py`
 - 디자인 → `src/head.html`(CSS) · `src/script.html`([실제 지도] 버튼)
 
+생성물은 **`결과물/`** 로 나갑니다(`output_dir` 로 바꿀 수 있습니다).
 생성된 `.html`·`.xlsx`는 **저장소에 함께 커밋합니다** — 폰이나 다른 기기에서 바로 열어 보기 위해서입니다.
 다만 **손으로 고치지는 마세요.** 다음 빌드에서 통째로 덮어써집니다.
 확인이 필요하면 **직접 빌드해서 그 산출물을 보세요.**
@@ -25,6 +26,7 @@
 | 값 | 위치 |
 |---|---|
 | 출력 파일명 | `일정.yaml: output` · `예산.yaml: output` (없으면 빌드가 안내 메시지와 함께 멈춤) |
+| 생성물 폴더 | `output_dir` (기본 `결과물/`, `'.'` 로 두면 저장소 뿌리) — 계산은 `outpath.py` 한 곳에만 |
 | 탭 제목 | `일정.yaml: doc_title` → `head.html`의 `__TITLE__` |
 | 지역별 색 | `일정.yaml: colors` → CSS를 `build.py`가 생성해 `__COLORCSS__`에 넣음 |
 | 나라별 보기 탭 | 날짜 블록 `cls`의 색 키에서 자동 → CSS를 `build.py`가 생성해 `__VIEWCSS__`에 넣음 |
@@ -34,6 +36,8 @@
 | 문단 제목 | `일정.yaml: labels` (`view_home`·`view_all`·`regions` 포함) |
 | 개요 지도 id | `일정.yaml: overview_map` |
 | 통화·시트 제목·설명 | `예산.yaml: rates / rate_rows / rate_labels / rate_notes / sheet_titles / sheet_intros` |
+| 환율 시트 고정 문구 | `예산.yaml: rate_sheet` (`인원`·`항공권합계`·`총예산`의 이름표·비고와 `foot` 안내문) |
+| 새 여행 시작 | `python new_trip.py` — 물어보고 두 YAML을 만듭니다 (`--from 답.yaml`·`--force`) |
 
 새 기능을 넣을 때도 같은 원칙입니다. `head.html`에 `.jp`처럼 여행별 클래스를 직접 쓰지 말고
 `colors` 키에서 생성되게 하세요.
@@ -55,8 +59,11 @@ print([(t,len(re.findall('<%s[ >]'%t,s)),len(re.findall('</%s>'%t,s))) for t in 
 
 열림/닫힘 수가 다르거나 SVG 파싱이 깨지면 되돌리세요.
 
-**도구를 고쳤다면 새 여행에서도 되는지 확인하세요** — `starter/`를 빈 디렉터리에 복사해 빌드해 보고,
-산출물에 이전 여행 문구가 남지 않았는지 검사합니다. 템플릿 xlsx는 행 수가 줄면 옛 값이 남습니다.
+**도구를 고쳤다면 새 여행에서도 되는지 확인하세요.** 빈 디렉터리에 복사한 뒤
+`python new_trip.py --from 답.yaml` 로 다른 여행을 하나 만들어 빌드하고,
+**산출물 전 셀을 훑어 이전 여행 문구가 없는지** 검사합니다.
+`--from` 은 이 회귀 검사를 사람 손 없이 돌리려고 있는 것이기도 합니다.
+템플릿 xlsx는 행 수가 줄면 옛 값이 남습니다.
 
 ## YAML 편집 방법
 
@@ -98,7 +105,18 @@ yaml.safe_dump(d, open(P,'w',encoding='utf-8'),
 서식은 `build_xlsx.py` 안에서 직접 만드니 색을 바꾸려면 그 블록을 고치세요.
 본문이 HTML 조각이라 `plain()`으로 태그를 벗겨 넣습니다.
 
+**환율 시트는 통화·항공편 수에 맞춰 행이 밀립니다.** 통화 5개·항공권 3편이 템플릿 기준이고,
+그보다 많으면 `fit()`이 행을 넣어 인원·항공권 합계·총예산 줄을 아래로 밉니다. 그래서 이 세 줄의
+위치를 숫자로 박아 쓰면 안 됩니다 — `people_row`·`sum_row` 처럼 계산된 값을 쓰세요.
+`rate_rows` 는 첫 통화 행부터 빈칸 없이 이어져야 하고, 어긋나면 빌드가 멈춥니다.
+인원·합계·총예산의 이름표와 비고, 하단 안내문은 템플릿이 아니라 `rate_sheet` 가 정합니다 —
+템플릿에 남겨 두면 이전 여행 문구가 새 여행 파일에 그대로 찍힙니다.
+
 **템플릿 xlsx는 행이 줄면 옛 값이 남습니다.** 통화·항공편·주석·일자 행이 이전 여행보다 적으면 아래쪽에 남은 셀이 그대로 보입니다. `resize()`와 `clear()`로 지우고 있으니, 시트에 새 영역을 추가하면 같이 처리하세요.
+
+**생성물 경로는 `outpath.resolve()` 로만 만드세요.** `build.py`·`build_xlsx.py`·`tools/make_artifact.py`
+셋이 같은 자리를 가리켜야 하는데, 각자 `doc['output']` 을 읽으면 언젠가 갈라집니다.
+읽기만 하는 쪽은 `make=False` 로 불러 빈 폴더가 생기지 않게 하세요.
 
 **DOM 순서에 의존하지 마세요.** `script.html`이 예전에 `querySelector('path')`로 첫 `<path>`의 stroke를 마커 색으로 읽었는데, 배경지도를 SVG 앞에 넣자 `stroke:none`인 배경 path를 집어 마커가 투명해졌습니다. 색은 빌드 때 `data-color`로 넣고, 경로선은 `class="maproute"`로 찾으세요.
 

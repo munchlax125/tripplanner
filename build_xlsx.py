@@ -16,13 +16,15 @@ import yaml, openpyxl
 from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
 from openpyxl.utils import get_column_letter
 
+import outpath
+
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 TPL = 'src/예산_템플릿.xlsx'   # 서식·수식 원본. 데이터는 전부 예산.yaml 에서 옵니다
 D = yaml.safe_load(open('src/예산.yaml', encoding='utf-8'))
 
-XLSX = D.get('output')
+XLSX = outpath.resolve(D)           # 폴더는 output_dir 이 정합니다 (기본 결과물/)
 if not XLSX:
     sys.exit("src/예산.yaml 에 'output: 파일명.xlsx' 를 넣으세요.")
 # 템플릿 '환율' 시트의 통화별 행 번호. 통화를 바꾸려면 템플릿 행과 여기를 같이 맞추세요.
@@ -75,20 +77,71 @@ def resize(ws, start, need, ncol):
 
 # ── 환율 ──
 ws = head('환율')
-# 템플릿 구조: 4~8행 통화 · 9행 인원 · 10~13행 항공권 · 14행 총예산
+# 템플릿 구조: 4~8행 통화 · 9행 인원 · 10~12행 항공권 · 13행 항공권 합계 · 14행 총예산
+# 통화나 항공편 수가 템플릿과 다르면 그만큼 행을 넣고 빼서 아래 항목을 밀어냅니다.
+# 이 계산이 없으면 통화 6개째·항공권 4편째가 합계와 총예산을 덮어씁니다.
 RATE_BLOCK = D.get('rate_block') or [4, 8]
-FLIGHT_BLOCK = D.get('flight_block') or [10, 13]
-clear(ws, RATE_BLOCK[0], RATE_BLOCK[1], 3)
+FLIGHT_BLOCK = D.get('flight_block') or [10, 12]
+
+
+def fit(anchor, have, need, ncol=3):
+    """anchor 부터 have 행이던 자리를 need 행으로 맞추고, 늘어난 만큼을 돌려줍니다."""
+    if need > have:
+        ws.insert_rows(anchor + have, need - have)
+        for r in range(anchor + have, anchor + need):
+            for c in range(1, ncol + 1):
+                ws.cell(r, c)._style = copy(ws.cell(anchor, c)._style)
+    elif need < have:
+        ws.delete_rows(anchor + need, have - need)
+    return need - have
+
+
+rate_end = max(RATE_ROW.values())
+if sorted(RATE_ROW.values()) != list(range(RATE_BLOCK[0], rate_end + 1)):
+    sys.exit("src/예산.yaml 의 rate_rows 는 %d행부터 빈칸 없이 이어져야 합니다: %r"
+             % (RATE_BLOCK[0], RATE_ROW))
+
+shift = fit(RATE_BLOCK[0], RATE_BLOCK[1] - RATE_BLOCK[0] + 1,
+            rate_end - RATE_BLOCK[0] + 1)
+clear(ws, RATE_BLOCK[0], rate_end, 3)
 for k, r in RATE_ROW.items():
     ws.cell(r, 1).value = RATE_LABEL.get(k, '%s → 원' % k)
     ws.cell(r, 2).value = D['rates'][k]
     ws.cell(r, 3).value = RATE_NOTE.get(k, '')
-ws['B9'].value = D['people']
-clear(ws, FLIGHT_BLOCK[0], FLIGHT_BLOCK[1], 3)
-for i, v in enumerate(D.get('flights') or []):
-    ws.cell(FLIGHT_BLOCK[0] + i, 1).value = v['name']
-    ws.cell(FLIGHT_BLOCK[0] + i, 2).value = v['krw']
-ws['B14'].value = D['total_budget']
+
+# 인원·합계·총예산 줄의 이름표와 비고, 그리고 시트 하단 안내문.
+# 템플릿에 박혀 있던 이전 여행 문구가 새 여행으로 새지 않도록 전부 YAML 이 정하고,
+# 값이 없으면 비웁니다.
+RS = D.get('rate_sheet') or {}
+
+
+def label_row(r, key, default_label):
+    v = RS.get(key) or {}
+    ws.cell(r, 1).value = v.get('label', default_label)
+    ws.cell(r, 3).value = v.get('note', '')
+
+
+people_row = 9 + shift
+ws.cell(people_row, 2).value = D['people']
+label_row(people_row, '인원', '인원')
+
+FL = D.get('flights') or []
+fl0 = FLIGHT_BLOCK[0] + shift
+shift += fit(fl0, FLIGHT_BLOCK[1] - FLIGHT_BLOCK[0] + 1, len(FL))
+clear(ws, fl0, fl0 + len(FL) - 1, 3)
+for i, v in enumerate(FL):
+    ws.cell(fl0 + i, 1).value = v['name']
+    ws.cell(fl0 + i, 2).value = v['krw']
+
+sum_row = fl0 + len(FL)
+ws.cell(sum_row, 2).value = ('=SUM(B%d:B%d)' % (fl0, sum_row - 1)) if FL else 0
+label_row(sum_row, '항공권합계', '항공권 합계')
+ws.cell(sum_row + 1, 2).value = D['total_budget']
+label_row(sum_row + 1, '총예산', '총예산')
+
+clear(ws, sum_row + 2, sum_row + 14, 1)
+for i, n in enumerate(RS.get('foot') or []):
+    ws.cell(sum_row + 3 + i, 1).value = n
 
 # ── 교통상세 ──
 ws = head('교통상세', intro_row=2)
@@ -151,6 +204,22 @@ LAST = START + len(D['days']) - 1
 for c in range(4, 11):
     ws.cell(LAST + 1, c).value = '=SUM(%s%d:%s%d)' % (
         chr(64 + c), START, chr(64 + c), LAST)
+
+# 총예산 점검. 템플릿에 박힌 수식을 그대로 두면 안 됩니다 — resize() 가 행을 옮겨도
+# openpyxl 은 수식 '문자열'까지 따라 고쳐주지 않아서, 날짜·통화·항공편 수가 이전 여행과
+# 다른 순간 =J22 · =환율!B13 처럼 엉뚱한 셀(대개 빈 칸)을 가리킵니다.
+# 그래서 환율 시트의 sum_row 와 이 시트의 LAST 로 매번 다시 씁니다.
+chk = LAST + 3
+ws.cell(chk, 1).value = '총예산 점검'
+for i, (lbl, ref) in enumerate((
+        ('현지 지출 합계', '=J%d' % (LAST + 1)),
+        ('항공권', '=환율!B%d' % sum_row),
+        ('소계', '=B%d+B%d' % (chk + 1, chk + 2)),
+        ((RS.get('총예산') or {}).get('label', '총예산'), '=환율!B%d' % (sum_row + 1)),
+        ('잔여 여유분', '=B%d-B%d' % (chk + 4, chk + 3)))):
+    ws.cell(chk + 1 + i, 1).value = lbl
+    ws.cell(chk + 1 + i, 2).value = ref
+
 clear(ws, LAST + 10, LAST + 30, 1)
 for i, n in enumerate(D.get('budget_notes') or []):
     ws.cell(LAST + 10 + i, 1).value = n
@@ -248,8 +317,9 @@ try:
     wb.save(XLSX)
     print('생성 완료: %s' % XLSX)
 except PermissionError:
-    wb.save('_new_예산.xlsx')
-    print('!! %s 가 Excel에서 열려 있습니다 → _new_예산.xlsx 로 저장했습니다.' % XLSX)
+    alt = os.path.join(os.path.dirname(XLSX), '_new_' + os.path.basename(XLSX))
+    wb.save(alt)
+    print('!! %s 가 Excel에서 열려 있습니다 → %s 로 저장했습니다.' % (XLSX, alt))
 
 print('  교통 %d행 · 입장료 %d행 · 일자 %d행'
       % (len(D['transport']), len(D['tickets']), len(D['days'])))

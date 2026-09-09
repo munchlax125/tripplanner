@@ -6,14 +6,28 @@ YAML 두 개를 고치면 **인터넷 없이 열리는 HTML 일정표 한 장**�
 ```bash
 pip install pyyaml openpyxl
 
-cp starter/일정.yaml src/일정.yaml     # 처음 한 번
-cp starter/예산.yaml src/예산.yaml
+python new_trip.py     # 물어봅니다 → src/일정.yaml · src/예산.yaml 을 만듭니다
 
-python build.py        # src/일정.yaml  →  <output>.html
-python build_xlsx.py   # src/예산.yaml  →  <output>.xlsx
+python build.py        # src/일정.yaml  →  결과물/<output>.html
+python build_xlsx.py   # src/예산.yaml  →  결과물/<output>.xlsx
 ```
 
-> **`src/` 안의 YAML만 고치세요.** HTML·엑셀은 생성물이라 다시 빌드하면 덮어써지고, 저장소에도 올라가지 않습니다.
+생성물은 **`결과물/`** 폴더에 모입니다. 다른 곳에 두려면 두 YAML 에 `output_dir: 원하는폴더` 를
+넣으세요 (`output_dir: '.'` 이면 저장소 뿌리).
+
+`new_trip.py` 가 제목·날짜·지역·숙박·항공권·통화·예산을 차례로 묻고,
+**날짜와 요일을 하루씩 펼친 두 YAML** 을 만들어 줍니다. 끝나자마자 빌드가 그대로 돌아가고,
+일정 내용은 그 뒤에 채우면 됩니다. 대괄호 안은 기본값이라 엔터만 눌러도 넘어갑니다.
+
+```bash
+python new_trip.py --from 답.yaml   # 미리 적어둔 답으로 (재현·테스트용)
+python new_trip.py --force          # 이미 만든 src/ YAML 을 덮어쓰기
+```
+
+손으로 시작하고 싶다면 `cp starter/일정.yaml src/일정.yaml` 로 최소 예시를 복사해도 됩니다.
+
+> **`src/` 안의 YAML만 고치세요.** HTML·엑셀은 생성물이라 다시 빌드하면 통째로 덮어써집니다.
+> (이 저장소는 폰에서 바로 열어 보려고 생성물도 함께 커밋합니다 — 그래도 고치는 건 YAML 쪽입니다.)
 
 ---
 

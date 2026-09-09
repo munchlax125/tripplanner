@@ -10,6 +10,8 @@ mapseq 텍스트와 Leaflet 데이터도 같은 소스에서 나오므로 어긋
 import io, sys, os, json, math, re, urllib.parse
 import yaml
 
+import outpath
+
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 HERE = os.path.dirname(os.path.abspath(__file__))
 os.chdir(HERE)
@@ -19,7 +21,7 @@ NICE_KM = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000]
 doc = yaml.safe_load(open('src/일정.yaml', encoding='utf-8'))
 
 # 여행에 관한 값은 전부 일정.yaml 에서 옵니다. 코드에는 여행별 상수가 없습니다.
-OUT = doc.get('output')
+OUT = outpath.resolve(doc)          # 폴더는 output_dir 이 정합니다 (기본 결과물/)
 if not OUT:
     sys.exit("src/일정.yaml 에 'output: 파일명.html' 을 넣으세요.")
 RAW_COLORS = dict(doc.get('colors') or {})
@@ -147,15 +149,24 @@ def build_map(mid, points, cap, color, trigger_pad=13, fit_pad=46):
         else:
             nodes.append({'x': x, 'y': y, 'idx': [i + 1], 'name': points[i][0]})
 
-    # 5) 라벨 자동 배치 (좌/우 + 세로 충돌 회피)
-    placed = []
+    # 5) 라벨 자동 배치 (좌/우 + 충돌 회피)
+    # 세로만 보고 밀어내면 안 됩니다 — 지도 반대편에 있어 겹칠 리 없는 라벨끼리도
+    # y 가 비슷하다는 이유로 서로를 12px 씩 밀어내고, 그러면 라벨이 제 마커에서
+    # 한참 떨어져 어느 지점 이름인지 알 수 없게 됩니다. 가로 범위까지 겹칠 때만 밀어냅니다.
+    def lblw(t):
+        """라벨 폭 어림 (.maplbl.stop = 10px). 한글·한자는 한 자 10px, 나머지는 5.5px."""
+        return sum(10.0 if ord(c) > 0x2E7F else 5.5 for c in t) + 4
+
+    placed = []                       # (x0, x1, y) — 라벨이 실제로 차지하는 상자
     for n in nodes:
         right = n['x'] < W * 0.55
         lx = n['x'] + 13 if right else n['x'] - 13
+        w = lblw(n['name'])
+        x0, x1 = (lx, lx + w) if right else (lx - w, lx)
         ly = n['y'] + 3.4
-        while any(abs(ly - p) < 12 for p in placed):
+        while any(abs(ly - py) < 12 and x0 < px1 and px0 < x1 for px0, px1, py in placed):
             ly += 12
-        placed.append(ly)
+        placed.append((x0, x1, ly))
         n['lx'], n['ly'], n['anchor'] = lx, ly, ('start' if right else 'end')
 
     esc = lambda t: (t.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;'))

@@ -4,6 +4,7 @@
 # 지도는 아직 없습니다. tools/make_basemap.py 로 만든 뒤 map_points 를 채우면 붙습니다.
 
 output: 내여행.html                 # (필수) 만들어질 파일 이름
+# output_dir: 결과물               # 생성물이 나갈 폴더. '.' 이면 저장소 뿌리
 doc_title: 도쿄 5박 6일             # 브라우저 탭 제목. 없으면 title 에서 태그를 벗겨 씁니다
 
 # (필수) 지역·나라별 색. 키는 blocks 의 cls 두 번째 낱말과 같아야 합니다.
