@@ -330,7 +330,7 @@ __MOVECSS__
   .flight{display:grid;grid-template-columns:78px minmax(0,1fr);gap:16px;padding:13px 20px;
     background:var(--surface);box-shadow:var(--surface-shadow);font-size:14px;}
   .flight+.flight{border-top:1px solid var(--separator);}
-  :not(.flight)+.flight{border-top-left-radius:var(--radius-card);border-top-right-radius:var(--radius-card);}
+  .flight:first-child,:not(.flight)+.flight{border-top-left-radius:var(--radius-card);border-top-right-radius:var(--radius-card);}
   .flight:not(:has(+.flight)){border-bottom-left-radius:var(--radius-card);border-bottom-right-radius:var(--radius-card);}
   .flight-date{font-family:var(--font-mono);font-size:12px;color:var(--muted);padding-top:2px;}
   .flight-body{color:var(--muted);}
@@ -407,7 +407,7 @@ __MOVECSS__
   .note{display:grid;grid-template-columns:120px minmax(0,1fr);gap:18px;padding:14px 20px;
     background:var(--surface);box-shadow:var(--surface-shadow);}
   .note+.note{border-top:1px solid var(--separator);}
-  :not(.note)+.note{border-top-left-radius:var(--radius-card);border-top-right-radius:var(--radius-card);}
+  .note:first-child,:not(.note)+.note{border-top-left-radius:var(--radius-card);border-top-right-radius:var(--radius-card);}
   .note:not(:has(+.note)){border-bottom-left-radius:var(--radius-card);border-bottom-right-radius:var(--radius-card);}
   .note-key{font-size:12.5px;font-weight:600;color:var(--foreground);padding-top:1px;}
   .note-val{font-size:13px;color:var(--muted);line-height:1.7;}
@@ -485,12 +485,52 @@ __MOVECSS__
   .bm-r5{stroke:rgb(var(--map-road)/var(--map-a-r5));stroke-width:.4;stroke-dasharray:1.8 1.8;}
   .bm-bord{stroke:rgb(var(--map-bord)/var(--map-a-bord));stroke-width:1;stroke-dasharray:5 3;}
 
+  /* ── 넓은 화면 ────────────────────────────────────────── */
+  /* DOM 순서는 폰과 같고 grid 배치만 바꿉니다. @media screen 이라 인쇄는 한 칸 그대로입니다.
+     지도가 여러 줄에 걸쳐 놓일 때 마지막 1fr 줄이 지도 키를 받아 줘서 왼쪽 칸 사이가 벌어지지 않습니다 */
+  @media screen and (min-width:1024px){
+    .wrap{max-width:1160px;padding-left:40px;padding-right:40px;}
+    .standfirst{max-width:76ch;}
+
+    /* 개요: 섹션은 왼쪽에 쌓이고 개요 지도는 오른쪽에서 따라 내려옵니다. --hrows 는 build.py 가 셉니다 */
+    .hgrid:has(>.hs-map){display:grid;column-gap:32px;align-items:start;
+      grid-template-columns:minmax(0,1fr) minmax(0,440px);
+      grid-template-rows:repeat(var(--hrows,1),auto) 1fr;}
+    .hgrid:has(>.hs-map)>*{grid-column:1;}
+    .hgrid:has(>.hs-map)>.hs-map{grid-column:2;grid-row:1 / -1;position:sticky;top:24px;}
+    .hs-map>.section-label:first-child{margin-top:0;}
+
+    /* 하루 카드: 글 | 지도. 지도가 없는 날은 한 칸 그대로입니다 */
+    .day-body:has(>.daymap){display:grid;column-gap:28px;align-items:start;
+      grid-template-columns:minmax(0,1fr) minmax(0,380px);grid-template-rows:auto 1fr;}
+    .day-body:has(>.daymap)>*{grid-column:1;}
+    .day-body:has(>.daymap)>.daymap{grid-column:2;grid-row:1 / -1;margin:4px 0 0;}
+
+    /* 예상경비: 무엇에 쓰나 | 어디에 쓰나 */
+    .cpair{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));
+      column-gap:20px;align-items:start;}
+
+    .note{grid-template-columns:160px minmax(0,1fr);}
+  }
+
+  /* ── 좁은 화면(1024px 미만) — 날짜를 카드 위 한 줄로 올리고 카드를 꽉 채웁니다 ── */
+  /* 날짜 칸 + 세로선 타임라인은 넓은 화면에서만 씁니다. 나라 색 점(.node)은 날짜 앞에 남깁니다 */
+  @media (max-width:1023.98px){
+    .day{grid-template-columns:auto minmax(0,1fr);grid-template-areas:"rail date" "body body";
+      align-items:center;column-gap:8px;}
+    .day-rail{grid-area:rail;}
+    .day-rail::before{display:none;}
+    .node{position:static;display:block;width:10px;height:10px;box-shadow:none;}
+    .day-date{grid-area:date;padding:0;text-align:left;font-size:13px;line-height:1.4;}
+    .day-date em{display:inline;margin-left:6px;font-family:var(--font-sans);font-size:12px;}
+    .day-body{grid-area:body;margin:8px 0 20px;}
+    .border{display:block;margin:0 0 14px;}
+    .border>.day-date,.border-rail{display:none;}
+  }
+
   /* ── 모바일 ───────────────────────────────────────────── */
   @media (max-width:600px){
     .wrap{padding:36px 16px 72px;}
-    .day,.border{grid-template-columns:52px 22px minmax(0,1fr);}
-    .day-date{font-size:11.5px;padding-right:8px;}
-    .node{left:3px;} .day-rail::before{left:8px;}
     .day-body{padding:16px 16px 18px;border-radius:20px;}
     .summary{padding:18px 18px 16px;}
     .sched li{grid-template-columns:46px minmax(0,1fr);gap:10px;}

@@ -524,6 +524,7 @@ def build_budget():
         items = [i for i in items if i[1]]
         if not items:
             return
+        O.append('  <div class="csec">')
         O.append('  <p class="section-label">%s</p>' % title)
         O.append('  <div class="summary">')
         mx = max(i[1] for i in items) or 1
@@ -534,7 +535,10 @@ def build_budget():
                      % (name, ('<small>%s</small>' % sub) if sub else '',
                         cls, round(v / mx * 100), money(v)))
         O.append('  </div>')
+        O.append('  </div>')
 
+    # 무엇에 쓰나 · 어디에 쓰나 — 넓은 화면에서 나란히 놓입니다
+    O.append('  <div class="cpair">')
     bars(LABELS['cost_kind'],
          [(k, v, '', '%d%%' % round(v / local * 100) if local else '') for k, v in kind.items()])
     if per_cc:
@@ -546,6 +550,7 @@ def build_budget():
              [(LEG.get(k, k), per_cc[k], k,
                '%d일 · 하루 평균 %s원' % (ndays.get(k, 0), money(per_cc[k] / max(ndays.get(k, 1), 1))))
               for k in REGIONS if k in per_cc])
+    O.append('  </div>')
 
     # 통화별로 얼마나 필요한가 — 현지에서 실제로 쥐고 있어야 하는 돈
     cash = {}
@@ -653,9 +658,15 @@ if REGIONS:
         B.append('    <label class="tab" for="view-cost">%s</label>' % LABELS['view_cost'])
     B.append('  </nav>\n')
 B.append('  <div class="stage">\n  <div class="home">')
+# 개요 섹션은 hsec 로 한 칸씩 감쌉니다. 넓은 화면에서는 개요 지도(hs-map)만 오른쪽 칸으로 가고
+# 나머지는 왼쪽에 쌓입니다. 왼쪽 개수(--hrows)는 섹션을 다 넣은 뒤에 채웁니다.
+# DOM 순서는 그대로라 폰·인쇄에서는 예전과 똑같이 한 줄로 흐릅니다.
+_hgrid, _hrows = len(B), 0
+B.append('')
 
 nights = doc.get('nights') or []
 if nights:
+    _hrows += 1
     B.append('  <div class="summary">\n    <div class="sum-head">\n      <h2>%s</h2>' % LABELS['nights'])
     B.append('      <span class="sum-total">%s</span>\n    </div>' % doc.get('nights_total', ''))
     mx = max(n['n'] for n in nights)
@@ -672,23 +683,31 @@ if nights:
     B.append('  </div>\n')
 
 if OVERVIEW_MAP:
+    B.append('  <div class="hsec hs-map">')
     section('overview')
-    B.append('      ' + render_daymap(OVERVIEW_MAP, 'ov', doc.get('overview_cap', '')) + '\n')
+    B.append('      ' + render_daymap(OVERVIEW_MAP, 'ov', doc.get('overview_cap', '')))
+    B.append('  </div>\n')
 
 _mv = move_section()
 if _mv:
+    _hrows += 1
+    B.append('  <div class="hsec">')
     section('moves')
     B += _mv
-    B.append('')
+    B.append('  </div>\n')
 elif doc.get('flights'):
+    _hrows += 1
+    B.append('  <div class="hsec">')
     section('flights')
     for f in doc['flights']:
         B.append('  <div class="flight">\n    <div class="flight-date">%s</div>'
                  '\n    <div class="flight-body">%s</div>\n  </div>' % (f['date'], f['body']))
-    B.append('')
+    B.append('  </div>\n')
 
 # 나라 카드 — 눌러서 그 나라만 보기
 if REGIONS:
+    _hrows += 1
+    B.append('  <div class="hsec">')
     section('regions')
     B.append('  <div class="ccards">')
     for k in REGIONS:
@@ -700,10 +719,13 @@ if REGIONS:
                  '<span class="cc-city">%s</span></label>'
                  % (k, k, name, span, nd, (' · %d박' % nn) if nn else '', ' · '.join(cities)))
     B.append('  </div>')
+    B.append('  </div>\n')
 
 # 하루씩 훑어보기 — 16일을 한 화면에. 누르면 그 나라로 들어갑니다
 _days = [b for b in doc['blocks'] if b['type'] == 'day']
 if _days:
+    _hrows += 1
+    B.append('  <div class="hsec">')
     section('outline')
     B.append('  <div class="tline">')
     for b in _days:
@@ -712,7 +734,9 @@ if _days:
                  % (cckey(b), day_id(b), b.get('date', ''), b.get('dow', ''),
                     re.sub(r'<[^>]+>', '', b.get('place', '')).strip()))
     B.append('  </div>')
-B.append('  </div>\n\n  <div class="days">')
+    B.append('  </div>')
+B[_hgrid] = '  <div class="hgrid" style="--hrows:%d">' % max(_hrows, 1)
+B.append('  </div>\n  </div>\n\n  <div class="days">')
 section('days', 'keep')
 B.append('')
 
@@ -737,7 +761,9 @@ for blk in doc['blocks']:
     B.append('  <div class="%s" id="%s">' % (blk['cls'], day_id(blk)))
     B.append('    <div class="day-date">%s<em>%s</em></div><div class="day-rail"><i class="node"></i></div>'
              % (blk.get('date', ''), blk.get('dow', '')))
+    # 글(dtext) · 지도(daymap) · 주의(dflags) 세 덩어리 — 넓은 화면에서 글 | 지도 두 칸이 됩니다
     B.append('    <div class="day-body">')
+    B.append('      <div class="dtext">')
     B.append('      <h3 class="day-place">%s</h3>' % blk.get('place', ''))
     if blk.get('sub'):
         B.append('      <p class="day-sub">%s</p>' % blk['sub'])
@@ -747,10 +773,14 @@ for blk in doc['blocks']:
         B.append('      <ul class="sched">')
         B += [li(r) for r in seg['rows']]
         B.append('      </ul>')
+    B.append('      </div>')
     if blk.get('map'):
         B.append('      ' + render_daymap(blk['map']['id'], cc, blk['map']['cap']))
-    for f in blk.get('flags', []):
-        B.append('      <div class="flag">%s</div>' % f)
+    if blk.get('flags'):
+        B.append('      <div class="dflags">')
+        for f in blk['flags']:
+            B.append('      <div class="flag">%s</div>' % f)
+        B.append('      </div>')
     B.append('    </div>\n  </div>\n')
 
 B.append('  </div>\n')                                   # .days 닫기
