@@ -500,12 +500,6 @@ __MOVECSS__
     .hgrid:has(>.hs-map)>.hs-map{grid-column:2;grid-row:1 / -1;position:sticky;top:24px;}
     .hs-map>.section-label:first-child{margin-top:0;}
 
-    /* 하루 카드: 글 | 지도. 지도가 없는 날은 한 칸 그대로입니다 */
-    .day-body:has(>.daymap){display:grid;column-gap:28px;align-items:start;
-      grid-template-columns:minmax(0,1fr) minmax(0,380px);grid-template-rows:auto 1fr;}
-    .day-body:has(>.daymap)>*{grid-column:1;}
-    .day-body:has(>.daymap)>.daymap{grid-column:2;grid-row:1 / -1;margin:4px 0 0;}
-
     /* 예상경비: 무엇에 쓰나 | 어디에 쓰나 */
     .cpair{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));
       column-gap:20px;align-items:start;}

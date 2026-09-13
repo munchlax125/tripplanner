@@ -761,9 +761,7 @@ for blk in doc['blocks']:
     B.append('  <div class="%s" id="%s">' % (blk['cls'], day_id(blk)))
     B.append('    <div class="day-date">%s<em>%s</em></div><div class="day-rail"><i class="node"></i></div>'
              % (blk.get('date', ''), blk.get('dow', '')))
-    # 글(dtext) · 지도(daymap) · 주의(dflags) 세 덩어리 — 넓은 화면에서 글 | 지도 두 칸이 됩니다
     B.append('    <div class="day-body">')
-    B.append('      <div class="dtext">')
     B.append('      <h3 class="day-place">%s</h3>' % blk.get('place', ''))
     if blk.get('sub'):
         B.append('      <p class="day-sub">%s</p>' % blk['sub'])
@@ -773,14 +771,10 @@ for blk in doc['blocks']:
         B.append('      <ul class="sched">')
         B += [li(r) for r in seg['rows']]
         B.append('      </ul>')
-    B.append('      </div>')
     if blk.get('map'):
         B.append('      ' + render_daymap(blk['map']['id'], cc, blk['map']['cap']))
-    if blk.get('flags'):
-        B.append('      <div class="dflags">')
-        for f in blk['flags']:
-            B.append('      <div class="flag">%s</div>' % f)
-        B.append('      </div>')
+    for f in blk.get('flags', []):
+        B.append('      <div class="flag">%s</div>' % f)
     B.append('    </div>\n  </div>\n')
 
 B.append('  </div>\n')                                   # .days 닫기
