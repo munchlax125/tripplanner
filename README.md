@@ -15,6 +15,9 @@ python build_xlsx.py   # src/예산.yaml  →  결과물/<output>.xlsx
 생성물은 **`결과물/`** 폴더에 모입니다. 다른 곳에 두려면 두 YAML 에 `output_dir: 원하는폴더` 를
 넣으세요 (`output_dir: '.'` 이면 저장소 뿌리).
 
+`일정.yaml` 에 `index_copy: index.html` 이 있으면 `build.py` 가 같은 HTML 을 **저장소 뿌리 `index.html`** 에도 씁니다.
+GitHub Pages(Settings → Pages → `main` / root)를 켜 두면 그 주소에서 최신 일정이 바로 열립니다.
+
 `new_trip.py` 가 제목·날짜·지역·숙박·항공권·통화·예산을 차례로 묻고,
 **날짜와 요일을 하루씩 펼친 두 YAML** 을 만들어 줍니다. 끝나자마자 빌드가 그대로 돌아가고,
 일정 내용은 그 뒤에 채우면 됩니다. 대괄호 안은 기본값이라 엔터만 눌러도 넘어갑니다.
@@ -52,6 +55,7 @@ python new_trip.py --force          # 이미 만든 src/ YAML 을 덮어쓰기
 
 ```yaml
 output: 내여행.html                # (필수) 만들어질 파일 이름
+index_copy: index.html             # 같은 내용을 저장소 뿌리에도 (GitHub Pages 첫 화면)
 doc_title: 도쿄 5박 6일             # 브라우저 탭 제목
 eyebrow: 2026 · 간토
 title: 도쿄<span class="sep">·</span>하코네

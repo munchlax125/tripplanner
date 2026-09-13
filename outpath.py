@@ -22,3 +22,11 @@ def resolve(doc, key='output', make=True):
     if make:
         os.makedirs(folder, exist_ok=True)
     return os.path.join(folder, name)
+
+
+def index_copy(doc):
+    """GitHub Pages 첫 화면으로 쓸 복사본 경로 — `index_copy` 값 그대로. 없으면 None.
+
+    output_dir 을 따르지 않습니다. Pages 는 저장소 뿌리의 index.html 을 열기 때문입니다.
+    """
+    return doc.get('index_copy') or None

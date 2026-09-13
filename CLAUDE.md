@@ -16,6 +16,11 @@
 다만 **손으로 고치지는 마세요.** 다음 빌드에서 통째로 덮어써집니다.
 확인이 필요하면 **직접 빌드해서 그 산출물을 보세요.**
 
+**저장소 뿌리의 `index.html` 은 GitHub Pages 첫 화면입니다.** `일정.yaml: index_copy: index.html` 이 있으면
+`build.py` 가 `결과물/<output>.html` 과 **똑같은 내용을 `index.html` 에도 씁니다.** 손으로 복사하지 말고 빌드하세요.
+일정 HTML 이 바뀌었는데 `index.html` 이 커밋에 빠지면 Pages 만 옛 일정을 보여줍니다 — 둘은 항상 같이 커밋합니다.
+`.nojekyll` 은 Pages 가 Jekyll 을 거치지 않고 파일을 그대로 내보내게 하는 빈 파일이니 지우지 마세요.
+
 `src/예산_템플릿.xlsx`는 예외입니다 — 서식·수식 원본이라 소스 자산입니다.
 
 ## 하드코딩 금지
@@ -27,6 +32,7 @@
 |---|---|
 | 출력 파일명 | `일정.yaml: output` · `예산.yaml: output` (없으면 빌드가 안내 메시지와 함께 멈춤) |
 | 생성물 폴더 | `output_dir` (기본 `결과물/`, `'.'` 로 두면 저장소 뿌리) — 계산은 `outpath.py` 한 곳에만 |
+| Pages 첫 화면 | `일정.yaml: index_copy` (보통 `index.html`, 없으면 복사 안 함) — `outpath.index_copy()` |
 | 탭 제목 | `일정.yaml: doc_title` → `head.html`의 `__TITLE__` |
 | 지역별 색 | `일정.yaml: colors` → CSS를 `build.py`가 생성해 `__COLORCSS__`에 넣음 |
 | 나라별 보기 탭 | 날짜 블록 `cls`의 색 키에서 자동 → CSS를 `build.py`가 생성해 `__VIEWCSS__`에 넣음 |
@@ -180,6 +186,9 @@ yaml.safe_dump(d, open(P,'w',encoding='utf-8'),
 
 ## 커밋
 
+**작업은 `main` 에서 합니다.** 디자인·일정 수정용 브랜치를 따로 만들지 마세요(사용자가 요청할 때만).
+`main` 이 곧 GitHub Pages 게시본입니다.
+
 요청받았을 때만 커밋하세요. 소스를 고쳤으면 **빌드해서 생성물까지 함께 커밋**합니다 —
-저장소만 받아도 폰에서 바로 열리도록.
+저장소만 받아도 폰에서 바로 열리도록. 생성물에는 **`결과물/<output>.html` 과 뿌리의 `index.html` 이 둘 다** 들어갑니다.
 `tools/_cache/`(Natural Earth 원본 약 25MB)는 무시됩니다.

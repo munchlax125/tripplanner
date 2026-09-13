@@ -227,6 +227,7 @@ def main():
 
     itin = {
         'output': out_html,
+        'index_copy': 'index.html',       # GitHub Pages 첫 화면 — 빌드가 같은 HTML 을 여기에도 씁니다
         'doc_title': title,
         'budget_source': BUDGET,
         'colors': {r['key']: r['color'] for r in regions},

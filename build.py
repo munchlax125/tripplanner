@@ -73,7 +73,7 @@ def color_css():
         rules += [
             '.bar-fill.%s,.swatch.%s,.day.%s .day-rail::before,.day.%s.stay .node'
             '{background:var(--c-%s);}' % (k, k, k, k, k),
-            '.ccard.%s{border-left-color:var(--c-%s);}' % (k, k),
+            '.ccard.%s{--cc:var(--c-%s);}' % (k, k),
             '.ctr.%s .cdate,.tl.%s .tl-d{border-left-color:var(--c-%s);}' % (k, k, k),
             '.day.%s .node{border-color:var(--c-%s);}' % (k, k),
             '.day.%s .bus{color:var(--c-%s);'
@@ -380,8 +380,8 @@ def view_css():
                 '  #view-home:checked~.stage:has(>.days>.%s:target)>.days'
                 '>:not(.%s):not(.keep){display:none;}' % (k, k)]
     act = ',\n'.join('  #view-%s:checked~.tabs .tab[for="view-%s"]' % (v, v) for v in VIEWS)
-    out += [act + '{background:hsl(var(--background));color:hsl(var(--foreground));'
-                  'box-shadow:var(--shadow-sm);}',
+    out += [act + '{background:var(--segment);color:var(--segment-foreground);'
+                  'box-shadow:var(--surface-shadow);}',
             '}']
     return '\n'.join(out)
 
@@ -777,6 +777,10 @@ B.append('\n</body>\n</html>\n')
 html = '\n'.join(B)
 open(OUT, 'w', encoding='utf-8').write(html)
 print('생성 완료: %s  (%s bytes)' % (OUT, format(len(html.encode('utf-8')), ',')))
+IDX = outpath.index_copy(doc)                             # GitHub Pages 첫 화면
+if IDX:
+    open(IDX, 'w', encoding='utf-8').write(html)
+    print('  같은 내용을 %s 에도 썼습니다' % IDX)
 print('  일 %d · 국경 %d · 지도 %d · 노트 %d'
       % (sum(1 for b in doc['blocks'] if b['type'] == 'day'),
          sum(1 for b in doc['blocks'] if b['type'] == 'border'),
